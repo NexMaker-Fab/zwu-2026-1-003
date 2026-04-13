@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>作业提交</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <!-- 导航栏 -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="nav-brand">Team Space</div>
+            <ul class="nav-menu">
+                <li><a href="index.html">首页</a></li>
+                <li><a href="team.html">团队介绍</a></li>
+                <li><a href="assignments.html" class="active">作业提交</a></li>
+                <li><a href="final-project.html">Final Project</a></li>
+                <li><a href="exercises.html">日常练习</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- 页面标题 -->
+    <header class="page-header">
+        <h1 class="page-title editable" data-field="assignmentTitle">
+            作业提交
+            <button class="edit-btn" onclick="openEditModal('assignmentTitle')">编辑</button>
+        </h1>
+        <p class="page-subtitle editable" data-field="assignmentSubtitle">
+            管理和提交课程作业
+            <button class="edit-btn" onclick="openEditModal('assignmentSubtitle')">编辑</button>
+        </p>
+    </header>
+
+    <!-- 作业列表 -->
+    <section class="content-section">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px;">
+            <h2 style="font-size: 28px; font-weight: 600; letter-spacing: -0.5px;">作业列表</h2>
+            <button class="btn btn-primary" onclick="openAddAssignmentModal()">+ 新建作业</button>
+        </div>
+
+        <div class="assignment-list" id="assignmentList">
+            <!-- 作业项 1 -->
+            <div class="assignment-item">
+                <div class="assignment-header">
+                    <h3 class="assignment-title editable" data-field="assign1Title">
+                        第一次编程作业 - HTML/CSS基础
+                        <button class="edit-btn" onclick="openEditModal('assign1Title')">编辑</button>
+                    </h3>
+                    <span class="assignment-status status-submitted">已提交</span>
+                </div>
+                <div class="assignment-meta">
+                    <span>📅 截止日期: 2026-04-20</span>
+                    <span>👤 提交人: 张三</span>
+                    <span>⭐ 成绩: 95/100</span>
+                </div>
+                <p class="assignment-description editable" data-field="assign1Desc">
+                    完成一个响应式个人主页，包含导航栏、个人介绍、技能展示和联系方式等模块。要求使用语义化HTML标签和现代CSS特性。
+                    <button class="edit-btn" onclick="openEditModal('assign1Desc')">编辑</button>
+                </p>
+            </div>
+
+            <!-- 作业项 2 -->
+            <div class="assignment-item">
+                <div class="assignment-header">
+                    <h3 class="assignment-title editable" data-field="assign2Title">
+                        第二次编程作业 - JavaScript交互
+                        <button class="edit-btn" onclick="openEditModal('assign2Title')">编辑</button>
+                    </h3>
+                    <span class="assignment-status status-pending">待提交</span>
+                </div>
+                <div class="assignment-meta">
+                    <span>📅 截止日期: 2026-04-27</span>
+                    <span>👤 提交人: 李四</span>
+                </div>
+                <p class="assignment-description editable" data-field="assign2Desc">
+                    实现一个待办事项应用，支持添加、删除、标记完成等功能。要求使用原生JavaScript，不使用框架。
+                    <button class="edit-btn" onclick="openEditModal('assign2Desc')">编辑</button>
+                </p>
+            </div>
+
+            <!-- 作业项 3 -->
+            <div class="assignment-item">
+                <div class="assignment-header">
+                    <h3 class="assignment-title editable" data-field="assign3Title">
+                        第三次编程作业 - React组件开发
+                        <button class="edit-btn" onclick="openEditModal('assign3Title')">编辑</button>
+                    </h3>
+                    <span class="assignment-status status-graded">已评分</span>
+                </div>
+                <div class="assignment-meta">
+                    <span>📅 截止日期: 2026-05-04</span>
+                    <span>👤 提交人: 王五</span>
+                    <span>⭐ 成绩: 98/100</span>
+                </div>
+                <p class="assignment-description editable" data-field="assign3Desc">
+                    使用React构建一个天气查询应用，集成第三方API，实现城市搜索、天气展示、未来预报等功能。
+                    <button class="edit-btn" onclick="openEditModal('assign3Desc')">编辑</button>
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <!-- 提交流程说明 -->
+    <section class="content-section" style="background: var(--bg-secondary); border-radius: 24px; margin: 40px auto; max-width: 1200px;">
+        <h2 style="font-size: 28px; font-weight: 600; margin-bottom: 20px; text-align: center; letter-spacing: -0.5px;">提交流程</h2>
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 30px; padding: 20px;">
+            <div style="text-align: center;">
+                <div style="width: 60px; height: 60px; background: var(--primary-color); color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 24px; font-weight: 600; margin: 0 auto 16px;">1</div>
+                <h3 style="font-size: 18px; font-weight: 600; margin-bottom: 8px;">创建作业</h3>
+                <p style="font-size: 15px; color: var(--text-secondary);">点击"新建作业"按钮，填写作业信息</p>
+            </div>
+            <div style="text-align: center;">
+                <div style="width: 60px; height: 60px; background: var(--primary-color); color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 24px; font-weight: 600; margin: 0 auto 16px;">2</div>
+                <h3 style="font-size: 18px; font-weight: 600; margin-bottom: 8px;">上传文件</h3>
+                <p style="font-size: 15px; color: var(--text-secondary);">上传代码文件或提供GitHub链接</p>
+            </div>
+            <div style="text-align: center;">
+                <div style="width: 60px; height: 60px; background: var(--primary-color); color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 24px; font-weight: 600; margin: 0 auto 16px;">3</div>
+                <h3 style="font-size: 18px; font-weight: 600; margin-bottom: 8px;">等待评分</h3>
+                <p style="font-size: 15px; color: var(--text-secondary);">老师批改后会显示成绩和反馈</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- 页脚 -->
+    <footer class="footer">
+        <div class="container">
+            <p>&copy; 2026 Team Space. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <!-- 编辑模态框 -->
+    <div class="modal" id="editModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title">编辑内容</h3>
+                <button class="modal-close" onclick="closeModal('editModal')">&times;</button>
+            </div>
+            <form id="editForm" onsubmit="saveEdit(event)">
+                <input type="hidden" id="editField" name="field">
+                <div class="form-group">
+                    <label class="form-label">内容</label>
+                    <textarea class="form-textarea" id="editContent" name="content" rows="6"></textarea>
+                </div>
+                <div style="display: flex; gap: 12px; justify-content: flex-end;">
+                    <button type="button" class="btn btn-secondary" onclick="closeModal('editModal')">取消</button>
+                    <button type="submit" class="btn btn-primary">保存</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- 添加作业模态框 -->
+    <div class="modal" id="addAssignmentModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title">新建作业</h3>
+                <button class="modal-close" onclick="closeModal('addAssignmentModal')">&times;</button>
+            </div>
+            <form id="addAssignmentForm" onsubmit="saveNewAssignment(event)">
+                <div class="form-group">
+                    <label class="form-label">作业标题</label>
+                    <input type="text" class="form-input" id="assignmentTitleInput" required>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">作业描述</label>
+                    <textarea class="form-textarea" id="assignmentDescInput" rows="4" required></textarea>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">截止日期</label>
+                    <input type="date" class="form-input" id="assignmentDeadlineInput" required>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">提交人</label>
+                    <select class="form-select" id="assignmentSubmitterInput" required>
+                        <option value="">选择成员</option>
+                        <option value="张三">张三</option>
+                        <option value="李四">李四</option>
+                        <option value="王五">王五</option>
+                        <option value="赵六">赵六</option>
+                    </select>
+                </div>
+                <div style="display: flex; gap: 12px; justify-content: flex-end;">
+                    <button type="button" class="btn btn-secondary" onclick="closeModal('addAssignmentModal')">取消</button>
+                    <button type="submit" class="btn btn-primary">创建</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>

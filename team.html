@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>团队介绍</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <!-- 导航栏 -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="nav-brand">Team Space</div>
+            <ul class="nav-menu">
+                <li><a href="index.html">首页</a></li>
+                <li><a href="team.html" class="active">团队介绍</a></li>
+                <li><a href="assignments.html">作业提交</a></li>
+                <li><a href="final-project.html">Final Project</a></li>
+                <li><a href="exercises.html">日常练习</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- 页面标题 -->
+    <header class="page-header">
+        <h1 class="page-title editable" data-field="teamTitle">
+            我们的团队
+            <button class="edit-btn" onclick="openEditModal('teamTitle')">编辑</button>
+        </h1>
+        <p class="page-subtitle editable" data-field="teamSubtitle">
+            一群充满激情和创造力的开发者
+            <button class="edit-btn" onclick="openEditModal('teamSubtitle')">编辑</button>
+        </p>
+    </header>
+
+    <!-- 团队介绍内容 -->
+    <section class="content-section">
+        <div class="editable" data-field="teamDescription">
+            <p style="font-size: 18px; line-height: 1.8; color: var(--text-secondary); text-align: center; max-width: 800px; margin: 0 auto;">
+                我们是一支充满活力和创新精神的团队，致力于通过技术解决实际问题。每个成员都拥有独特的技能和视角，共同推动项目的成功。
+            </p>
+            <button class="edit-btn" onclick="openEditModal('teamDescription')">编辑</button>
+        </div>
+    </section>
+
+    <!-- 团队成员 -->
+    <section class="content-section">
+        <h2 style="font-size: 36px; font-weight: 600; text-align: center; margin-bottom: 20px; letter-spacing: -1px;">团队成员</h2>
+        
+        <div class="team-grid" id="teamGrid">
+            <!-- 成员卡片 1 -->
+            <div class="member-card" onclick="window.location.href='member.html?id=1'">
+                <div class="member-avatar">👨‍💻</div>
+                <div class="member-info">
+                    <h3 class="member-name">张三</h3>
+                    <p class="member-role">前端开发工程师</p>
+                    <p class="member-bio">专注于React和Vue开发，热爱用户体验设计</p>
+                </div>
+            </div>
+
+            <!-- 成员卡片 2 -->
+            <div class="member-card" onclick="window.location.href='member.html?id=2'">
+                <div class="member-avatar">👩‍💻</div>
+                <div class="member-info">
+                    <h3 class="member-name">李四</h3>
+                    <p class="member-role">后端开发工程师</p>
+                    <p class="member-bio">擅长Node.js和Python，对系统架构有深入研究</p>
+                </div>
+            </div>
+
+            <!-- 成员卡片 3 -->
+            <div class="member-card" onclick="window.location.href='member.html?id=3'">
+                <div class="member-avatar">👨‍🎨</div>
+                <div class="member-info">
+                    <h3 class="member-name">王五</h3>
+                    <p class="member-role">UI/UX设计师</p>
+                    <p class="member-bio">追求极致的设计细节，注重用户交互体验</p>
+                </div>
+            </div>
+
+            <!-- 成员卡片 4 -->
+            <div class="member-card" onclick="window.location.href='member.html?id=4'">
+                <div class="member-avatar">👩‍🔬</div>
+                <div class="member-info">
+                    <h3 class="member-name">赵六</h3>
+                    <p class="member-role">数据分析师</p>
+                    <p class="member-bio">精通数据挖掘和机器学习，用数据驱动决策</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="text-center mt-20">
+            <button class="btn btn-primary" onclick="openAddMemberModal()">添加新成员</button>
+        </div>
+    </section>
+
+    <!-- 页脚 -->
+    <footer class="footer">
+        <div class="container">
+            <p>&copy; 2026 Team Space. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <!-- 编辑模态框 -->
+    <div class="modal" id="editModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title">编辑内容</h3>
+                <button class="modal-close" onclick="closeModal('editModal')">&times;</button>
+            </div>
+            <form id="editForm" onsubmit="saveEdit(event)">
+                <input type="hidden" id="editField" name="field">
+                <div class="form-group">
+                    <label class="form-label">内容</label>
+                    <textarea class="form-textarea" id="editContent" name="content" rows="6"></textarea>
+                </div>
+                <div style="display: flex; gap: 12px; justify-content: flex-end;">
+                    <button type="button" class="btn btn-secondary" onclick="closeModal('editModal')">取消</button>
+                    <button type="submit" class="btn btn-primary">保存</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- 添加成员模态框 -->
+    <div class="modal" id="addMemberModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title">添加新成员</h3>
+                <button class="modal-close" onclick="closeModal('addMemberModal')">&times;</button>
+            </div>
+            <form id="addMemberForm" onsubmit="saveNewMember(event)">
+                <div class="form-group">
+                    <label class="form-label">姓名</label>
+                    <input type="text" class="form-input" id="memberName" required>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">角色</label>
+                    <input type="text" class="form-input" id="memberRole" required>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">简介</label>
+                    <textarea class="form-textarea" id="memberBio" rows="4" required></textarea>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">头像表情</label>
+                    <select class="form-select" id="memberAvatar">
+                        <option value="👨‍💻">👨‍💻 男程序员</option>
+                        <option value="👩‍💻">👩‍💻 女程序员</option>
+                        <option value="👨‍🎨">👨‍🎨 男设计师</option>
+                        <option value="👩‍🎨">👩‍🎨 女设计师</option>
+                        <option value="👨‍🔬">👨‍🔬 男科学家</option>
+                        <option value="👩‍🔬">👩‍🔬 女科学家</option>
+                        <option value="👨‍💼">👨‍💼 男经理</option>
+                        <option value="👩‍💼">👩‍💼 女经理</option>
+                    </select>
+                </div>
+                <div style="display: flex; gap: 12px; justify-content: flex-end;">
+                    <button type="button" class="btn btn-secondary" onclick="closeModal('addMemberModal')">取消</button>
+                    <button type="submit" class="btn btn-primary">添加</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
