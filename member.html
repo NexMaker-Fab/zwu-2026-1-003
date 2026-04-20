@@ -1,11 +1,10 @@
-!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>成员简介</title>
-    <link rel="icon" type="image/svg+xml" href="favicon.svg">
-    <link rel="alternate icon" type="image/png" href="favicon.png">
+    <!-- Favicon 将由 JavaScript 动态生成 -->
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
@@ -34,25 +33,32 @@
             <div style="background: var(--bg-secondary); border-radius: 24px; padding: 50px; margin-bottom: 40px;">
                 <div style="display: grid; grid-template-columns: 200px 1fr; gap: 40px; align-items: start;">
                     <!-- 头像 -->
-                    <div style="width: 200px; height: 200px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); border-radius: 20px; display: flex; align-items: center; justify-content: center; font-size: 100px;" id="memberAvatar">
-                        👨‍💻
+                    <div style="position: relative;">
+                        <div style="width: 200px; height: 200px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); border-radius: 20px; display: flex; align-items: center; justify-content: center; font-size: 100px; cursor: pointer; transition: var(--transition);" 
+                             id="memberAvatar"
+                             onclick="openAvatarModal()"
+                             title="点击修改头像">
+                            👨‍💻
+                        </div>
+                        <button onclick="openAvatarModal()" 
+                                style="position: absolute; bottom: -10px; right: -10px; background: var(--primary-color); color: white; border: none; width: 40px; height: 40px; border-radius: 50%; cursor: pointer; font-size: 18px; box-shadow: 0 2px 8px rgba(0,0,0,0.2); transition: var(--transition);"
+                                title="修改头像">
+                            ✏️
+                        </button>
                     </div>
 
                     <!-- 基本信息 -->
                     <div>
                         <h1 class="editable" data-field="memberName" style="font-size: 42px; font-weight: 700; margin-bottom: 12px; letter-spacing: -1.5px;">
-                            张三
+                            汪成乐
                             <button class="edit-btn" onclick="openEditModal('memberName')">编辑</button>
                         </h1>
                         <p class="editable" data-field="memberRole" style="font-size: 20px; color: var(--primary-color); font-weight: 500; margin-bottom: 20px;">
-                            前端开发工程师
+                            团队成员
                             <button class="edit-btn" onclick="openEditModal('memberRole')">编辑</button>
                         </p>
                         <div style="display: flex; gap: 12px; flex-wrap: wrap;">
-                            <span class="tag">React</span>
-                            <span class="tag">Vue.js</span>
-                            <span class="tag">TypeScript</span>
-                            <span class="tag">UI/UX</span>
+                            <span class="tag">技能标签</span>
                         </div>
                     </div>
                 </div>
@@ -192,12 +198,55 @@
         </div>
     </div>
 
+    <!-- 头像选择模态框 -->
+    <div class="modal" id="avatarModal">
+        <div class="modal-content" style="max-width: 600px;">
+            <div class="modal-header">
+                <h3 class="modal-title">上传头像</h3>
+                <button class="modal-close" onclick="closeModal('avatarModal')">&times;</button>
+            </div>
+            
+            <!-- 预览区域 -->
+            <div style="text-align: center; padding: 30px 0;">
+                <div id="avatarPreview" style="width: 150px; height: 150px; margin: 0 auto 20px; border-radius: 20px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); display: flex; align-items: center; justify-content: center; font-size: 80px; overflow: hidden; box-shadow: 0 4px 12px rgba(0,0,0,0.15);">
+                    👨‍💻
+                </div>
+                <p style="color: var(--text-secondary); font-size: 14px;">支持 JPG、PNG、GIF 格式，建议尺寸 200x200px</p>
+            </div>
+            
+            <!-- 上传按钮 -->
+            <div style="text-align: center; margin-bottom: 20px;">
+                <input type="file" id="avatarFileInput" accept="image/*" style="display: none;" onchange="handleAvatarUpload(event)">
+                <button onclick="document.getElementById('avatarFileInput').click()" 
+                        class="btn btn-primary" 
+                        style="padding: 12px 30px; font-size: 16px;">
+                    📤 选择图片
+                </button>
+            </div>
+            
+            <!-- 操作提示 -->
+            <div style="background: #f5f5f7; padding: 15px; border-radius: 12px; margin-bottom: 20px;">
+                <p style="font-size: 13px; color: var(--text-secondary); margin: 0; text-align: center;">
+                    💡 提示：图片会自动裁剪为正方形并压缩，确保加载速度
+                </p>
+            </div>
+            
+            <div style="display: flex; gap: 12px; justify-content: flex-end;">
+                <button type="button" class="btn btn-secondary" onclick="closeModal('avatarModal')">取消</button>
+                <button type="button" class="btn btn-primary" onclick="confirmAvatarUpload()" id="confirmAvatarBtn" disabled>确认使用</button>
+            </div>
+        </div>
+    </div>
+
     <script src="script.js"></script>
     <script>
+        let currentMemberId = null;
+        
         // 根据URL参数加载对应成员信息
         document.addEventListener('DOMContentLoaded', function() {
             const urlParams = new URLSearchParams(window.location.search);
             const memberId = urlParams.get('id');
+            currentMemberId = memberId;
             
             if (memberId) {
                 loadMemberData(memberId);
@@ -205,22 +254,256 @@
         });
 
         function loadMemberData(memberId) {
-            // 这里可以从localStorage或服务器加载具体成员数据
-            // 示例数据映射
-            const members = {
-                '1': { name: '张三', role: '前端开发工程师', avatar: '👨‍💻' },
-                '2': { name: '李四', role: '后端开发工程师', avatar: '👩‍💻' },
-                '3': { name: '王五', role: 'UI/UX设计师', avatar: '👨‍🎨' },
-                '4': { name: '赵六', role: '数据分析师', avatar: '👩‍🔬' }
+            console.log('📄 加载成员数据, ID:', memberId);
+            
+            // 从 localStorage 加载成员数据，如果没有则使用默认值
+            const savedMembers = JSON.parse(localStorage.getItem('teamMembers') || '{}');
+            
+            // 默认成员数据
+            const defaultMembers = {
+                '1': { name: '汪成乐', role: '团队成员', avatar: '👨‍💻' },
+                '2': { name: '陈康文', role: '团队成员', avatar: '👨‍💻' },
+                '3': { name: '吴昌宏', role: '团队成员', avatar: '👨‍💻' },
+                '4': { name: '刘谢翰', role: '团队成员', avatar: '👨‍💻' },
+                '5': { name: '朱奕鸿', role: '团队成员', avatar: '👨‍💻' },
+                '6': { name: '许可', role: '团队成员', avatar: '👨‍💻' },
+                '7': { name: '葛宸菲', role: '团队成员', avatar: '👩‍💻' }
             };
 
-            const member = members[memberId];
+            const member = savedMembers[memberId] || defaultMembers[memberId];
+            
             if (member) {
+                console.log('👤 成员数据:', member.name, '头像类型:', member.avatarType || 'emoji');
+                
                 document.title = `${member.name} - 成员简介`;
                 document.querySelector('[data-field="memberName"]').childNodes[0].textContent = member.name + ' ';
                 document.querySelector('[data-field="memberRole"]').childNodes[0].textContent = member.role + ' ';
-                document.getElementById('memberAvatar').textContent = member.avatar;
+                
+                // 设置头像（支持图片和 Emoji）
+                const avatarElement = document.getElementById('memberAvatar');
+                if (member.avatarType === 'image' && member.avatar) {
+                    // 图片类型头像
+                    console.log('🖼️ 使用图片头像');
+                    avatarElement.innerHTML = '';
+                    avatarElement.style.backgroundImage = `url(${member.avatar})`;
+                    avatarElement.style.backgroundSize = 'cover';
+                    avatarElement.style.backgroundPosition = 'center';
+                    
+                    // 生成并设置动态 favicon
+                    generateDynamicFaviconFromImage(member.avatar);
+                } else {
+                    // Emoji 类型头像
+                    const emoji = member.avatar || '👨‍💻';
+                    console.log('😀 使用 Emoji 头像:', emoji);
+                    avatarElement.textContent = emoji;
+                    avatarElement.style.backgroundImage = '';
+                    
+                    // 生成并设置动态 favicon
+                    generateDynamicFavicon(emoji);
+                }
+            } else {
+                console.warn('⚠️ 未找到成员数据, ID:', memberId);
             }
+        }
+        
+        // 打开头像选择模态框
+        function openAvatarModal() {
+            document.getElementById('avatarModal').classList.add('active');
+            // 重置预览区域
+            const preview = document.getElementById('avatarPreview');
+            const currentAvatar = document.getElementById('memberAvatar').textContent;
+            preview.innerHTML = currentAvatar;
+            preview.style.backgroundImage = '';
+            document.getElementById('confirmAvatarBtn').disabled = true;
+        }
+        
+        // 处理头像上传
+        let uploadedImageData = null;
+        
+        function handleAvatarUpload(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+            
+            // 验证文件类型
+            if (!file.type.startsWith('image/')) {
+                showNotification('❌ 请选择图片文件！', 'error');
+                return;
+            }
+            
+            // 验证文件大小（最大 5MB）
+            if (file.size > 5 * 1024 * 1024) {
+                showNotification('❌ 图片大小不能超过 5MB！', 'error');
+                return;
+            }
+            
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                const img = new Image();
+                img.onload = function() {
+                    // 处理图片：裁剪为正方形并压缩
+                    processImage(img, function(processedDataUrl) {
+                        uploadedImageData = processedDataUrl;
+                        
+                        // 显示预览
+                        const preview = document.getElementById('avatarPreview');
+                        preview.innerHTML = '';
+                        preview.style.backgroundImage = `url(${processedDataUrl})`;
+                        preview.style.backgroundSize = 'cover';
+                        preview.style.backgroundPosition = 'center';
+                        
+                        // 启用确认按钮
+                        document.getElementById('confirmAvatarBtn').disabled = false;
+                    });
+                };
+                img.src = e.target.result;
+            };
+            reader.readAsDataURL(file);
+        }
+        
+        // 处理图片：裁剪为正方形并压缩
+        function processImage(img, callback) {
+            const canvas = document.createElement('canvas');
+            const ctx = canvas.getContext('2d');
+            
+            // 计算正方形裁剪区域
+            const size = Math.min(img.width, img.height);
+            const x = (img.width - size) / 2;
+            const y = (img.height - size) / 2;
+            
+            // 设置画布尺寸（200x200）
+            canvas.width = 200;
+            canvas.height = 200;
+            
+            // 绘制图片（居中裁剪）
+            ctx.drawImage(img, x, y, size, size, 0, 0, 200, 200);
+            
+            // 转换为 JPEG 格式，质量 0.8
+            const dataUrl = canvas.toDataURL('image/jpeg', 0.8);
+            callback(dataUrl);
+        }
+        
+        // 确认头像上传
+        function confirmAvatarUpload() {
+            if (!uploadedImageData || !currentMemberId) return;
+            
+            // 更新头像显示
+            const avatarElement = document.getElementById('memberAvatar');
+            avatarElement.innerHTML = '';
+            avatarElement.style.backgroundImage = `url(${uploadedImageData})`;
+            avatarElement.style.backgroundSize = 'cover';
+            avatarElement.style.backgroundPosition = 'center';
+            
+            // 保存到 localStorage
+            const savedMembers = JSON.parse(localStorage.getItem('teamMembers') || '{}');
+            if (!savedMembers[currentMemberId]) {
+                savedMembers[currentMemberId] = { name: '', role: '', avatar: '' };
+            }
+            savedMembers[currentMemberId].avatar = uploadedImageData;
+            savedMembers[currentMemberId].avatarType = 'image'; // 标记为图片类型
+            localStorage.setItem('teamMembers', JSON.stringify(savedMembers));
+            
+            // 生成新的 favicon
+            generateDynamicFaviconFromImage(uploadedImageData);
+            
+            // 关闭模态框
+            closeModal('avatarModal');
+            showNotification('✅ 头像已更新！', 'success');
+            
+            // 重置
+            uploadedImageData = null;
+            document.getElementById('avatarFileInput').value = '';
+        }
+        
+        // 生成动态 favicon（Emoji 版本）
+        function generateDynamicFavicon(emoji) {
+            const canvas = document.createElement('canvas');
+            canvas.width = 64;
+            canvas.height = 64;
+            const ctx = canvas.getContext('2d');
+            
+            // 绘制背景（渐变）
+            const gradient = ctx.createLinearGradient(0, 0, 64, 64);
+            gradient.addColorStop(0, '#667eea');
+            gradient.addColorStop(1, '#764ba2');
+            ctx.fillStyle = gradient;
+            ctx.fillRect(0, 0, 64, 64);
+            
+            // 绘制圆角矩形背景
+            ctx.beginPath();
+            ctx.roundRect(4, 4, 56, 56, 12);
+            ctx.fillStyle = 'rgba(255, 255, 255, 0.95)';
+            ctx.fill();
+            
+            // 绘制 emoji
+            ctx.font = '40px Arial';
+            ctx.textAlign = 'center';
+            ctx.textBaseline = 'middle';
+            ctx.fillText(emoji, 32, 32);
+            
+            // 转换为 favicon
+            const faviconUrl = canvas.toDataURL('image/png');
+            updateFavicon(faviconUrl);
+        }
+        
+        // 从图片生成动态 favicon
+        function generateDynamicFaviconFromImage(imageData) {
+            console.log('🎨 开始从图片生成 Favicon');
+            const img = new Image();
+            img.onload = function() {
+                const canvas = document.createElement('canvas');
+                canvas.width = 64;
+                canvas.height = 64;
+                const ctx = canvas.getContext('2d');
+                
+                // 绘制圆角背景
+                ctx.fillStyle = '#ffffff';
+                ctx.beginPath();
+                ctx.roundRect(0, 0, 64, 64, 12);
+                ctx.fill();
+                
+                // 绘制图片（保持比例，居中裁剪）
+                const size = Math.min(img.width, img.height);
+                const x = (img.width - size) / 2;
+                const y = (img.height - size) / 2;
+                
+                ctx.save();
+                ctx.beginPath();
+                ctx.roundRect(0, 0, 64, 64, 12);
+                ctx.clip();
+                ctx.drawImage(img, x, y, size, size, 0, 0, 64, 64);
+                ctx.restore();
+                
+                // 添加边框
+                ctx.strokeStyle = '#667eea';
+                ctx.lineWidth = 2;
+                ctx.beginPath();
+                ctx.roundRect(1, 1, 62, 62, 11);
+                ctx.stroke();
+                
+                const faviconUrl = canvas.toDataURL('image/png');
+                console.log('✅ Favicon 生成成功');
+                updateFavicon(faviconUrl);
+            };
+            img.onerror = function() {
+                console.error('❌ 图片加载失败');
+            };
+            img.src = imageData;
+        }
+        
+        // 更新 favicon
+        function updateFavicon(url) {
+            // 移除所有现有的 favicon
+            const existingLinks = document.querySelectorAll("link[rel*='icon']");
+            existingLinks.forEach(link => link.remove());
+            
+            // 创建新的 favicon
+            const link = document.createElement('link');
+            link.rel = 'shortcut icon';
+            link.type = 'image/png';
+            link.href = url;
+            document.head.appendChild(link);
+            
+            console.log('✅ Favicon 已更新');
         }
     </script>
 </body>

@@ -438,6 +438,17 @@ body {
     color: #004085;
 }
 
+.status-needs-revision {
+    background: #f8d7da;
+    color: #721c24;
+}
+
+.status-excellent {
+    background: linear-gradient(135deg, #ffeaa7 0%, #fdcb6e 100%);
+    color: #d63031;
+    font-weight: 600;
+}
+
 .assignment-meta {
     display: flex;
     gap: 20px;
