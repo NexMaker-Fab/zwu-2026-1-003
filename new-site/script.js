@@ -579,6 +579,7 @@ function loadAssignments() {
                 ${assignment.teacherEvaluation ? `<div class="teacher-evaluation"><strong>Teacher's Comments:</strong><br>${renderMarkdown(assignment.teacherEvaluation)}</div>` : ''}
                 <div class="assignment-actions">
                     <button class="btn btn-primary btn-small" onclick="openSubmitAssignmentModal(${assignment.id})">📤 Submit</button>
+                    <button class="btn btn-secondary btn-small" onclick="openEditAssignmentModal(${assignment.id})">✏️ Edit</button>
                     <button class="btn btn-secondary btn-small" onclick="openTeacherEvaluationModal(${assignment.id})">👨‍🏫 Evaluate</button>
                     <button class="btn btn-secondary btn-small" onclick="deleteAssignment(${assignment.id})">Delete</button>
                 </div>
@@ -593,6 +594,59 @@ function loadAssignments() {
 function openSubmitAssignmentModal(assignmentId) {
     document.getElementById('submitAssignmentId').value = assignmentId;
     openModal('submitAssignmentModal');
+}
+
+// Open edit assignment modal
+function openEditAssignmentModal(assignmentId) {
+    const assignments = JSON.parse(localStorage.getItem('assignments') || '[]');
+    const assignment = assignments.find(a => a.id === assignmentId);
+    
+    if (!assignment) return;
+    
+    // Fill form with existing data
+    document.getElementById('editAssignmentId').value = assignment.id;
+    document.getElementById('editAssignmentTitle').value = assignment.title;
+    document.getElementById('editAssignmentDescription').value = assignment.description || '';
+    document.getElementById('editAssignmentDeadline').value = assignment.deadline;
+    document.getElementById('editAssignmentSubmitter').value = assignment.submitter;
+    
+    openModal('editAssignmentModal');
+}
+
+// Save edited assignment
+function saveEditAssignment(event) {
+    event.preventDefault();
+    
+    const assignmentId = parseInt(document.getElementById('editAssignmentId').value);
+    const title = document.getElementById('editAssignmentTitle').value.trim();
+    const description = document.getElementById('editAssignmentDescription').value.trim();
+    const deadline = document.getElementById('editAssignmentDeadline').value;
+    const submitter = document.getElementById('editAssignmentSubmitter').value;
+    
+    if (!title || !deadline || !submitter) {
+        showNotification('❌ Please fill in all required fields!', 'error');
+        return;
+    }
+    
+    const assignments = JSON.parse(localStorage.getItem('assignments') || '[]');
+    const assignmentIndex = assignments.findIndex(a => a.id === assignmentId);
+    
+    if (assignmentIndex !== -1) {
+        // Update assignment data
+        assignments[assignmentIndex].title = title;
+        assignments[assignmentIndex].description = description;
+        assignments[assignmentIndex].deadline = deadline;
+        assignments[assignmentIndex].submitter = submitter;
+        assignments[assignmentIndex].updatedAt = new Date().toISOString();
+        
+        localStorage.setItem('assignments', JSON.stringify(assignments));
+        
+        showNotification('✅ Assignment updated successfully!');
+        closeModal('editAssignmentModal');
+        
+        // Reload assignments
+        loadAssignments();
+    }
 }
 
 // Handle assignment submission

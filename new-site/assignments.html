@@ -97,6 +97,41 @@
         </div>
     </div>
 
+    <!-- Edit Assignment Modal -->
+    <div class="modal" id="editAssignmentModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title">✏️ Edit Assignment</h3>
+                <button class="modal-close" onclick="closeModal('editAssignmentModal')">&times;</button>
+            </div>
+            <form onsubmit="saveEditAssignment(event)">
+                <input type="hidden" id="editAssignmentId">
+                <div class="form-group">
+                    <label class="form-label">Title</label>
+                    <input type="text" class="form-input" id="editAssignmentTitle" required placeholder="Assignment title">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Description</label>
+                    <textarea class="form-textarea" id="editAssignmentDescription" rows="4" placeholder="Assignment description"></textarea>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Deadline</label>
+                    <input type="date" class="form-input" id="editAssignmentDeadline" required>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Submitter</label>
+                    <select class="form-select" id="editAssignmentSubmitter" required>
+                        <option value="">Select a member</option>
+                    </select>
+                </div>
+                <div class="modal-actions">
+                    <button type="button" class="btn btn-secondary" onclick="closeModal('editAssignmentModal')">Cancel</button>
+                    <button type="submit" class="btn btn-primary">Save Changes</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
     <!-- GitHub Config Modal -->
     <div class="modal" id="githubConfigModal">
         <div class="modal-content">
