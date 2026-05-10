@@ -1,4 +1,4 @@
-/* 全局样式 - 苹果风格简约设计 */
+/* Pinterest 风格设计 */
 * {
     margin: 0;
     padding: 0;
@@ -6,121 +6,122 @@
 }
 
 :root {
-    --primary-color: #0071e3;
-    --secondary-color: #1d1d1f;
-    --text-primary: #1d1d1f;
-    --text-secondary: #86868b;
+    --primary-color: #e60023; /* Pinterest 红色 */
+    --primary-hover: #ad081b;
+    --secondary-color: #111111;
+    --text-primary: #111111;
+    --text-secondary: #767676;
     --bg-primary: #ffffff;
-    --bg-secondary: #f5f5f7;
-    --border-color: #d2d2d7;
-    --shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
-    --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    --bg-secondary: #efefef;
+    --border-color: #cdcdcd;
+    --card-bg: #ffffff;
+    --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.12);
+    --shadow-md: 0 2px 8px rgba(0, 0, 0, 0.15);
+    --shadow-lg: 0 4px 12px rgba(0, 0, 0, 0.2);
+    --radius-sm: 8px;
+    --radius-md: 16px;
+    --radius-lg: 24px;
+    --radius-full: 999px;
+    --transition: all 0.2s ease;
 }
 
 body {
-    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
     color: var(--text-primary);
     background-color: var(--bg-primary);
-    line-height: 1.6;
+    line-height: 1.5;
     -webkit-font-smoothing: antialiased;
-    -moz-osx-font-smoothing: grayscale;
 }
 
 .container {
-    max-width: 1200px;
+    max-width: 1400px;
     margin: 0 auto;
-    padding: 0 20px;
+    padding: 0 16px;
 }
 
-/* 导航栏 */
+/* 导航栏 - Pinterest 风格 */
 .navbar {
     position: sticky;
     top: 0;
-    background: rgba(255, 255, 255, 0.8);
-    backdrop-filter: saturate(180%) blur(20px);
-    -webkit-backdrop-filter: saturate(180%) blur(20px);
-    border-bottom: 1px solid var(--border-color);
+    background: var(--bg-primary);
+    border-bottom: none;
+    box-shadow: var(--shadow-sm);
     z-index: 1000;
     transition: var(--transition);
 }
 
 .nav-container {
-    max-width: 1200px;
+    max-width: 1400px;
     margin: 0 auto;
-    padding: 0 20px;
+    padding: 12px 16px;
     display: flex;
     justify-content: space-between;
     align-items: center;
-    height: 52px;
+    height: auto;
 }
 
 .nav-brand {
-    font-size: 21px;
-    font-weight: 600;
-    color: var(--text-primary);
+    font-size: 24px;
+    font-weight: 700;
+    color: var(--primary-color);
     letter-spacing: -0.5px;
+    cursor: pointer;
 }
 
 .nav-menu {
     display: flex;
     list-style: none;
-    gap: 32px;
+    gap: 8px;
 }
 
 .nav-menu a {
     text-decoration: none;
-    color: var(--text-secondary);
-    font-size: 14px;
-    font-weight: 400;
-    transition: var(--transition);
-    position: relative;
-}
-
-.nav-menu a:hover,
-.nav-menu a.active {
     color: var(--text-primary);
+    font-size: 16px;
+    font-weight: 600;
+    padding: 8px 16px;
+    border-radius: var(--radius-full);
+    transition: var(--transition);
 }
 
-.nav-menu a.active::after {
-    content: '';
-    position: absolute;
-    bottom: -16px;
-    left: 0;
-    right: 0;
-    height: 2px;
-    background: var(--primary-color);
+.nav-menu a:hover {
+    background-color: var(--bg-secondary);
 }
 
-/* Hero Section */
+.nav-menu a.active {
+    background-color: var(--text-primary);
+    color: var(--bg-primary);
+}
+
+/* Hero Section - Pinterest 风格 */
 .hero-section {
-    min-height: calc(100vh - 52px);
+    min-height: calc(100vh - 60px);
     display: flex;
     align-items: center;
     justify-content: center;
-    background: linear-gradient(180deg, var(--bg-primary) 0%, var(--bg-secondary) 100%);
-    padding: 80px 20px;
+    background: linear-gradient(135deg, #f5f5f5 0%, #e8e8e8 100%);
+    padding: 60px 20px;
+    text-align: center;
 }
 
 .hero-content {
-    text-align: center;
     max-width: 800px;
 }
 
 .hero-title {
     font-size: 56px;
     font-weight: 700;
-    letter-spacing: -2px;
-    margin-bottom: 16px;
-    color: var(--text-primary);
+    margin-bottom: 24px;
+    letter-spacing: -1.5px;
     line-height: 1.1;
+    color: var(--text-primary);
 }
 
 .hero-subtitle {
-    font-size: 24px;
-    font-weight: 400;
+    font-size: 20px;
     color: var(--text-secondary);
     margin-bottom: 40px;
-    letter-spacing: 0.5px;
+    line-height: 1.6;
 }
 
 .hero-buttons {
@@ -130,152 +131,81 @@ body {
     flex-wrap: wrap;
 }
 
-/* 按钮样式 */
+/* 按钮 - Pinterest 风格 */
 .btn {
-    display: inline-block;
-    padding: 14px 32px;
-    border-radius: 980px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 12px 24px;
     font-size: 16px;
-    font-weight: 500;
-    text-decoration: none;
-    transition: var(--transition);
-    cursor: pointer;
+    font-weight: 600;
     border: none;
-    letter-spacing: -0.2px;
+    border-radius: var(--radius-full);
+    cursor: pointer;
+    transition: var(--transition);
+    text-decoration: none;
+    white-space: nowrap;
 }
 
 .btn-primary {
-    background: var(--primary-color);
+    background-color: var(--primary-color);
     color: white;
 }
 
 .btn-primary:hover {
-    background: #0077ed;
+    background-color: var(--primary-hover);
     transform: scale(1.02);
 }
 
 .btn-secondary {
-    background: transparent;
-    color: var(--primary-color);
-    border: 1px solid var(--primary-color);
-}
-
-.btn-secondary:hover {
-    background: var(--primary-color);
-    color: white;
-}
-
-.btn-small {
-    padding: 8px 20px;
-    font-size: 14px;
-}
-
-/* Features Section */
-.features-section {
-    padding: 100px 20px;
-    background: var(--bg-primary);
-}
-
-.features-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-    gap: 30px;
-    max-width: 1200px;
-    margin: 0 auto;
-}
-
-.feature-card {
-    background: var(--bg-secondary);
-    padding: 40px 30px;
-    border-radius: 18px;
-    text-align: center;
-    transition: var(--transition);
-    cursor: pointer;
-}
-
-.feature-card:hover {
-    transform: translateY(-4px);
-    box-shadow: var(--shadow);
-}
-
-.feature-icon {
-    font-size: 48px;
-    margin-bottom: 20px;
-}
-
-.feature-card h3 {
-    font-size: 24px;
-    font-weight: 600;
-    margin-bottom: 12px;
-    letter-spacing: -0.5px;
-}
-
-.feature-card p {
-    font-size: 16px;
-    color: var(--text-secondary);
-    margin-bottom: 20px;
-    line-height: 1.5;
-}
-
-.feature-link {
-    color: var(--primary-color);
-    text-decoration: none;
-    font-size: 16px;
-    font-weight: 500;
-    transition: var(--transition);
-}
-
-.feature-link:hover {
-    opacity: 0.7;
-}
-
-/* 页面标题 */
-.page-header {
-    padding: 80px 20px 60px;
-    text-align: center;
-    background: var(--bg-secondary);
-}
-
-.page-title {
-    font-size: 48px;
-    font-weight: 700;
-    letter-spacing: -1.5px;
-    margin-bottom: 16px;
+    background-color: var(--bg-secondary);
     color: var(--text-primary);
 }
 
-.page-subtitle {
-    font-size: 20px;
-    color: var(--text-secondary);
-    font-weight: 400;
+.btn-secondary:hover {
+    background-color: #e2e2e2;
+}
+
+.btn-small {
+    padding: 8px 16px;
+    font-size: 14px;
 }
 
 /* 内容区域 */
 .content-section {
-    padding: 60px 20px;
-    max-width: 1200px;
-    margin: 0 auto;
+    padding: 60px 0;
 }
 
-/* 团队成员卡片 */
+.section-title {
+    font-size: 36px;
+    font-weight: 700;
+    margin-bottom: 40px;
+    text-align: center;
+    letter-spacing: -1px;
+}
+
+/* 卡片网格 - Pinterest 瀑布流风格 */
 .team-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-    gap: 30px;
-    margin-top: 40px;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 24px;
+    padding: 20px 0;
 }
 
+/* 成员卡片 - Pinterest 风格 */
 .member-card {
-    background: var(--bg-secondary);
-    border-radius: 18px;
+    background: var(--card-bg);
+    border-radius: var(--radius-md);
     overflow: hidden;
-    transition: var(--transition);
     cursor: pointer;
+    transition: var(--transition);
+    box-shadow: var(--shadow-sm);
+    position: relative;
 }
 
 .member-card:hover {
+    box-shadow: var(--shadow-lg);
     transform: translateY(-4px);
-    box-shadow: var(--shadow);
 }
 
 .member-avatar {
@@ -285,142 +215,96 @@ body {
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 80px;
-    color: white;
+    font-size: 120px;
+    overflow: hidden;
+    background-size: cover;
+    background-position: center;
 }
 
 .member-info {
-    padding: 24px;
+    padding: 20px;
 }
 
 .member-name {
-    font-size: 22px;
-    font-weight: 600;
-    margin-bottom: 8px;
-    letter-spacing: -0.3px;
-}
-
-.member-role {
-    font-size: 15px;
-    color: var(--primary-color);
-    font-weight: 500;
-    margin-bottom: 12px;
-}
-
-.member-bio {
-    font-size: 15px;
-    color: var(--text-secondary);
-    line-height: 1.6;
-}
-
-/* 可编辑区域 */
-.editable {
-    position: relative;
-    transition: var(--transition);
-}
-
-.editable:hover {
-    background: rgba(0, 113, 227, 0.05);
-    border-radius: 8px;
-}
-
-.edit-btn {
-    position: absolute;
-    top: 8px;
-    right: 8px;
-    background: var(--primary-color);
-    color: white;
-    border: none;
-    padding: 6px 12px;
-    border-radius: 6px;
-    font-size: 12px;
-    cursor: pointer;
-    opacity: 0;
-    transition: var(--transition);
-}
-
-.editable:hover .edit-btn {
-    opacity: 1;
-}
-
-.edit-btn:hover {
-    background: #0077ed;
-}
-
-/* 表单样式 */
-.form-group {
-    margin-bottom: 24px;
-}
-
-.form-label {
-    display: block;
-    font-size: 14px;
-    font-weight: 500;
+    font-size: 20px;
+    font-weight: 700;
     margin-bottom: 8px;
     color: var(--text-primary);
 }
 
-.form-input,
-.form-textarea,
-.form-select {
-    width: 100%;
-    padding: 12px 16px;
-    border: 1px solid var(--border-color);
-    border-radius: 10px;
-    font-size: 16px;
-    font-family: inherit;
+.member-role {
+    font-size: 14px;
+    color: var(--text-secondary);
+    margin-bottom: 12px;
+    font-weight: 500;
+}
+
+.member-bio {
+    font-size: 14px;
+    color: var(--text-secondary);
+    line-height: 1.6;
+}
+
+/* 标签 - Pinterest 风格 */
+.tag {
+    display: inline-block;
+    padding: 6px 12px;
+    background: var(--bg-secondary);
+    color: var(--text-primary);
+    border-radius: var(--radius-full);
+    font-size: 13px;
+    font-weight: 600;
+    margin: 4px;
     transition: var(--transition);
-    background: var(--bg-primary);
 }
 
-.form-input:focus,
-.form-textarea:focus,
-.form-select:focus {
-    outline: none;
-    border-color: var(--primary-color);
-    box-shadow: 0 0 0 4px rgba(0, 113, 227, 0.1);
+.tag:hover {
+    background: #e2e2e2;
 }
 
-.form-textarea {
-    resize: vertical;
-    min-height: 120px;
-}
-
-/* 作业列表 */
+/* 作业列表 - Pinterest 卡片风格 */
 .assignment-list {
-    margin-top: 40px;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+    gap: 24px;
+    padding: 20px 0;
 }
 
 .assignment-item {
-    background: var(--bg-secondary);
-    border-radius: 12px;
+    background: var(--card-bg);
+    border-radius: var(--radius-md);
     padding: 24px;
-    margin-bottom: 16px;
+    box-shadow: var(--shadow-sm);
     transition: var(--transition);
+    border: 2px solid transparent;
 }
 
 .assignment-item:hover {
-    box-shadow: var(--shadow);
+    box-shadow: var(--shadow-md);
+    border-color: var(--border-color);
 }
 
 .assignment-header {
     display: flex;
     justify-content: space-between;
-    align-items: center;
-    margin-bottom: 12px;
+    align-items: flex-start;
+    margin-bottom: 16px;
+    gap: 12px;
 }
 
 .assignment-title {
     font-size: 20px;
-    font-weight: 600;
-    letter-spacing: -0.3px;
+    font-weight: 700;
+    flex: 1;
+    color: var(--text-primary);
 }
 
 .assignment-status {
-    padding: 6px 14px;
-    border-radius: 980px;
+    padding: 6px 12px;
+    border-radius: var(--radius-full);
     font-size: 13px;
-    font-weight: 500;
+    font-weight: 600;
+    white-space: nowrap;
 }
 
 .status-pending {
@@ -446,125 +330,25 @@ body {
 .status-excellent {
     background: linear-gradient(135deg, #ffeaa7 0%, #fdcb6e 100%);
     color: #d63031;
-    font-weight: 600;
+    font-weight: 700;
 }
 
 .assignment-meta {
     display: flex;
-    gap: 20px;
+    gap: 16px;
+    margin-bottom: 16px;
     font-size: 14px;
     color: var(--text-secondary);
-    margin-bottom: 12px;
+    flex-wrap: wrap;
 }
 
 .assignment-description {
     font-size: 15px;
-    color: var(--text-secondary);
     line-height: 1.6;
-}
-
-/* 项目展示 */
-.project-showcase {
-    margin-top: 40px;
-}
-
-.project-card {
-    background: var(--bg-secondary);
-    border-radius: 18px;
-    overflow: hidden;
-    margin-bottom: 30px;
-    transition: var(--transition);
-}
-
-.project-card:hover {
-    box-shadow: var(--shadow);
-}
-
-.project-image {
-    width: 100%;
-    height: 400px;
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 100px;
-    color: white;
-}
-
-.project-content {
-    padding: 32px;
-}
-
-.project-title {
-    font-size: 28px;
-    font-weight: 600;
-    margin-bottom: 12px;
-    letter-spacing: -0.5px;
-}
-
-.project-description {
-    font-size: 16px;
     color: var(--text-secondary);
-    line-height: 1.7;
-    margin-bottom: 20px;
 }
 
-.project-tags {
-    display: flex;
-    gap: 10px;
-    flex-wrap: wrap;
-}
-
-.tag {
-    background: var(--bg-primary);
-    padding: 6px 14px;
-    border-radius: 980px;
-    font-size: 13px;
-    color: var(--text-secondary);
-    border: 1px solid var(--border-color);
-}
-
-/* 练习列表 */
-.exercise-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
-    gap: 24px;
-    margin-top: 40px;
-}
-
-.exercise-card {
-    background: var(--bg-secondary);
-    border-radius: 14px;
-    padding: 24px;
-    transition: var(--transition);
-}
-
-.exercise-card:hover {
-    transform: translateY(-2px);
-    box-shadow: var(--shadow);
-}
-
-.exercise-date {
-    font-size: 13px;
-    color: var(--primary-color);
-    font-weight: 500;
-    margin-bottom: 8px;
-}
-
-.exercise-title {
-    font-size: 20px;
-    font-weight: 600;
-    margin-bottom: 10px;
-    letter-spacing: -0.3px;
-}
-
-.exercise-content {
-    font-size: 15px;
-    color: var(--text-secondary);
-    line-height: 1.6;
-}
-
-/* 模态框 */
+/* 模态框 - Pinterest 风格 */
 .modal {
     display: none;
     position: fixed;
@@ -572,11 +356,11 @@ body {
     left: 0;
     right: 0;
     bottom: 0;
-    background: rgba(0, 0, 0, 0.5);
-    backdrop-filter: blur(10px);
+    background: rgba(0, 0, 0, 0.6);
     z-index: 2000;
     align-items: center;
     justify-content: center;
+    backdrop-filter: blur(4px);
 }
 
 .modal.active {
@@ -585,53 +369,177 @@ body {
 
 .modal-content {
     background: var(--bg-primary);
-    border-radius: 18px;
-    padding: 40px;
+    border-radius: var(--radius-lg);
     max-width: 600px;
     width: 90%;
-    max-height: 80vh;
+    max-height: 90vh;
     overflow-y: auto;
-    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+    box-shadow: var(--shadow-lg);
+    animation: modalSlideIn 0.3s ease;
+}
+
+@keyframes modalSlideIn {
+    from {
+        opacity: 0;
+        transform: translateY(-20px) scale(0.95);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
 }
 
 .modal-header {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 24px;
+    padding: 24px;
+    border-bottom: 1px solid var(--border-color);
 }
 
 .modal-title {
     font-size: 24px;
-    font-weight: 600;
-    letter-spacing: -0.5px;
+    font-weight: 700;
+    color: var(--text-primary);
 }
 
 .modal-close {
     background: none;
     border: none;
-    font-size: 28px;
+    font-size: 32px;
     cursor: pointer;
     color: var(--text-secondary);
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: var(--radius-full);
     transition: var(--transition);
-    line-height: 1;
 }
 
 .modal-close:hover {
+    background: var(--bg-secondary);
     color: var(--text-primary);
 }
 
-/* 页脚 */
-.footer {
-    background: var(--bg-secondary);
-    padding: 40px 20px;
-    text-align: center;
-    border-top: 1px solid var(--border-color);
+/* 表单 - Pinterest 风格 */
+.form-group {
+    margin-bottom: 20px;
+    padding: 0 24px;
 }
 
-.footer p {
+.form-label {
+    display: block;
+    margin-bottom: 8px;
     font-size: 14px;
-    color: var(--text-secondary);
+    font-weight: 600;
+    color: var(--text-primary);
+}
+
+.form-input,
+.form-textarea,
+.form-select {
+    width: 100%;
+    padding: 12px 16px;
+    border: 2px solid var(--border-color);
+    border-radius: var(--radius-md);
+    font-size: 16px;
+    font-family: inherit;
+    transition: var(--transition);
+    background: var(--bg-primary);
+}
+
+.form-input:focus,
+.form-textarea:focus,
+.form-select:focus {
+    outline: none;
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 3px rgba(230, 0, 35, 0.1);
+}
+
+.form-textarea {
+    resize: vertical;
+    min-height: 120px;
+}
+
+/* 文件上传区域 */
+.upload-area {
+    border: 2px dashed var(--border-color);
+    border-radius: var(--radius-md);
+    padding: 40px;
+    text-align: center;
+    cursor: pointer;
+    transition: var(--transition);
+    background: var(--bg-secondary);
+}
+
+.upload-area:hover {
+    border-color: var(--primary-color);
+    background: rgba(230, 0, 35, 0.05);
+}
+
+.upload-area.dragover {
+    border-color: var(--primary-color);
+    background: rgba(230, 0, 35, 0.1);
+}
+
+/* 编辑按钮 */
+.edit-btn {
+    background: var(--bg-secondary);
+    border: none;
+    padding: 6px 12px;
+    border-radius: var(--radius-full);
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: var(--transition);
+    color: var(--text-primary);
+    margin-left: 8px;
+}
+
+.edit-btn:hover {
+    background: #e2e2e2;
+}
+
+/* 通知提示 - Pinterest 风格 */
+.notification {
+    position: fixed;
+    top: 80px;
+    right: 20px;
+    padding: 16px 24px;
+    border-radius: var(--radius-md);
+    box-shadow: var(--shadow-lg);
+    z-index: 3000;
+    animation: slideInRight 0.3s ease;
+    font-weight: 600;
+    max-width: 400px;
+}
+
+@keyframes slideInRight {
+    from {
+        transform: translateX(400px);
+        opacity: 0;
+    }
+    to {
+        transform: translateX(0);
+        opacity: 1;
+    }
+}
+
+.notification.success {
+    background: #00a67e;
+    color: white;
+}
+
+.notification.error {
+    background: var(--primary-color);
+    color: white;
+}
+
+.notification.info {
+    background: #111111;
+    color: white;
 }
 
 /* 响应式设计 */
@@ -641,68 +549,91 @@ body {
     }
 
     .hero-subtitle {
-        font-size: 20px;
+        font-size: 18px;
     }
 
-    .page-title {
-        font-size: 36px;
-    }
-
-    .nav-menu {
+    .team-grid {
+        grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
         gap: 16px;
     }
 
-    .nav-menu a {
-        font-size: 13px;
-    }
-
-    .features-grid,
-    .team-grid,
-    .exercise-grid {
+    .assignment-list {
         grid-template-columns: 1fr;
     }
 
-    .hero-buttons {
-        flex-direction: column;
-        align-items: center;
+    .nav-menu {
+        gap: 4px;
+    }
+
+    .nav-menu a {
+        font-size: 14px;
+        padding: 6px 12px;
+    }
+
+    .modal-content {
+        width: 95%;
+        margin: 20px;
+    }
+}
+
+@media (max-width: 480px) {
+    .hero-title {
+        font-size: 32px;
+    }
+
+    .section-title {
+        font-size: 28px;
+    }
+
+    .team-grid {
+        grid-template-columns: 1fr;
     }
 
     .btn {
         width: 100%;
-        max-width: 300px;
-        text-align: center;
+    }
+
+    .hero-buttons {
+        flex-direction: column;
     }
 }
 
-/* 动画效果 */
-@keyframes fadeIn {
-    from {
-        opacity: 0;
-        transform: translateY(20px);
-    }
+/* 加载动画 */
+@keyframes spin {
     to {
-        opacity: 1;
-        transform: translateY(0);
+        transform: rotate(360deg);
     }
 }
 
-.fade-in {
-    animation: fadeIn 0.6s ease-out;
+.loading {
+    display: inline-block;
+    width: 20px;
+    height: 20px;
+    border: 3px solid rgba(230, 0, 35, 0.3);
+    border-radius: 50%;
+    border-top-color: var(--primary-color);
+    animation: spin 0.8s linear infinite;
 }
 
-/* 工具类 */
-.text-center {
+/* 空状态 */
+.empty-state {
     text-align: center;
+    padding: 60px 20px;
+    color: var(--text-secondary);
 }
 
-.mt-20 {
-    margin-top: 20px;
+.empty-state-icon {
+    font-size: 64px;
+    margin-bottom: 16px;
+    opacity: 0.5;
 }
 
-.mb-20 {
-    margin-bottom: 20px;
+.empty-state-text {
+    font-size: 18px;
+    font-weight: 600;
+    margin-bottom: 8px;
 }
 
-.hidden {
-    display: none !important;
+.empty-state-subtext {
+    font-size: 14px;
 }
