@@ -166,6 +166,27 @@
         </div>
     </div>
 
+    <!-- Teacher Evaluation Modal -->
+    <div class="modal" id="teacherEvaluationModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title">👨‍🏫 Teacher Evaluation</h3>
+                <button class="modal-close" onclick="closeModal('teacherEvaluationModal')">&times;</button>
+            </div>
+            <form onsubmit="saveTeacherEvaluation(event)">
+                <input type="hidden" id="evaluationAssignmentId">
+                <div class="form-group">
+                    <label class="form-label">Evaluation Comments</label>
+                    <textarea class="form-textarea" id="teacherComments" rows="6" placeholder="Enter your evaluation comments, feedback, and suggestions..." required></textarea>
+                </div>
+                <div class="modal-actions">
+                    <button type="button" class="btn btn-secondary" onclick="closeModal('teacherEvaluationModal')">Cancel</button>
+                    <button type="submit" class="btn btn-primary">Save Evaluation</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
     <script src="script.js"></script>
 </body>
 </html>

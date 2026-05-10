@@ -559,6 +559,10 @@ function loadAssignments() {
             'completed': '✅ Completed'
         }[assignment.status] || assignment.status;
         
+        // Check evaluation status
+        const isEvaluated = assignment.isEvaluated || false;
+        const evaluationStatus = isEvaluated ? '<span class="evaluation-badge evaluated">✅ Evaluated</span>' : '<span class="evaluation-badge pending">⏸️ Not Evaluated</span>';
+        
         html += `
             <div class="assignment-card">
                 <div class="assignment-header">
@@ -571,8 +575,11 @@ function loadAssignments() {
                     <span class="assignment-status ${statusClass}">${statusText}</span>
                 </div>
                 ${assignment.description ? `<div class="assignment-description" style="white-space: pre-wrap; line-height: 1.8;">${renderMarkdown(assignment.description)}</div>` : ''}
+                ${evaluationStatus}
+                ${assignment.teacherEvaluation ? `<div class="teacher-evaluation"><strong>Teacher's Comments:</strong><br>${renderMarkdown(assignment.teacherEvaluation)}</div>` : ''}
                 <div class="assignment-actions">
                     <button class="btn btn-primary btn-small" onclick="openSubmitAssignmentModal(${assignment.id})">📤 Submit</button>
+                    <button class="btn btn-secondary btn-small" onclick="openTeacherEvaluationModal(${assignment.id})">👨‍🏫 Evaluate</button>
                     <button class="btn btn-secondary btn-small" onclick="deleteAssignment(${assignment.id})">Delete</button>
                 </div>
             </div>
@@ -638,6 +645,53 @@ function deleteAssignment(assignmentId) {
     
     showNotification('✅ Assignment deleted!');
     loadAssignments();
+}
+
+// Open teacher evaluation modal
+function openTeacherEvaluationModal(assignmentId) {
+    document.getElementById('evaluationAssignmentId').value = assignmentId;
+    
+    // Load existing evaluation if any
+    const assignments = JSON.parse(localStorage.getItem('assignments') || '[]');
+    const assignment = assignments.find(a => a.id === assignmentId);
+    
+    if (assignment && assignment.teacherEvaluation) {
+        document.getElementById('teacherComments').value = assignment.teacherEvaluation;
+    } else {
+        document.getElementById('teacherComments').value = '';
+    }
+    
+    openModal('teacherEvaluationModal');
+}
+
+// Save teacher evaluation
+function saveTeacherEvaluation(event) {
+    event.preventDefault();
+    
+    const assignmentId = parseInt(document.getElementById('evaluationAssignmentId').value);
+    const comments = document.getElementById('teacherComments').value.trim();
+    
+    if (!comments) {
+        showNotification('❌ Please enter evaluation comments!', 'error');
+        return;
+    }
+    
+    const assignments = JSON.parse(localStorage.getItem('assignments') || '[]');
+    const assignment = assignments.find(a => a.id === assignmentId);
+    
+    if (assignment) {
+        assignment.teacherEvaluation = comments;
+        assignment.isEvaluated = true;
+        assignment.evaluatedAt = new Date().toISOString();
+        
+        localStorage.setItem('assignments', JSON.stringify(assignments));
+        
+        showNotification('✅ Evaluation saved successfully!');
+        closeModal('teacherEvaluationModal');
+        
+        // Reload assignments to show updated status
+        loadAssignments();
+    }
 }
 
 // ==================== GitHub Integration ====================

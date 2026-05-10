@@ -501,6 +501,46 @@ body {
     gap: 12px;
 }
 
+/* Evaluation Badge */
+.evaluation-badge {
+    display: inline-block;
+    padding: 6px 12px;
+    border-radius: var(--radius-sm);
+    font-size: 13px;
+    font-weight: 600;
+    margin-bottom: 12px;
+}
+
+.evaluation-badge.evaluated {
+    background: rgba(46, 213, 115, 0.15);
+    color: #2ed573;
+    border: 1px solid rgba(46, 213, 115, 0.3);
+}
+
+.evaluation-badge.pending {
+    background: rgba(255, 165, 2, 0.15);
+    color: #ffa502;
+    border: 1px solid rgba(255, 165, 2, 0.3);
+}
+
+/* Teacher Evaluation Comments */
+.teacher-evaluation {
+    background: rgba(108, 92, 231, 0.1);
+    border-left: 3px solid var(--primary-color);
+    padding: 12px 16px;
+    margin-bottom: 16px;
+    border-radius: var(--radius-sm);
+    font-size: 14px;
+    color: var(--text-primary);
+    line-height: 1.6;
+}
+
+.teacher-evaluation strong {
+    color: var(--primary-color);
+    display: block;
+    margin-bottom: 8px;
+}
+
 /* Projects Grid */
 .projects-grid {
     display: grid;
