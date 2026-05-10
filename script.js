@@ -72,8 +72,11 @@ function initializeDefaultMembers() {
     
     const existingMembers = JSON.parse(localStorage.getItem('teamMembers') || '{}');
     
-    // Only initialize if no members exist
-    if (Object.keys(existingMembers).length > 0) {
+    // Always ensure we have the 8 team members
+    const requiredMembers = ['1', '2', '3', '4', '5', '6', '7', '8'];
+    const needsInit = requiredMembers.some(id => !existingMembers[id]);
+    
+    if (!needsInit && Object.keys(existingMembers).length > 0) {
         console.log('✅ Member data already exists, skip initialization');
         return;
     }
@@ -82,7 +85,7 @@ function initializeDefaultMembers() {
         '1': { 
             name: 'Wang Chengle', 
             role: 'Team Member', 
-            avatar: '👨‍💻', 
+            avatar: '👨\u200d💻', 
             avatarType: 'emoji',
             bio: '',
             hobbies: [],
@@ -93,7 +96,7 @@ function initializeDefaultMembers() {
         '2': { 
             name: 'Wu Changhong', 
             role: 'Team Member', 
-            avatar: '👨‍💻', 
+            avatar: '👨\u200d💻', 
             avatarType: 'emoji',
             bio: '',
             hobbies: [],
@@ -104,7 +107,7 @@ function initializeDefaultMembers() {
         '3': { 
             name: 'Liu Xiehan', 
             role: 'Team Member', 
-            avatar: '👨‍💻', 
+            avatar: '👨\u200d💻', 
             avatarType: 'emoji',
             bio: '',
             hobbies: [],
@@ -115,7 +118,7 @@ function initializeDefaultMembers() {
         '4': { 
             name: 'Chen Kangwen', 
             role: 'Team Member', 
-            avatar: '👨‍💻', 
+            avatar: '👨\u200d💻', 
             avatarType: 'emoji',
             bio: '',
             hobbies: [],
@@ -126,7 +129,7 @@ function initializeDefaultMembers() {
         '5': { 
             name: 'Ge Chenfei', 
             role: 'Team Member', 
-            avatar: '👩‍💻', 
+            avatar: '👩\u200d💻', 
             avatarType: 'emoji',
             bio: '',
             hobbies: [],
@@ -137,7 +140,7 @@ function initializeDefaultMembers() {
         '6': { 
             name: 'Xu Ke', 
             role: 'Team Member', 
-            avatar: '👨‍💻', 
+            avatar: '👨\u200d💻', 
             avatarType: 'emoji',
             bio: '',
             hobbies: [],
@@ -148,7 +151,7 @@ function initializeDefaultMembers() {
         '7': { 
             name: 'Zhu Yihong', 
             role: 'Team Member', 
-            avatar: '👨‍💻', 
+            avatar: '👨\u200d💻', 
             avatarType: 'emoji',
             bio: '',
             hobbies: [],
@@ -159,7 +162,7 @@ function initializeDefaultMembers() {
         '8': { 
             name: 'Chen Yuzhe', 
             role: 'Team Member', 
-            avatar: '👨‍💻', 
+            avatar: '👨\u200d💻', 
             avatarType: 'emoji',
             bio: '',
             hobbies: [],
@@ -169,8 +172,11 @@ function initializeDefaultMembers() {
         }
     };
     
-    localStorage.setItem('teamMembers', JSON.stringify(defaultMembers));
-    console.log('✅ Successfully initialized 8 team members');
+    // Merge with existing members (preserve any custom data)
+    const mergedMembers = { ...defaultMembers, ...existingMembers };
+    
+    localStorage.setItem('teamMembers', JSON.stringify(mergedMembers));
+    console.log('✅ Successfully initialized/updated 8 team members');
 }
 
 // Load and display members
@@ -1197,6 +1203,9 @@ async function convertFilesToBase64(files) {
 
 // Initialize on page load
 document.addEventListener('DOMContentLoaded', function() {
+    // Always initialize default members first (on all pages)
+    initializeDefaultMembers();
+    
     // Update dynamic logo on all pages
     updateDynamicLogo();
     
@@ -1205,9 +1214,8 @@ document.addEventListener('DOMContentLoaded', function() {
         loadMemberProfile();
     }
     
-    // Initialize default members on team page
+    // Load members on team page
     if (window.location.pathname.includes('team.html') || window.location.pathname.endsWith('team.html')) {
-        initializeDefaultMembers();
         loadMembers();
     }
     

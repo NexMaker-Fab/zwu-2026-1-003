@@ -1197,6 +1197,9 @@ async function convertFilesToBase64(files) {
 
 // Initialize on page load
 document.addEventListener('DOMContentLoaded', function() {
+    // Always initialize default members first (on all pages)
+    initializeDefaultMembers();
+    
     // Update dynamic logo on all pages
     updateDynamicLogo();
     
@@ -1205,9 +1208,8 @@ document.addEventListener('DOMContentLoaded', function() {
         loadMemberProfile();
     }
     
-    // Initialize default members on team page
+    // Load members on team page
     if (window.location.pathname.includes('team.html') || window.location.pathname.endsWith('team.html')) {
-        initializeDefaultMembers();
         loadMembers();
     }
     
