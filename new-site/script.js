@@ -1089,10 +1089,8 @@ function confirmProfileAvatarChange() {
         // Update sidebar logo
         updateDynamicLogo();
         
-        // Force refresh the page to update favicon properly
-        setTimeout(() => {
-            window.location.reload();
-        }, 500);
+        // Update favicon immediately with new avatar
+        updateMemberFavicon(members[currentMemberId]);
     }
 }
 
