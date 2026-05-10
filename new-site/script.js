@@ -462,16 +462,23 @@ function saveEditedMember(event) {
 // Populate submitter dropdown
 function populateSubmitterOptions() {
     const submitterSelect = document.getElementById('assignmentSubmitter');
-    if (!submitterSelect) return;
+    const editSubmitterSelect = document.getElementById('editAssignmentSubmitter');
     
     const members = JSON.parse(localStorage.getItem('teamMembers') || '{}');
     
     let options = '<option value="">Select a member</option>';
+    options += '<option value="All Members">👥 All Members</option>';
     Object.entries(members).forEach(([id, member]) => {
         options += `<option value="${member.name}">${member.name}</option>`;
     });
     
-    submitterSelect.innerHTML = options;
+    if (submitterSelect) {
+        submitterSelect.innerHTML = options;
+    }
+    
+    if (editSubmitterSelect) {
+        editSubmitterSelect.innerHTML = options;
+    }
 }
 
 // Open add assignment modal
@@ -598,6 +605,9 @@ function openSubmitAssignmentModal(assignmentId) {
 
 // Open edit assignment modal
 function openEditAssignmentModal(assignmentId) {
+    // Populate submitter options first
+    populateSubmitterOptions();
+    
     const assignments = JSON.parse(localStorage.getItem('assignments') || '[]');
     const assignment = assignments.find(a => a.id === assignmentId);
     
