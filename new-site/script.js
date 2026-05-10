@@ -66,6 +66,43 @@ document.addEventListener('click', function(e) {
 
 // ==================== Member Management ====================
 
+// Initialize default assignments
+function initializeDefaultAssignments() {
+    console.log('🔧 Initializing default assignments...');
+    
+    const existingAssignments = JSON.parse(localStorage.getItem('assignments') || '[]');
+    
+    // Check if the practice record already exists
+    const hasPracticeRecord = existingAssignments.some(a => 
+        a.title === 'Practice Record: From Git Installation to Team Website Deployment'
+    );
+    
+    if (hasPracticeRecord) {
+        console.log('✅ Practice record already exists, skip initialization');
+        return;
+    }
+    
+    // Get all member names
+    const members = JSON.parse(localStorage.getItem('teamMembers') || '{}');
+    const memberNames = Object.values(members).map(m => m.name).join(', ');
+    
+    // Create the practice record assignment
+    const practiceRecord = {
+        id: Date.now(),
+        title: 'Practice Record: From Git Installation to Team Website Deployment',
+        description: `**Summary and Learnings:**\n\nThis comprehensive practice session covered the complete workflow from setting up Git to deploying a collaborative team website. Through hands-on experience, we gained valuable insights into version control, web development, and team collaboration.\n\n**Key Learning Points:**\n\n1. **Git Fundamentals**\n   - Installed and configured Git on local machines\n   - Learned basic Git commands: init, add, commit, push, pull\n   - Understanding of repositories, branches, and commit history\n   - Proper commit message conventions\n\n2. **GitHub Collaboration**\n   - Created and managed GitHub repositories\n   - Learned about remote repositories and synchronization\n   - Understanding of push/pull workflows\n   - Repository settings and configuration\n\n3. **Web Development Basics**\n   - HTML structure and semantic markup\n   - CSS styling and responsive design\n   - JavaScript for dynamic functionality\n   - Multi-page website architecture\n\n4. **Team Website Features**\n   - Night mode design with dark theme\n   - Dynamic member profiles with editable information\n   - Avatar upload and customization (emoji & images)\n   - Dynamic favicon that changes based on current member\n   - Assignment and project management system\n   - File upload support (images, videos, documents)\n\n5. **Version Control Best Practices**\n   - Regular commits with descriptive messages\n   - Proper file organization and structure\n   - Handling merge conflicts\n   - Backup and recovery strategies\n\n6. **Deployment Process**\n   - GitHub Pages setup and configuration\n   - Domain and URL management\n   - Cache management and version updates\n   - Testing across different browsers\n\n**Challenges Overcome:**\n- Browser caching issues with favicons (solved with version parameters)\n- Image upload and display optimization (implemented Canvas-based rendering)\n- Cross-browser compatibility for dynamic content\n- Data persistence using localStorage\n\n**Team Members:** ${memberNames}\n\n**Date:** ${new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}
+`,
+        deadline: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString().split('T')[0], // 7 days from now
+        submitter: 'All Members',
+        status: 'completed',
+        createdAt: new Date().toISOString()
+    };
+    
+    existingAssignments.unshift(practiceRecord); // Add to beginning
+    localStorage.setItem('assignments', JSON.stringify(existingAssignments));
+    console.log('✅ Successfully created practice record assignment');
+}
+
 // Initialize default members
 function initializeDefaultMembers() {
     console.log('🔧 Initializing default members...');
@@ -481,6 +518,19 @@ function saveNewAssignment(event) {
     loadAssignments();
 }
 
+// Simple Markdown renderer for assignment descriptions
+function renderMarkdown(text) {
+    if (!text) return '';
+    
+    // Convert **bold** to <strong>
+    let html = text.replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>');
+    
+    // Convert newlines to <br>
+    html = html.replace(/\n/g, '<br>');
+    
+    return html;
+}
+
 // Load and display assignments
 function loadAssignments() {
     const assignmentsList = document.getElementById('assignmentsList');
@@ -520,7 +570,7 @@ function loadAssignments() {
                     </div>
                     <span class="assignment-status ${statusClass}">${statusText}</span>
                 </div>
-                ${assignment.description ? `<p class="assignment-description">${assignment.description}</p>` : ''}
+                ${assignment.description ? `<div class="assignment-description" style="white-space: pre-wrap; line-height: 1.8;">${renderMarkdown(assignment.description)}</div>` : ''}
                 <div class="assignment-actions">
                     <button class="btn btn-primary btn-small" onclick="openSubmitAssignmentModal(${assignment.id})">📤 Submit</button>
                     <button class="btn btn-secondary btn-small" onclick="deleteAssignment(${assignment.id})">Delete</button>
@@ -1232,6 +1282,11 @@ async function convertFilesToBase64(files) {
 document.addEventListener('DOMContentLoaded', function() {
     // Always initialize default members first (on all pages)
     initializeDefaultMembers();
+    
+    // Initialize default assignments on assignments page
+    if (window.location.pathname.includes('assignments.html') || window.location.pathname.endsWith('assignments.html')) {
+        initializeDefaultAssignments();
+    }
     
     // Update dynamic logo on all pages
     updateDynamicLogo();
