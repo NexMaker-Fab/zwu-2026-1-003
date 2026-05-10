@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Debug Console</title>
+    <style>
+        body { font-family: monospace; padding: 20px; background: #1e1e1e; color: #d4d4d4; }
+        .log { background: #2d2d2d; padding: 10px; margin: 5px 0; border-left: 3px solid #4ec9b0; }
+        .error { border-left-color: #f44747; color: #f44747; }
+        .success { border-left-color: #4ec9b0; color: #4ec9b0; }
+        button { padding: 10px 20px; margin: 5px; background: #0e639c; color: white; border: none; cursor: pointer; }
+        button:hover { background: #1177bb; }
+    </style>
+</head>
+<body>
+    <h1>🔍 Debug Console</h1>
+    <div>
+        <button onclick="runAllTests()">Run All Tests</button>
+        <button onclick="clearLog()">Clear Log</button>
+    </div>
+    <div id="log"></div>
+
+    <script src="script.js"></script>
+    <script>
+        function log(message, type = 'info') {
+            const div = document.createElement('div');
+            div.className = `log ${type}`;
+            div.textContent = `[${new Date().toLocaleTimeString()}] ${message}`;
+            document.getElementById('log').appendChild(div);
+            console.log(message);
+        }
+
+        function clearLog() {
+            document.getElementById('log').innerHTML = '';
+        }
+
+        function runAllTests() {
+            clearLog();
+            log('Starting diagnostic tests...', 'info');
+            
+            // Test 1: Script loaded
+            log('✅ script.js loaded', 'success');
+            
+            // Test 2: Check critical functions
+            const criticalFunctions = [
+                'openModal',
+                'closeModal', 
+                'openAddMemberModal',
+                'saveNewMember',
+                'openAddAssignmentModal',
+                'saveNewAssignment',
+                'openGithubConfigModal',
+                'saveGithubConfig',
+                'openAddProjectModal',
+                'saveNewProject',
+                'handleSubmitAssignment',
+                'uploadToGithub',
+                'initializeDefaultMembers'
+            ];
+            
+            let passCount = 0;
+            criticalFunctions.forEach(fn => {
+                if (typeof window[fn] === 'function') {
+                    log(`✅ ${fn} exists`, 'success');
+                    passCount++;
+                } else {
+                    log(`❌ ${fn} NOT FOUND`, 'error');
+                }
+            });
+            
+            log(`\nResult: ${passCount}/${criticalFunctions.length} functions found`, passCount === criticalFunctions.length ? 'success' : 'error');
+            
+            // Test 3: Check localStorage
+            log('\n--- localStorage Status ---', 'info');
+            try {
+                const members = JSON.parse(localStorage.getItem('teamMembers') || '{}');
+                log(`Members: ${Object.keys(members).length} items`, 'success');
+                
+                const assignments = JSON.parse(localStorage.getItem('assignments') || '[]');
+                log(`Assignments: ${assignments.length} items`, 'success');
+                
+                const projects = JSON.parse(localStorage.getItem('projects') || '[]');
+                log(`Projects: ${projects.length} items`, 'success');
+                
+                const githubConfig = JSON.parse(localStorage.getItem('githubConfig') || '{}');
+                log(`GitHub Config: ${githubConfig.username ? 'Configured' : 'Not configured'}`, githubConfig.username ? 'success' : 'info');
+            } catch (e) {
+                log(`localStorage error: ${e.message}`, 'error');
+            }
+            
+            // Test 4: Try to initialize members
+            log('\n--- Testing Member Initialization ---', 'info');
+            try {
+                if (typeof initializeDefaultMembers === 'function') {
+                    initializeDefaultMembers();
+                    const members = JSON.parse(localStorage.getItem('teamMembers') || '{}');
+                    log(`✅ Members initialized: ${Object.keys(members).length} members`, 'success');
+                    log(`Names: ${Object.values(members).map(m => m.name).join(', ')}`, 'success');
+                }
+            } catch (e) {
+                log(`❌ Initialization error: ${e.message}`, 'error');
+            }
+            
+            // Test 5: Check DOM elements on current page
+            log('\n--- DOM Elements Check ---', 'info');
+            const modals = ['editModal', 'addMemberModal', 'addAssignmentModal', 'githubConfigModal', 'addProjectModal'];
+            modals.forEach(id => {
+                const el = document.getElementById(id);
+                if (el) {
+                    log(`✅ Modal #${id} exists in DOM`, 'success');
+                } else {
+                    log(`⚠️ Modal #${id} NOT in current page DOM`, 'info');
+                }
+            });
+            
+            log('\n✅ Diagnostic complete!', 'success');
+            log('\n💡 TIP: Open browser console (F12) for more details', 'info');
+        }
+        
+        // Auto-run on load
+        window.onload = function() {
+            setTimeout(runAllTests, 500);
+        };
+    </script>
+</body>
+</html>

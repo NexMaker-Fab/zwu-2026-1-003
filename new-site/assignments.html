@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Assignments - Team Space</title>
+    <link rel="icon" type="image/svg+xml" href="favicon.svg">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <!-- Left Sidebar Navigation -->
+    <nav class="sidebar">
+        <div class="sidebar-header">
+            <div class="logo-icon">🐱</div>
+        </div>
+        <ul class="sidebar-menu">
+            <li><a href="index.html" title="Home">
+                <span class="menu-icon">🏠</span>
+                <span class="menu-text">Home</span>
+            </a></li>
+            <li><a href="team.html" title="Team">
+                <span class="menu-icon">👥</span>
+                <span class="menu-text">Team</span>
+            </a></li>
+            <li><a href="assignments.html" class="active" title="Assignments">
+                <span class="menu-icon">📝</span>
+                <span class="menu-text">Assignments</span>
+            </a></li>
+            <li><a href="final-project.html" title="Projects">
+                <span class="menu-icon">🚀</span>
+                <span class="menu-text">Projects</span>
+            </a></li>
+        </ul>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="main-content">
+
+    <!-- Page Header -->
+    <section class="page-header">
+        <div class="container">
+            <h1 class="page-title">Assignments</h1>
+            <p class="page-subtitle">Manage and track assignment submissions</p>
+        </div>
+    </section>
+
+    <!-- Assignments Section -->
+    <section class="content-section">
+        <div class="container">
+            <div class="section-header">
+                <h2 class="section-title">Assignment List</h2>
+                <div class="header-actions">
+                    <button class="btn btn-secondary" onclick="openGithubConfigModal()">⚙️ GitHub Config</button>
+                    <button class="btn btn-primary" onclick="openAddAssignmentModal()">+ New Assignment</button>
+                </div>
+            </div>
+
+            <div class="assignments-list" id="assignmentsList">
+                <!-- Assignments will be loaded dynamically -->
+            </div>
+        </div>
+    </section>
+
+    </main>
+
+    <!-- Add Assignment Modal -->
+    <div class="modal" id="addAssignmentModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title">New Assignment</h3>
+                <button class="modal-close" onclick="closeModal('addAssignmentModal')">&times;</button>
+            </div>
+            <form onsubmit="saveNewAssignment(event)">
+                <div class="form-group">
+                    <label class="form-label">Title</label>
+                    <input type="text" class="form-input" id="assignmentTitle" required placeholder="Assignment title">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Description</label>
+                    <textarea class="form-textarea" id="assignmentDescription" rows="4" placeholder="Assignment description"></textarea>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Deadline</label>
+                    <input type="date" class="form-input" id="assignmentDeadline" required>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Submitter</label>
+                    <select class="form-select" id="assignmentSubmitter" required>
+                        <option value="">Select a member</option>
+                    </select>
+                </div>
+                <div class="modal-actions">
+                    <button type="button" class="btn btn-secondary" onclick="closeModal('addAssignmentModal')">Cancel</button>
+                    <button type="submit" class="btn btn-primary">Create Assignment</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- GitHub Config Modal -->
+    <div class="modal" id="githubConfigModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title">GitHub Configuration</h3>
+                <button class="modal-close" onclick="closeModal('githubConfigModal')">&times;</button>
+            </div>
+            <form onsubmit="saveGithubConfig(event)">
+                <div class="form-group">
+                    <label class="form-label">GitHub Username</label>
+                    <input type="text" class="form-input" id="githubUsername" required placeholder="Your GitHub username">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Repository Name</label>
+                    <input type="text" class="form-input" id="githubRepo" required placeholder="e.g., team-assignments">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Personal Access Token</label>
+                    <input type="password" class="form-input" id="githubToken" placeholder="ghp_xxxxxxxxxxxx">
+                    <small class="form-hint">Generate at: Settings → Developer settings → Personal access tokens</small>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Branch</label>
+                    <input type="text" class="form-input" id="githubBranch" value="main" placeholder="main">
+                </div>
+                <div class="modal-actions">
+                    <button type="button" class="btn btn-secondary" onclick="closeModal('githubConfigModal')">Cancel</button>
+                    <button type="button" class="btn btn-secondary" onclick="testGithubConnection()">Test Connection</button>
+                    <button type="submit" class="btn btn-primary">Save Configuration</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Submit Assignment Modal -->
+    <div class="modal" id="submitAssignmentModal">
+        <div class="modal-content modal-large">
+            <div class="modal-header">
+                <h3 class="modal-title">Submit Assignment</h3>
+                <button class="modal-close" onclick="closeModal('submitAssignmentModal')">&times;</button>
+            </div>
+            <form onsubmit="handleSubmitAssignment(event)">
+                <input type="hidden" id="submitAssignmentId">
+                <div class="form-group">
+                    <label class="form-label">Submission Link (Optional)</label>
+                    <input type="url" class="form-input" id="submissionLink" placeholder="https://github.com/...">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Upload Files</label>
+                    <div class="file-upload-area" id="fileUploadArea" onclick="document.getElementById('assignmentFiles').click()">
+                        <div class="file-upload-icon">📁</div>
+                        <p>Click to upload or drag and drop</p>
+                        <small>Images, Videos, Documents, Archives (Max 50MB per file)</small>
+                    </div>
+                    <input type="file" id="assignmentFiles" multiple accept="image/*,video/*,.pdf,.doc,.docx,.xls,.xlsx,.ppt,.pptx,.zip,.rar,.7z" style="display: none;" onchange="handleFileSelect(event)">
+                    <div id="selectedFilesList" class="selected-files-list"></div>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Notes (Optional)</label>
+                    <textarea class="form-textarea" id="submissionNotes" rows="3" placeholder="Additional notes"></textarea>
+                </div>
+                <div class="modal-actions">
+                    <button type="button" class="btn btn-secondary" onclick="closeModal('submitAssignmentModal')">Cancel</button>
+                    <button type="submit" class="btn btn-primary">Submit & Sync to GitHub</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>

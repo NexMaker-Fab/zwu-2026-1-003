@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Team - Team Space</title>
+    <link rel="icon" type="image/svg+xml" href="favicon.svg">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <!-- Left Sidebar Navigation -->
+    <nav class="sidebar">
+        <div class="sidebar-header">
+            <div class="logo-icon" id="dynamicLogo">🐱</div>
+        </div>
+        <ul class="sidebar-menu">
+            <li><a href="index.html" title="Home">
+                <span class="menu-icon">🏠</span>
+                <span class="menu-text">Home</span>
+            </a></li>
+            <li><a href="team.html" class="active" title="Team">
+                <span class="menu-icon">👥</span>
+                <span class="menu-text">Team</span>
+            </a></li>
+            <li><a href="assignments.html" title="Assignments">
+                <span class="menu-icon">📝</span>
+                <span class="menu-text">Assignments</span>
+            </a></li>
+            <li><a href="final-project.html" title="Projects">
+                <span class="menu-icon">🚀</span>
+                <span class="menu-text">Projects</span>
+            </a></li>
+        </ul>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <!-- Page Header -->
+        <section class="page-header">
+            <div class="container">
+                <h1 class="page-title">Our Team</h1>
+                <p class="page-subtitle">Meet the talented members of our team</p>
+            </div>
+        </section>
+
+        <!-- Team Members Section -->
+        <section class="content-section">
+            <div class="container">
+                <div class="section-header">
+                    <h2 class="section-title">Team Members</h2>
+                    <button class="btn btn-primary" onclick="openAddMemberModal()">+ Add New Member</button>
+                </div>
+
+                <div class="members-grid" id="membersGrid">
+                    <!-- Members will be loaded dynamically -->
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Add Member Modal -->
+    <div class="modal" id="addMemberModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title">Add New Member</h3>
+                <button class="modal-close" onclick="closeModal('addMemberModal')">&times;</button>
+            </div>
+            <form onsubmit="saveNewMember(event)">
+                <div class="form-group">
+                    <label class="form-label">Name</label>
+                    <input type="text" class="form-input" id="memberName" required placeholder="Enter member name">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Role</label>
+                    <input type="text" class="form-input" id="memberRole" required placeholder="e.g., Developer, Designer">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Bio</label>
+                    <textarea class="form-textarea" id="memberBio" rows="4" placeholder="Brief introduction"></textarea>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Avatar Emoji</label>
+                    <select class="form-select" id="memberAvatar">
+                        <option value="👨‍💻">👨‍💻 Developer</option>
+                        <option value="👩‍💻">👩‍💻 Developer</option>
+                        <option value="🎨">🎨 Designer</option>
+                        <option value="📊">📊 Analyst</option>
+                        <option value="🚀">🚀 Leader</option>
+                        <option value="⭐">⭐ Star</option>
+                    </select>
+                </div>
+                <div class="modal-actions">
+                    <button type="button" class="btn btn-secondary" onclick="closeModal('addMemberModal')">Cancel</button>
+                    <button type="submit" class="btn btn-primary">Add Member</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Edit Member Modal -->
+    <div class="modal" id="editMemberModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title">Edit Member</h3>
+                <button class="modal-close" onclick="closeModal('editMemberModal')">&times;</button>
+            </div>
+            <form onsubmit="saveEditedMember(event)">
+                <input type="hidden" id="editMemberId">
+                <div class="form-group">
+                    <label class="form-label">Name</label>
+                    <input type="text" class="form-input" id="editMemberName" required>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Role</label>
+                    <input type="text" class="form-input" id="editMemberRole" required>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Bio</label>
+                    <textarea class="form-textarea" id="editMemberBio" rows="4"></textarea>
+                </div>
+                <div class="modal-actions">
+                    <button type="button" class="btn btn-secondary" onclick="closeModal('editMemberModal')">Cancel</button>
+                    <button type="submit" class="btn btn-primary">Save Changes</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Avatar Upload Modal -->
+    <div class="modal" id="avatarUploadModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title">Upload Avatar</h3>
+                <button class="modal-close" onclick="closeModal('avatarUploadModal')">&times;</button>
+            </div>
+            <div class="form-group">
+                <label class="form-label">Select Image (JPG, PNG, GIF)</label>
+                <input type="file" id="avatarFileInput" accept="image/jpeg,image/png,image/gif" onchange="handleTeamAvatarUpload(event)">
+            </div>
+            <div id="avatarPreviewContainer" style="display: none; margin: 20px 0; text-align: center;">
+                <img id="avatarPreview" style="width: 150px; height: 150px; border-radius: 50%; object-fit: cover; border: 3px solid var(--accent-color);">
+            </div>
+            <div class="modal-actions">
+                <button type="button" class="btn btn-secondary" onclick="closeModal('avatarUploadModal')">Cancel</button>
+                <button type="button" class="btn btn-primary" id="confirmAvatarBtn" onclick="confirmTeamAvatarUpload()" disabled>Confirm</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>

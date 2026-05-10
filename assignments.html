@@ -1,156 +1,156 @@
 <!DOCTYPE html>
-<html lang="zh-CN">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>作业提交</title>
+    <title>Assignments</title>
     <link rel="icon" type="image/svg+xml" href="favicon.svg">
     <link rel="alternate icon" type="image/png" href="favicon.png">
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-    <!-- 导航栏 -->
+    <!-- Navigation Bar -->
     <nav class="navbar">
         <div class="nav-container">
             <div class="nav-brand">Team Space</div>
             <ul class="nav-menu">
-                <li><a href="index.html">首页</a></li>
-                <li><a href="team.html">团队介绍</a></li>
-                <li><a href="assignments.html" class="active">作业提交</a></li>
+                <li><a href="index.html">Home</a></li>
+                <li><a href="team.html">Team</a></li>
+                <li><a href="assignments.html" class="active">Assignments</a></li>
                 <li><a href="final-project.html">Final Project</a></li>
             </ul>
         </div>
     </nav>
 
-    <!-- 页面标题 -->
+    <!-- Page Header -->
     <header class="page-header">
         <h1 class="page-title editable" data-field="assignmentTitle">
-            作业提交
-            <button class="edit-btn" onclick="openEditModal('assignmentTitle')">编辑</button>
+            Assignment Submission
+            <button class="edit-btn" onclick="openEditModal('assignmentTitle')">Edit</button>
         </h1>
         <p class="page-subtitle editable" data-field="assignmentSubtitle">
-            管理和提交课程作业
-            <button class="edit-btn" onclick="openEditModal('assignmentSubtitle')">编辑</button>
+            Manage and submit course assignments
+            <button class="edit-btn" onclick="openEditModal('assignmentSubtitle')">Edit</button>
         </p>
     </header>
 
     <!-- 作业列表 -->
     <section class="content-section">
         <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px;">
-            <h2 style="font-size: 28px; font-weight: 600; letter-spacing: -0.5px;">作业列表</h2>
+            <h2 style="font-size: 28px; font-weight: 600; letter-spacing: -0.5px;">Assignments</h2>
             <div style="display: flex; gap: 12px;">
-                <button class="btn btn-secondary" onclick="openGithubConfigModal()">⚙️ GitHub 配置</button>
-                <button class="btn btn-primary" onclick="openAddAssignmentModal()">+ 新建作业</button>
+                <button class="btn btn-secondary" onclick="openGithubConfigModal()">⚙️ GitHub Config</button>
+                <button class="btn btn-primary" onclick="openAddAssignmentModal()">+ New Assignment</button>
             </div>
         </div>
 
         <div class="assignment-list" id="assignmentList">
-            <!-- 作业将通过 JavaScript 动态加载 -->
+            <!-- Assignments will be loaded dynamically via JavaScript -->
             <div id="emptyState" style="text-align: center; padding: 60px 20px; color: var(--text-secondary);">
                 <div style="font-size: 64px; margin-bottom: 20px;">📝</div>
-                <h3 style="font-size: 20px; font-weight: 600; margin-bottom: 8px; color: var(--text-primary);">暂无作业</h3>
-                <p style="font-size: 15px;">点击“新建作业”按钮创建第一个作业</p>
+                <h3 style="font-size: 20px; font-weight: 600; margin-bottom: 8px; color: var(--text-primary);">No Assignments Yet</h3>
+                <p style="font-size: 15px;">Click "New Assignment" to create your first assignment</p>
             </div>
         </div>
     </section>
 
     <!-- 提交流程说明 -->
     <section class="content-section" style="background: var(--bg-secondary); border-radius: 24px; margin: 40px auto; max-width: 1200px;">
-        <h2 style="font-size: 28px; font-weight: 600; margin-bottom: 20px; text-align: center; letter-spacing: -0.5px;">提交流程</h2>
+        <h2 style="font-size: 28px; font-weight: 600; margin-bottom: 20px; text-align: center; letter-spacing: -0.5px;">Submission Process</h2>
         <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 30px; padding: 20px;">
             <div style="text-align: center;">
-                <div style="width: 60px; height: 60px; background: var(--primary-color); color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 24px; font-weight: 600; margin: 0 auto 16px;">1</div>
-                <h3 style="font-size: 18px; font-weight: 600; margin-bottom: 8px;">创建作业</h3>
-                <p style="font-size: 15px; color: var(--text-secondary);">点击"新建作业"按钮，填写作业信息</p>
+                <div style="width: 60px; height: 60px; background: var(--yt-red); color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 24px; font-weight: 600; margin: 0 auto 16px;">1</div>
+                <h3 style="font-size: 18px; font-weight: 600; margin-bottom: 8px;">Create Assignment</h3>
+                <p style="font-size: 15px; color: var(--text-secondary);">Click "New Assignment" button and fill in the details</p>
             </div>
             <div style="text-align: center;">
-                <div style="width: 60px; height: 60px; background: var(--primary-color); color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 24px; font-weight: 600; margin: 0 auto 16px;">2</div>
-                <h3 style="font-size: 18px; font-weight: 600; margin-bottom: 8px;">上传文件</h3>
-                <p style="font-size: 15px; color: var(--text-secondary);">上传代码文件或提供GitHub链接</p>
+                <div style="width: 60px; height: 60px; background: var(--yt-red); color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 24px; font-weight: 600; margin: 0 auto 16px;">2</div>
+                <h3 style="font-size: 18px; font-weight: 600; margin-bottom: 8px;">Upload Files</h3>
+                <p style="font-size: 15px; color: var(--text-secondary);">Upload code files or provide GitHub link</p>
             </div>
             <div style="text-align: center;">
-                <div style="width: 60px; height: 60px; background: var(--primary-color); color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 24px; font-weight: 600; margin: 0 auto 16px;">3</div>
-                <h3 style="font-size: 18px; font-weight: 600; margin-bottom: 8px;">等待评分</h3>
-                <p style="font-size: 15px; color: var(--text-secondary);">老师批改后会显示成绩和反馈</p>
+                <div style="width: 60px; height: 60px; background: var(--yt-red); color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 24px; font-weight: 600; margin: 0 auto 16px;">3</div>
+                <h3 style="font-size: 18px; font-weight: 600; margin-bottom: 8px;">Wait for Grading</h3>
+                <p style="font-size: 15px; color: var(--text-secondary);">Teacher will grade and provide feedback</p>
             </div>
         </div>
     </section>
 
-    <!-- 页脚 -->
+    <!-- Footer -->
     <footer class="footer">
         <div class="container">
             <p>&copy; 2026 Team Space. All rights reserved.</p>
         </div>
     </footer>
 
-    <!-- 编辑模态框 -->
+    <!-- Edit Modal -->
     <div class="modal" id="editModal">
         <div class="modal-content">
             <div class="modal-header">
-                <h3 class="modal-title">编辑内容</h3>
+                <h3 class="modal-title">Edit Content</h3>
                 <button class="modal-close" onclick="closeModal('editModal')">&times;</button>
             </div>
             <form id="editForm" onsubmit="saveEdit(event)">
                 <input type="hidden" id="editField" name="field">
                 <div class="form-group">
-                    <label class="form-label">内容</label>
+                    <label class="form-label">Content</label>
                     <textarea class="form-textarea" id="editContent" name="content" rows="6"></textarea>
                 </div>
                 <div style="display: flex; gap: 12px; justify-content: flex-end;">
-                    <button type="button" class="btn btn-secondary" onclick="closeModal('editModal')">取消</button>
-                    <button type="submit" class="btn btn-primary">保存</button>
+                    <button type="button" class="btn btn-secondary" onclick="closeModal('editModal')">Cancel</button>
+                    <button type="submit" class="btn btn-primary">Save</button>
                 </div>
             </form>
         </div>
     </div>
 
-    <!-- 添加作业模态框 -->
+    <!-- Add Assignment Modal -->
     <div class="modal" id="addAssignmentModal">
         <div class="modal-content" style="max-width: 700px;">
             <div class="modal-header">
-                <h3 class="modal-title">新建作业</h3>
+                <h3 class="modal-title">New Assignment</h3>
                 <button class="modal-close" onclick="closeModal('addAssignmentModal')">&times;</button>
             </div>
             <form id="addAssignmentForm" onsubmit="saveNewAssignment(event)">
                 <div class="form-group">
-                    <label class="form-label">作业标题</label>
-                    <input type="text" class="form-input" id="assignmentTitleInput" required placeholder="例如：第一次编程作业">
+                    <label class="form-label">Assignment Title</label>
+                    <input type="text" class="form-input" id="assignmentTitleInput" required placeholder="e.g., First Programming Assignment">
                 </div>
                 <div class="form-group">
-                    <label class="form-label">作业描述</label>
-                    <textarea class="form-textarea" id="assignmentDescInput" rows="4" required placeholder="请详细描述作业要求..."></textarea>
+                    <label class="form-label">Description</label>
+                    <textarea class="form-textarea" id="assignmentDescInput" rows="4" required placeholder="Please describe the assignment requirements in detail..."></textarea>
                 </div>
                 <div class="form-group">
                     <label class="form-label">截止日期</label>
                     <input type="date" class="form-input" id="assignmentDeadlineInput" required>
                 </div>
                 <div class="form-group">
-                    <label class="form-label">提交人</label>
+                    <label class="form-label">Submitter</label>
                     <select class="form-select" id="assignmentSubmitterInput" required>
-                        <option value="">选择成员</option>
-                        <option value="全体成员">👥 全体成员</option>
-                        <option value="汪成乐">汪成乐</option>
-                        <option value="陈康文">陈康文</option>
-                        <option value="吴昌宏">吴昌宏</option>
-                        <option value="刘谢翰">刘谢翰</option>
-                        <option value="朱奕鸿">朱奕鸿</option>
-                        <option value="许可">许可</option>
-                        <option value="葛宸菲">葛宸菲</option>
+                        <option value="">Select member</option>
+                        <option value="全体成员">👥 All Members</option>
+                        <option value="Wang Chengle">Wang Chengle</option>
+                        <option value="Chen Kangwen">Chen Kangwen</option>
+                        <option value="Wu Changhong">Wu Changhong</option>
+                        <option value="Liu Xiehan">Liu Xiehan</option>
+                        <option value="Zhu Yihong">Zhu Yihong</option>
+                        <option value="Xu Ke">Xu Ke</option>
+                        <option value="Ge Chenfei">Ge Chenfei</option>
                     </select>
                 </div>
                 <div style="display: flex; gap: 12px; justify-content: flex-end;">
-                    <button type="button" class="btn btn-secondary" onclick="closeModal('addAssignmentModal')">取消</button>
-                    <button type="submit" class="btn btn-primary">创建</button>
+                    <button type="button" class="btn btn-secondary" onclick="closeModal('addAssignmentModal')">Cancel</button>
+                    <button type="submit" class="btn btn-primary">Create</button>
                 </div>
             </form>
         </div>
     </div>
 
-    <!-- 提交作业模态框 -->
+    <!-- Submit Assignment Modal -->
     <div class="modal" id="submitAssignmentModal">
         <div class="modal-content" style="max-width: 700px;">
             <div class="modal-header">
-                <h3 class="modal-title">提交作业</h3>
+                <h3 class="modal-title">Submit Assignment</h3>
                 <button class="modal-close" onclick="closeModal('submitAssignmentModal')">&times;</button>
             </div>
             <form id="submitAssignmentForm" onsubmit="handleSubmitAssignment(event)">
@@ -163,146 +163,146 @@
                          ondrop="handleDrop(event)"
                          onclick="document.getElementById('fileInput').click()">
                         <div style="font-size: 48px; margin-bottom: 12px;">📁</div>
-                        <p style="font-size: 16px; color: var(--text-primary); margin-bottom: 8px; font-weight: 500;">点击或拖拽文件到此处</p>
-                        <p style="font-size: 13px; color: var(--text-secondary);">支持 PPT、PDF、Word、视频等各类文件</p>
+                        <p style="font-size: 16px; color: var(--text-primary); margin-bottom: 8px; font-weight: 500;">Click or drag files here</p>
+                        <p style="font-size: 13px; color: var(--text-secondary);">Supports PPT, PDF, Word, Video and other file types</p>
                         <input type="file" id="fileInput" style="display: none;" multiple onchange="handleFileSelect(event)">
                     </div>
                 </div>
                 <div id="selectedFiles" style="margin-bottom: 20px;"></div>
                 <div class="form-group">
-                    <label class="form-label">备注（可选）</label>
-                    <textarea class="form-textarea" id="submissionNote" rows="3" placeholder="添加任何需要说明的内容..."></textarea>
+                    <label class="form-label">Note (Optional)</label>
+                    <textarea class="form-textarea" id="submissionNote" rows="3" placeholder="Add any notes or comments..."></textarea>
                 </div>
                 <div style="background: #f0f9ff; border-left: 4px solid var(--primary-color); padding: 16px; border-radius: 8px; margin-bottom: 20px;">
                     <p style="font-size: 14px; color: var(--text-primary); margin: 0;">
-                        <strong>💡 提示：</strong>文件将自动同步到您的 GitHub 仓库
+                        <strong>💡 Tip:</strong> Files will be automatically synced to your GitHub repository
                     </p>
                 </div>
                 <div style="display: flex; gap: 12px; justify-content: flex-end;">
-                    <button type="button" class="btn btn-secondary" onclick="closeModal('submitAssignmentModal')">取消</button>
-                    <button type="submit" class="btn btn-primary">提交到 GitHub</button>
+                    <button type="button" class="btn btn-secondary" onclick="closeModal('submitAssignmentModal')">Cancel</button>
+                    <button type="submit" class="btn btn-primary">Submit to GitHub</button>
                 </div>
             </form>
         </div>
     </div>
 
-    <!-- GitHub 配置模态框 -->
+    <!-- GitHub Config Modal -->
     <div class="modal" id="githubConfigModal">
         <div class="modal-content">
             <div class="modal-header">
-                <h3 class="modal-title">GitHub 配置</h3>
+                <h3 class="modal-title">GitHub Configuration</h3>
                 <button class="modal-close" onclick="closeModal('githubConfigModal')">&times;</button>
             </div>
             <form id="githubConfigForm" onsubmit="saveGithubConfig(event)">
                 <div class="form-group">
-                    <label class="form-label">GitHub 用户名</label>
-                    <input type="text" class="form-input" id="githubUsername" required placeholder="例如：your-username">
+                    <label class="form-label">GitHub Username</label>
+                    <input type="text" class="form-input" id="githubUsername" required placeholder="e.g., your-username">
                 </div>
                 <div class="form-group">
-                    <label class="form-label">仓库名称</label>
-                    <input type="text" class="form-input" id="githubRepo" required placeholder="例如：team-assignments">
+                    <label class="form-label">Repository Name</label>
+                    <input type="text" class="form-input" id="githubRepo" required placeholder="e.g., team-assignments">
                 </div>
                 <div class="form-group">
                     <label class="form-label">Personal Access Token</label>
                     <input type="password" class="form-input" id="githubToken" required placeholder="ghp_xxxxxxxxxxxx">
                     <p style="font-size: 12px; color: var(--text-secondary); margin-top: 6px;">
-                        需要在 GitHub Settings > Developer settings > Personal access tokens 中生成
+                        Generate in GitHub Settings > Developer settings > Personal access tokens
                     </p>
                 </div>
                 <div class="form-group">
-                    <label class="form-label">分支名称</label>
+                    <label class="form-label">Branch Name</label>
                     <input type="text" class="form-input" id="githubBranch" value="main" placeholder="main">
                 </div>
                 <div style="display: flex; gap: 12px; justify-content: flex-end;">
-                    <button type="button" class="btn btn-secondary" onclick="closeModal('githubConfigModal')">取消</button>
-                    <button type="button" class="btn btn-secondary" onclick="testGithubConnection()">🔍 测试连接</button>
-                    <button type="submit" class="btn btn-primary">保存配置</button>
+                    <button type="button" class="btn btn-secondary" onclick="closeModal('githubConfigModal')">Cancel</button>
+                    <button type="button" class="btn btn-secondary" onclick="testGithubConnection()">🔍 Test Connection</button>
+                    <button type="submit" class="btn btn-primary">Save Configuration</button>
                 </div>
             </form>
         </div>
     </div>
 
-    <!-- 编辑作业模态框 -->
+    <!-- Edit Assignment Modal -->
     <div class="modal" id="editAssignmentModal">
         <div class="modal-content" style="max-width: 700px;">
             <div class="modal-header">
-                <h3 class="modal-title">编辑作业</h3>
+                <h3 class="modal-title">Edit Assignment</h3>
                 <button class="modal-close" onclick="closeModal('editAssignmentModal')">&times;</button>
             </div>
             <form id="editAssignmentForm" onsubmit="saveEditAssignment(event)">
                 <input type="hidden" id="editAssignmentId">
                 <div class="form-group">
-                    <label class="form-label">作业标题</label>
+                    <label class="form-label">Title</label>
                     <input type="text" class="form-input" id="editAssignmentTitle" required>
                 </div>
                 <div class="form-group">
-                    <label class="form-label">作业描述</label>
+                    <label class="form-label">Description</label>
                     <textarea class="form-textarea" id="editAssignmentDesc" rows="4" required></textarea>
                 </div>
                 <div class="form-group">
-                    <label class="form-label">截止日期</label>
+                    <label class="form-label">Deadline</label>
                     <input type="date" class="form-input" id="editAssignmentDeadline" required>
                 </div>
                 <div class="form-group">
-                    <label class="form-label">提交人</label>
+                    <label class="form-label">Submitter</label>
                     <select class="form-select" id="editAssignmentSubmitter" required>
-                        <option value="">选择成员</option>
-                        <option value="全体成员">👥 全体成员</option>
-                        <option value="汪成乐">汪成乐</option>
-                        <option value="陈康文">陈康文</option>
-                        <option value="吴昌宏">吴昌宏</option>
-                        <option value="刘谢翰">刘谢翰</option>
-                        <option value="朱奕鸿">朱奕鸿</option>
-                        <option value="许可">许可</option>
-                        <option value="葛宸菲">葛宸菲</option>
+                        <option value="">Select member</option>
+                        <option value="全体成员">👥 All Members</option>
+                        <option value="Wang Chengle">Wang Chengle</option>
+                        <option value="Chen Kangwen">Chen Kangwen</option>
+                        <option value="Wu Changhong">Wu Changhong</option>
+                        <option value="Liu Xiehan">Liu Xiehan</option>
+                        <option value="Zhu Yihong">Zhu Yihong</option>
+                        <option value="Xu Ke">Xu Ke</option>
+                        <option value="Ge Chenfei">Ge Chenfei</option>
                     </select>
                 </div>
                 <div style="display: flex; gap: 12px; justify-content: flex-end;">
-                    <button type="button" class="btn btn-secondary" onclick="closeModal('editAssignmentModal')">取消</button>
-                    <button type="submit" class="btn btn-primary">保存修改</button>
+                    <button type="button" class="btn btn-secondary" onclick="closeModal('editAssignmentModal')">Cancel</button>
+                    <button type="submit" class="btn btn-primary">Save Changes</button>
                 </div>
             </form>
         </div>
     </div>
 
-    <!-- 修改作业状态模态框 -->
+    <!-- Update Status Modal -->
     <div class="modal" id="updateStatusModal">
         <div class="modal-content" style="max-width: 500px;">
             <div class="modal-header">
-                <h3 class="modal-title">修改作业状态</h3>
+                <h3 class="modal-title">Update Assignment Status</h3>
                 <button class="modal-close" onclick="closeModal('updateStatusModal')">&times;</button>
             </div>
             <form id="updateStatusForm" onsubmit="saveUpdateStatus(event)">
                 <input type="hidden" id="statusAssignmentId">
                 <div class="form-group">
-                    <label class="form-label">当前状态</label>
+                    <label class="form-label">Current Status</label>
                     <div id="currentStatusDisplay" style="padding: 12px; background: var(--bg-secondary); border-radius: 8px; font-size: 15px;"></div>
                 </div>
                 <div class="form-group">
-                    <label class="form-label">新状态</label>
+                    <label class="form-label">New Status</label>
                     <select class="form-select" id="newStatusSelect" required>
-                        <option value="pending">⏳ 待提交 - 作业已创建，等待学生提交</option>
-                        <option value="submitted">📤 已提交 - 学生已提交，等待老师批改</option>
-                        <option value="grading">🔍 待批改 - 老师正在批改中</option>
-                        <option value="needs_revision">✏️ 需修改 - 需要学生根据评语修改后重新提交</option>
-                        <option value="graded">✅ 已批改 - 老师已完成批改</option>
-                        <option value="excellent">🌟 优秀 - 优秀作业，值得表扬</option>
+                        <option value="pending">⏳ Pending - Assignment created, waiting for submission</option>
+                        <option value="submitted">📤 Submitted - Student submitted, waiting for grading</option>
+                        <option value="grading">🔍 Grading - Teacher is grading</option>
+                        <option value="needs_revision">✏️ Needs Revision - Student needs to revise and resubmit</option>
+                        <option value="graded">✅ Graded - Teacher completed grading</option>
+                        <option value="excellent">🌟 Excellent - Outstanding work</option>
                     </select>
                     <p style="font-size: 12px; color: var(--text-secondary); margin-top: 6px;">
-                        💡 提示：从“已批改”改为“需修改”时，系统会自动提示学生重新提交
+                        💡 Tip: When changing from "Graded" to "Needs Revision", the system will automatically prompt student to resubmit
                     </p>
                 </div>
                 <div class="form-group">
-                    <label class="form-label">成绩（可选）</label>
-                    <input type="text" class="form-input" id="gradeInput" placeholder="例如：95/100 或 A+">
+                    <label class="form-label">Grade (Optional)</label>
+                    <input type="text" class="form-input" id="gradeInput" placeholder="e.g., 95/100 or A+">
                 </div>
                 <div class="form-group">
-                    <label class="form-label">评语（可选）</label>
-                    <textarea class="form-textarea" id="feedbackInput" rows="3" placeholder="添加评语或反馈..."></textarea>
+                    <label class="form-label">Feedback (Optional)</label>
+                    <textarea class="form-textarea" id="feedbackInput" rows="3" placeholder="Add feedback or comments..."></textarea>
                 </div>
                 <div style="display: flex; gap: 12px; justify-content: flex-end;">
-                    <button type="button" class="btn btn-secondary" onclick="closeModal('updateStatusModal')">取消</button>
-                    <button type="submit" class="btn btn-primary">更新状态</button>
+                    <button type="button" class="btn btn-secondary" onclick="closeModal('updateStatusModal')">Cancel</button>
+                    <button type="submit" class="btn btn-primary">Update Status</button>
                 </div>
             </form>
         </div>

@@ -1,14 +1,14 @@
-// Team Space - 主要功能脚本
+// Team Space - Main Functionality Script
 
-// 页面加载完成后初始化
+// Initialize after page load
 document.addEventListener('DOMContentLoaded', function() {
     initializePage();
     loadSavedData();
 });
 
-// 初始化页面
+// Initialize page
 function initializePage() {
-    // 添加淡入动画
+    // Add fade-in animation
     const elements = document.querySelectorAll('.feature-card, .member-card, .assignment-item, .project-card, .exercise-card');
     elements.forEach((el, index) => {
         el.style.opacity = '0';
@@ -16,14 +16,14 @@ function initializePage() {
     });
 }
 
-// 从 localStorage 加载保存的数据
+// Load saved data from localStorage
 function loadSavedData() {
     const editableElements = document.querySelectorAll('[data-field]');
     editableElements.forEach(element => {
         const field = element.getAttribute('data-field');
         const savedContent = localStorage.getItem(field);
         if (savedContent) {
-            // 保留编辑按钮，只更新文本内容
+            // Keep edit button, only update text content
             const editBtn = element.querySelector('.edit-btn');
             if (editBtn) {
                 element.innerHTML = savedContent + editBtn.outerHTML;
@@ -34,20 +34,20 @@ function loadSavedData() {
     });
 }
 
-// 打开编辑模态框
+// Open edit modal
 function openEditModal(field) {
     const modal = document.getElementById('editModal');
     const fieldInput = document.getElementById('editField');
     const contentInput = document.getElementById('editContent');
     
-    // 获取当前内容
+    // Get current content
     const element = document.querySelector(`[data-field="${field}"]`);
     if (element) {
         const editBtn = element.querySelector('.edit-btn');
         let currentContent = '';
         
         if (editBtn) {
-            // 获取不包含编辑按钮的文本内容
+            // Get text content without edit button
             const clone = element.cloneNode(true);
             const btn = clone.querySelector('.edit-btn');
             if (btn) btn.remove();
@@ -62,23 +62,31 @@ function openEditModal(field) {
     }
 }
 
-// 关闭模态框
+// Generic open modal function
+function openModal(modalId) {
+    const modal = document.getElementById(modalId);
+    if (modal) {
+        modal.classList.add('active');
+    }
+}
+
+// Close modal
 function closeModal(modalId) {
     const modal = document.getElementById(modalId);
     modal.classList.remove('active');
 }
 
-// 保存编辑内容
+// Save edited content
 function saveEdit(event) {
     event.preventDefault();
     
     const field = document.getElementById('editField').value;
     const content = document.getElementById('editContent').value;
     
-    // 保存到 localStorage
+    // Save to localStorage
     localStorage.setItem(field, content);
     
-    // 更新页面显示
+    // Update page display
     const element = document.querySelector(`[data-field="${field}"]`);
     if (element) {
         const editBtn = element.querySelector('.edit-btn');
@@ -89,20 +97,20 @@ function saveEdit(event) {
         }
     }
     
-    // 关闭模态框
+    // Close modal
     closeModal('editModal');
     
-    // 显示成功提示
-    showNotification('保存成功！', 'success');
+    // Show success notification
+    showNotification('Saved successfully!', 'success');
 }
 
-// 打开添加成员模态框
+// Open add member modal
 function openAddMemberModal() {
     const modal = document.getElementById('addMemberModal');
     modal.classList.add('active');
 }
 
-// 保存新成员
+// Save new member
 function saveNewMember(event) {
     event.preventDefault();
     
@@ -111,9 +119,9 @@ function saveNewMember(event) {
     const bio = document.getElementById('memberBio').value;
     const avatar = document.getElementById('memberAvatar').value;
     
-    // 创建新成员卡片
+    // Create new member card
     const teamGrid = document.getElementById('teamGrid');
-    const memberId = Date.now(); // 使用时间戳作为唯一ID
+    const memberId = Date.now(); // Use timestamp as unique ID
     
     const memberCard = document.createElement('div');
     memberCard.className = 'member-card';
@@ -129,31 +137,32 @@ function saveNewMember(event) {
     
     teamGrid.appendChild(memberCard);
     
-    // 保存到 localStorage
-    const members = JSON.parse(localStorage.getItem('teamMembers') || '[]');
-    members.push({
-        id: memberId,
+    // Save to localStorage (using object format to match initialization)
+    const members = JSON.parse(localStorage.getItem('teamMembers') || '{}');
+    const newId = Object.keys(members).length + 1;
+    members[newId] = {
         name: name,
         role: role,
         bio: bio,
-        avatar: avatar
-    });
+        avatar: avatar,
+        avatarType: 'emoji'
+    };
     localStorage.setItem('teamMembers', JSON.stringify(members));
     
-    // 关闭模态框并重置表单
+    // Close modal and reset form
     closeModal('addMemberModal');
     document.getElementById('addMemberForm').reset();
     
-    showNotification('成员添加成功！', 'success');
+    showNotification('Member added successfully!', 'success');
 }
 
-// 打开添加作业模态框
+// Open add assignment modal
 function openAddAssignmentModal() {
     const modal = document.getElementById('addAssignmentModal');
     modal.classList.add('active');
 }
 
-// 保存新作业
+// Save new assignment
 function saveNewAssignment(event) {
     event.preventDefault();
     
@@ -162,7 +171,7 @@ function saveNewAssignment(event) {
     const deadline = document.getElementById('assignmentDeadlineInput').value;
     const submitter = document.getElementById('assignmentSubmitterInput').value;
     
-    // 保存到 localStorage
+    // Save to localStorage
     const assignments = JSON.parse(localStorage.getItem('assignments') || '[]');
     const assignId = Date.now();
     
@@ -177,25 +186,25 @@ function saveNewAssignment(event) {
     });
     localStorage.setItem('assignments', JSON.stringify(assignments));
     
-    // 关闭模态框并重置表单
+    // Close modal and reset form
     closeModal('addAssignmentModal');
     document.getElementById('addAssignmentForm').reset();
     
-    showNotification('作业创建成功！', 'success');
+    showNotification('Assignment created successfully!', 'success');
     
-    // 刷新作业列表
+    // Refresh assignment list
     if (window.location.pathname.includes('assignments.html')) {
         loadAssignments();
     }
 }
 
-// 打开添加项目模态框
+// Open add project modal
 function openAddProjectModal() {
     const modal = document.getElementById('addProjectModal');
     modal.classList.add('active');
 }
 
-// 保存新项目
+// Save new project
 function saveNewProject(event) {
     event.preventDefault();
     
@@ -205,10 +214,10 @@ function saveNewProject(event) {
     const demoLink = document.getElementById('projectDemoInput').value;
     const githubLink = document.getElementById('projectGithubInput').value;
     
-    // 解析标签
+    // Parse tags
     const tags = tagsStr.split(',').map(tag => tag.trim()).filter(tag => tag);
     
-    // 创建新项目卡片
+    // Create new project card
     const projectShowcase = document.getElementById('projectShowcase');
     const projectId = Date.now();
     
@@ -226,7 +235,7 @@ function saveNewProject(event) {
     const tagsHtml = tags.map(tag => `<span class="tag">${tag}</span>`).join('');
     
     const buttonsHtml = `
-        ${demoLink ? `<a href="${demoLink}" class="btn btn-primary btn-small" target="_blank">查看演示</a>` : ''}
+        ${demoLink ? `<a href="${demoLink}" class="btn btn-primary btn-small" target="_blank">View Demo</a>` : ''}
         ${githubLink ? `<a href="${githubLink}" class="btn btn-secondary btn-small" target="_blank">GitHub</a>` : ''}
     `;
     
@@ -244,7 +253,7 @@ function saveNewProject(event) {
     
     projectShowcase.appendChild(projectCard);
     
-    // 保存到 localStorage
+    // Save to localStorage
     const projects = JSON.parse(localStorage.getItem('projects') || '[]');
     projects.push({
         id: projectId,
@@ -256,20 +265,20 @@ function saveNewProject(event) {
     });
     localStorage.setItem('projects', JSON.stringify(projects));
     
-    // 关闭模态框并重置表单
+    // Close modal and reset form
     closeModal('addProjectModal');
     document.getElementById('addProjectForm').reset();
     
-    showNotification('项目创建成功！', 'success');
+    showNotification('Project created successfully!', 'success');
 }
 
-// 打开添加练习模态框
+// Open add exercise modal
 function openAddExerciseModal() {
     const modal = document.getElementById('addExerciseModal');
     modal.classList.add('active');
 }
 
-// 保存新练习
+// Save new exercise
 function saveNewExercise(event) {
     event.preventDefault();
     
@@ -278,10 +287,10 @@ function saveNewExercise(event) {
     const tagsStr = document.getElementById('exerciseTagsInput').value;
     const date = document.getElementById('exerciseDateInput').value;
     
-    // 解析标签
+    // Parse tags
     const tags = tagsStr.split(',').map(tag => tag.trim()).filter(tag => tag);
     
-    // 创建新练习卡片
+    // Create new exercise card
     const exerciseGrid = document.getElementById('exerciseGrid');
     const exerciseId = Date.now();
     
@@ -294,16 +303,16 @@ function saveNewExercise(event) {
         <h3 class="exercise-title">${title}</h3>
         <p class="exercise-content">${content}</p>
         <div style="margin-top: 16px; display: flex; gap: 8px; flex-wrap: wrap;">${tagsHtml}</div>
-    `;
-    
-    // 插入到最前面
+    };
+        
+    // Insert at the beginning
     if (exerciseGrid.firstChild) {
         exerciseGrid.insertBefore(exerciseCard, exerciseGrid.firstChild);
     } else {
         exerciseGrid.appendChild(exerciseCard);
     }
     
-    // 保存到 localStorage
+    // Save to localStorage
     const exercises = JSON.parse(localStorage.getItem('exercises') || '[]');
     exercises.unshift({
         id: exerciseId,
@@ -314,16 +323,16 @@ function saveNewExercise(event) {
     });
     localStorage.setItem('exercises', JSON.stringify(exercises));
     
-    // 关闭模态框并重置表单
+    // Close modal and reset form
     closeModal('addExerciseModal');
     document.getElementById('addExerciseForm').reset();
     
-    showNotification('练习记录创建成功！', 'success');
+    showNotification('Exercise created successfully!', 'success');
 }
 
-// 显示通知
+// Show notification
 function showNotification(message, type = 'info') {
-    // 创建通知元素
+    // Create notification element
     const notification = document.createElement('div');
     notification.style.cssText = `
         position: fixed;
@@ -343,7 +352,7 @@ function showNotification(message, type = 'info') {
     
     document.body.appendChild(notification);
     
-    // 3秒后自动消失
+    // Auto dismiss after 3 seconds
     setTimeout(() => {
         notification.style.animation = 'slideOut 0.3s ease-out';
         setTimeout(() => {
@@ -352,14 +361,14 @@ function showNotification(message, type = 'info') {
     }, 3000);
 }
 
-// 点击模态框外部关闭
+// Close modal when clicking outside
 document.addEventListener('click', function(event) {
     if (event.target.classList.contains('modal')) {
         event.target.classList.remove('active');
     }
 });
 
-// ESC键关闭模态框
+// Close modal with ESC key
 document.addEventListener('keydown', function(event) {
     if (event.key === 'Escape') {
         const modals = document.querySelectorAll('.modal.active');
@@ -369,7 +378,7 @@ document.addEventListener('keydown', function(event) {
     }
 });
 
-// 添加CSS动画
+// Add CSS animations
 const style = document.createElement('style');
 style.textContent = `
     @keyframes slideIn {
@@ -396,7 +405,7 @@ style.textContent = `
 `;
 document.head.appendChild(style);
 
-// 工具函数：格式化日期
+// Utility function: format date
 function formatDate(date) {
     const d = new Date(date);
     const year = d.getFullYear();
@@ -405,22 +414,22 @@ function formatDate(date) {
     return `${year}-${month}-${day}`;
 }
 
-// 工具函数：生成唯一ID
+// Utility function: generate unique ID
 function generateId() {
     return Date.now().toString(36) + Math.random().toString(36).substr(2);
 }
 
-// ==================== 作业管理功能 ====================
+// ==================== Assignment Management ====================
 
-// 全局变量存储选中的文件
+// Global variable to store selected files
 let selectedFiles = [];
 
-// 打开 GitHub 配置模态框
+// Open GitHub config modal
 function openGithubConfigModal() {
     const modal = document.getElementById('githubConfigModal');
     if (!modal) return;
     
-    // 加载已保存的配置
+    // Load saved configuration
     const config = JSON.parse(localStorage.getItem('githubConfig') || '{}');
     if (config.username) document.getElementById('githubUsername').value = config.username;
     if (config.repo) document.getElementById('githubRepo').value = config.repo;
@@ -430,7 +439,7 @@ function openGithubConfigModal() {
     modal.classList.add('active');
 }
 
-// 保存 GitHub 配置
+// Save GitHub configuration
 function saveGithubConfig(event) {
     event.preventDefault();
     
@@ -443,10 +452,10 @@ function saveGithubConfig(event) {
     
     localStorage.setItem('githubConfig', JSON.stringify(config));
     closeModal('githubConfigModal');
-    showNotification('✅ GitHub 配置已保存！', 'success');
+    showNotification('✅ GitHub configuration saved!', 'success');
 }
 
-// 测试 GitHub 连接
+// Test GitHub connection
 async function testGithubConnection() {
     const username = document.getElementById('githubUsername').value;
     const repo = document.getElementById('githubRepo').value;
@@ -454,14 +463,14 @@ async function testGithubConnection() {
     const branch = document.getElementById('githubBranch').value || 'main';
     
     if (!username || !repo || !token) {
-        showNotification('⚠️ 请先填写所有必填字段', 'error');
+        showNotification('⚠️ Please fill in all required fields', 'error');
         return;
     }
     
-    showNotification('🔍 正在测试连接...', 'info');
+    showNotification('🔍 Testing connection...', 'info');
     
     try {
-        // 测试仓库访问
+        // Test repository access
         const url = `https://api.github.com/repos/${username}/${repo}`;
         const response = await fetch(url, {
             headers: {
@@ -472,19 +481,19 @@ async function testGithubConnection() {
         
         if (!response.ok) {
             if (response.status === 404) {
-                throw new Error('仓库不存在，请检查用户名和仓库名');
+                throw new Error('Repository not found, please check username and repo name');
             } else if (response.status === 401) {
-                throw new Error('Token 无效或已过期');
+                throw new Error('Token is invalid or expired');
             } else if (response.status === 403) {
-                throw new Error('没有访问此仓库的权限');
+                throw new Error('No permission to access this repository');
             } else {
-                throw new Error('连接失败: ' + response.statusText);
+                throw new Error('Connection failed: ' + response.statusText);
             }
         }
         
         const repoData = await response.json();
         
-        // 测试分支是否存在
+        // Test if branch exists
         const branchUrl = `https://api.github.com/repos/${username}/${repo}/branches/${branch}`;
         const branchResponse = await fetch(branchUrl, {
             headers: {
@@ -494,17 +503,17 @@ async function testGithubConnection() {
         });
         
         if (!branchResponse.ok) {
-            throw new Error(`分支 '${branch}' 不存在`);
+            throw new Error(`Branch '${branch}' does not exist`);
         }
         
-        showNotification(`✅ 连接成功！\n仓库: ${repoData.full_name}\n分支: ${branch}\n文件数: ${repoData.size} KB`, 'success');
+        showNotification(`✅ Connection successful!\nRepository: ${repoData.full_name}\nBranch: ${branch}\nSize: ${repoData.size} KB`, 'success');
     } catch (error) {
-        console.error('连接测试失败:', error);
-        showNotification('❌ 连接失败: ' + error.message, 'error');
+        console.error('Connection test failed:', error);
+        showNotification('❌ Connection failed: ' + error.message, 'error');
     }
 }
 
-// 拖拽事件处理
+// Drag and drop event handling
 function handleDragOver(event) {
     event.preventDefault();
     event.currentTarget.style.borderColor = 'var(--primary-color)';
@@ -595,7 +604,7 @@ function formatFileSize(bytes) {
     return Math.round(bytes / Math.pow(k, i) * 100) / 100 + ' ' + sizes[i];
 }
 
-// 打开提交作业模态框
+// Open submit assignment modal
 function openSubmitAssignmentModal(assignmentId) {
     const modal = document.getElementById('submitAssignmentModal');
     if (!modal) return;
@@ -608,7 +617,7 @@ function openSubmitAssignmentModal(assignmentId) {
     modal.classList.add('active');
 }
 
-// 处理作业提交
+// Handle assignment submission
 async function handleSubmitAssignment(event) {
     event.preventDefault();
     
@@ -616,72 +625,72 @@ async function handleSubmitAssignment(event) {
     const note = document.getElementById('submissionNote').value;
     
     if (selectedFiles.length === 0) {
-        showNotification('请至少选择一个文件！', 'error');
+        showNotification('Please select at least one file!', 'error');
         return;
     }
     
-    // 获取 GitHub 配置
+    // Get GitHub configuration
     const config = JSON.parse(localStorage.getItem('githubConfig') || '{}');
     if (!config.username || !config.repo || !config.token) {
-        showNotification('⚠️ 请先配置 GitHub 信息！', 'error');
+        showNotification('⚠️ Please configure GitHub information first!', 'error');
         setTimeout(() => openGithubConfigModal(), 1500);
         return;
     }
     
-    showNotification('📤 正在上传到 GitHub...', 'info');
+    showNotification('📤 Uploading to GitHub...', 'info');
     
     try {
         let uploadCount = 0;
         const totalFiles = selectedFiles.length;
         
-        // 上传所有文件到 GitHub
+        // Upload all files to GitHub
         for (let i = 0; i < selectedFiles.length; i++) {
             const file = selectedFiles[i];
-            showNotification(`📤 正在上传 ${i + 1}/${totalFiles}: ${file.name}`, 'info');
+            showNotification(`📤 Uploading ${i + 1}/${totalFiles}: ${file.name}`, 'info');
             
             try {
                 await uploadToGithub(file, config, assignmentId);
                 uploadCount++;
             } catch (fileError) {
-                console.error(`文件 ${file.name} 上传失败:`, fileError);
-                throw new Error(`文件 ${file.name} 上传失败: ${fileError.message}`);
+                console.error(`File ${file.name} upload failed:`, fileError);
+                throw new Error(`File ${file.name} upload failed: ${fileError.message}`);
             }
         }
         
-        // 自动更新作业状态为"已提交"
+        // Automatically update assignment status to "submitted"
         updateAssignmentStatus(assignmentId, 'submitted', note);
+                
+        // Add status history record
+        addStatusHistory(assignmentId, 'submitted', `Student submitted assignment with ${uploadCount} file(s)`);
         
-        // 添加状态历史记录
-        addStatusHistory(assignmentId, 'submitted', `学生提交作业，共${uploadCount}个文件`);
-        
-        // 关闭模态框
+        // Close modal
         closeModal('submitAssignmentModal');
         selectedFiles = [];
         
-        showNotification(`✅ 作业提交成功！${uploadCount}个文件已同步到 GitHub`, 'success');
+        showNotification(`✅ Assignment submitted successfully! ${uploadCount} file(s) synced to GitHub`, 'success');
         
-        // 刷新作业列表
+        // Refresh assignment list
         loadAssignments();
     } catch (error) {
-        console.error('上传失败:', error);
-        showNotification('❌ 上传失败: ' + error.message, 'error');
+        console.error('Upload failed:', error);
+        showNotification('❌ Upload failed: ' + error.message, 'error');
     }
 }
 
-// 上传文件到 GitHub
+// Upload file to GitHub
 async function uploadToGithub(file, config, assignmentId) {
     const reader = new FileReader();
     
     return new Promise((resolve, reject) => {
         reader.onload = async function(e) {
             try {
-                const content = e.target.result.split(',')[1]; // 获取 Base64 内容
+                const content = e.target.result.split(',')[1]; // Get Base64 content
                 const path = `assignments/${assignmentId}/${file.name}`;
                 
                 // GitHub API URL
                 const url = `https://api.github.com/repos/${config.username}/${config.repo}/contents/${path}`;
                 
-                // 检查文件是否已存在
+                // Check if file already exists
                 let sha = null;
                 try {
                     const checkResponse = await fetch(url, {
@@ -694,14 +703,14 @@ async function uploadToGithub(file, config, assignmentId) {
                     if (checkResponse.ok) {
                         const existingFile = await checkResponse.json();
                         sha = existingFile.sha;
-                        console.log(`文件已存在，将更新: ${file.name}`);
+                        console.log(`File already exists, will update: ${file.name}`);
                     }
                 } catch (e) {
-                    // 文件不存在，继续上传
-                    console.log(`新文件上传: ${file.name}`);
+                    // File does not exist, continue upload
+                    console.log(`New file upload: ${file.name}`);
                 }
                 
-                // 上传或更新文件
+                // Upload or update file
                 const response = await fetch(url, {
                     method: 'PUT',
                     headers: {
@@ -719,39 +728,39 @@ async function uploadToGithub(file, config, assignmentId) {
                 
                 if (!response.ok) {
                     const errorData = await response.json();
-                    const errorMsg = errorData.message || '上传失败';
+                    const errorMsg = errorData.message || 'Upload failed';
                     
-                    // 提供更详细的错误信息
+                    // Provide more detailed error information
                     if (response.status === 404) {
-                        throw new Error('仓库不存在或没有访问权限');
+                        throw new Error('Repository not found or no access permission');
                     } else if (response.status === 403) {
-                        throw new Error('Token 无效或权限不足');
+                        throw new Error('Token is invalid or insufficient permissions');
                     } else if (response.status === 422) {
-                        throw new Error('文件格式错误或太大（最大 25MB）');
+                        throw new Error('Invalid file format or too large (max 25MB)');
                     } else {
                         throw new Error(errorMsg);
                     }
                 }
                 
                 const result = await response.json();
-                console.log(`✅ 文件上传成功: ${file.name}`, result.content.html_url);
+                console.log(`✅ File uploaded successfully: ${file.name}`, result.content.html_url);
                 resolve(result);
             } catch (error) {
-                console.error('❌ 上传错误:', error);
+                console.error('❌ Upload error:', error);
                 reject(error);
             }
         };
         
         reader.onerror = () => {
-            console.error('文件读取失败');
-            reject(new Error('文件读取失败'));
+            console.error('File read failed');
+            reject(new Error('File read failed'));
         };
         
         reader.readAsDataURL(file);
     });
 }
 
-// 更新作业状态
+// Update assignment status
 function updateAssignmentStatus(assignmentId, status, note = '') {
     const assignments = JSON.parse(localStorage.getItem('assignments') || '[]');
     const assignment = assignments.find(a => a.id == assignmentId);
@@ -761,19 +770,19 @@ function updateAssignmentStatus(assignmentId, status, note = '') {
         assignment.status = status;
         assignment.submittedAt = new Date().toISOString();
         
-        // 如果有备注，保存备注
+        // Save note if provided
         if (note) {
             assignment.submissionNote = note;
         }
         
         localStorage.setItem('assignments', JSON.stringify(assignments));
         
-        // 记录状态变更
-        console.log(`作业 ${assignmentId} 状态从 ${oldStatus} 变更为 ${status}`);
+        // Record status change
+        console.log(`Assignment ${assignmentId} status changed from ${oldStatus} to ${status}`);
     }
 }
 
-// 添加状态历史记录
+// Add status history record
 function addStatusHistory(assignmentId, newStatus, action) {
     const assignments = JSON.parse(localStorage.getItem('assignments') || '[]');
     const assignment = assignments.find(a => a.id == assignmentId);
@@ -790,7 +799,7 @@ function addStatusHistory(assignmentId, newStatus, action) {
             operator: getCurrentUser()
         });
         
-        // 只保留最近10条记录
+        // Keep only the last 10 records
         if (assignment.statusHistory.length > 10) {
             assignment.statusHistory = assignment.statusHistory.slice(-10);
         }
@@ -799,13 +808,13 @@ function addStatusHistory(assignmentId, newStatus, action) {
     }
 }
 
-// 获取当前用户（简化版，实际应该从登录系统获取）
+// Get current user (simplified version, should actually get from login system)
 function getCurrentUser() {
-    // 这里可以扩展为从 localStorage 或登录系统获取
-    return '当前用户';
+    // This can be extended to get from localStorage or login system
+    return 'Current User';
 }
 
-// 加载作业列表
+// Load assignment list
 function loadAssignments() {
     const assignmentList = document.getElementById('assignmentList');
     if (!assignmentList) return;
@@ -816,8 +825,8 @@ function loadAssignments() {
         assignmentList.innerHTML = `
             <div id="emptyState" style="text-align: center; padding: 60px 20px; color: var(--text-secondary);">
                 <div style="font-size: 64px; margin-bottom: 20px;">📝</div>
-                <h3 style="font-size: 20px; font-weight: 600; margin-bottom: 8px; color: var(--text-primary);">暂无作业</h3>
-                <p style="font-size: 15px;">点击“新建作业”按钮创建第一个作业</p>
+                <h3 style="font-size: 20px; font-weight: 600; margin-bottom: 8px; color: var(--text-primary);">No assignments yet</h3>
+                <p style="font-size: 15px;">Click "New Assignment" button to create your first assignment</p>
             </div>
         `;
         return;
@@ -834,28 +843,28 @@ function loadAssignments() {
                     <span class="assignment-status ${statusInfo.class}" title="${statusInfo.description}">${statusInfo.text}</span>
                 </div>
                 <div class="assignment-meta">
-                    <span>📅 截止日期: ${assignment.deadline}</span>
-                    <span>👤 提交人: ${assignment.submitter === '全体成员' ? '👥 全体成员' : assignment.submitter}</span>
-                    ${assignment.grade ? `<span>⭐ 成绩: ${assignment.grade}</span>` : ''}
+                    <span>📅 Deadline: ${assignment.deadline}</span>
+                    <span>👤 Submitter: ${assignment.submitter === '全体成员' ? '👥 All Members' : assignment.submitter}</span>
+                    ${assignment.grade ? `<span>⭐ Grade: ${assignment.grade}</span>` : ''}
                 </div>
                 <p class="assignment-description">${assignment.description}</p>
                 ${assignment.feedback ? `
                     <div style="margin-top: 12px; padding: 12px; background: #fff9e6; border-left: 4px solid #ffa500; border-radius: 8px;">
                         <p style="font-size: 14px; color: var(--text-primary); margin: 0;">
-                            <strong>💬 评语：</strong>${assignment.feedback}
+                            <strong>💬 Feedback:</strong>${assignment.feedback}
                         </p>
                     </div>
                 ` : ''}
                 ${assignment.statusHistory && assignment.statusHistory.length > 0 ? `
                     <div style="margin-top: 12px; padding: 10px; background: #f5f5f7; border-radius: 8px; font-size: 13px;">
                         <details>
-                            <summary style="cursor: pointer; color: var(--text-secondary); font-weight: 500;">📋 查看状态历史 (${assignment.statusHistory.length})</summary>
+                            <summary style="cursor: pointer; color: var(--text-secondary); font-weight: 500;">📋 View Status History (${assignment.statusHistory.length})</summary>
                             <div style="margin-top: 10px; max-height: 150px; overflow-y: auto;">
                                 ${assignment.statusHistory.slice().reverse().map(h => `
                                     <div style="padding: 6px 0; border-bottom: 1px solid #e0e0e0;">
                                         <span style="color: var(--primary-color);">${getStatusInfo(h.status).text}</span>
                                         <span style="color: var(--text-secondary); margin-left: 8px;">${h.action}</span>
-                                        <span style="color: #999; margin-left: 8px; font-size: 12px;">${new Date(h.timestamp).toLocaleString('zh-CN')}</span>
+                                        <span style="color: #999; margin-left: 8px; font-size: 12px;">${new Date(h.timestamp).toLocaleString('en-US')}</span>
                                     </div>
                                 `).join('')}
                             </div>
@@ -864,11 +873,11 @@ function loadAssignments() {
                 ` : ''}
                 <div style="margin-top: 16px; display: flex; gap: 10px; flex-wrap: wrap;">
                     ${assignment.status !== 'submitted' && assignment.status !== 'grading' && assignment.status !== 'graded' && assignment.status !== 'excellent' ? `
-                        <button class="btn btn-primary btn-small" onclick="openSubmitAssignmentModal('${assignment.id}')">📤 提交作业</button>
+                        <button class="btn btn-primary btn-small" onclick="openSubmitAssignmentModal('${assignment.id}')">📤 Submit Assignment</button>
                     ` : ''}
-                    <button class="btn btn-secondary btn-small" onclick="openUpdateStatusModal('${assignment.id}')">📊 修改状态</button>
-                    <button class="btn btn-secondary btn-small" onclick="openEditAssignmentModal('${assignment.id}')">✏️ 编辑</button>
-                    <button class="btn btn-small" style="background: #ff4444; color: white;" onclick="deleteAssignment('${assignment.id}')">🗑️ 删除</button>
+                    <button class="btn btn-secondary btn-small" onclick="openUpdateStatusModal('${assignment.id}')">📊 Update Status</button>
+                    <button class="btn btn-secondary btn-small" onclick="openEditAssignmentModal('${assignment.id}')">✏️ Edit</button>
+                    <button class="btn btn-small" style="background: #ff4444; color: white;" onclick="deleteAssignment('${assignment.id}')">🗑️ Delete</button>
                     ${(assignment.status === 'submitted' || assignment.status === 'grading' || assignment.status === 'graded' || assignment.status === 'excellent' || assignment.status === 'needs_revision') ? `
                         <a href="https://github.com/${JSON.parse(localStorage.getItem('githubConfig') || '{}').username}/${JSON.parse(localStorage.getItem('githubConfig') || '{}').repo}/tree/main/assignments/${assignment.id}" 
                            target="_blank" 
@@ -884,50 +893,50 @@ function loadAssignments() {
     assignmentList.innerHTML = html;
 }
 
-// 获取状态信息
+// Get status information
 function getStatusInfo(status) {
     const statusMap = {
         'pending': { 
-            text: '⏳ 待提交', 
+            text: '⏳ Pending', 
             class: 'status-pending',
-            description: '作业已创建，等待学生提交'
+            description: 'Assignment created, waiting for student submission'
         },
         'submitted': { 
-            text: '📤 已提交', 
+            text: '📤 Submitted', 
             class: 'status-submitted',
-            description: '学生已提交，等待老师批改'
+            description: 'Student submitted, waiting for teacher grading'
         },
         'grading': { 
-            text: '🔍 待批改', 
+            text: '🔍 Grading', 
             class: 'status-graded',
-            description: '老师正在批改中'
+            description: 'Teacher is grading'
         },
         'needs_revision': { 
-            text: '✏️ 需修改', 
+            text: '✏️ Needs Revision', 
             class: 'status-needs-revision',
-            description: '需要学生根据评语修改后重新提交'
+            description: 'Student needs to revise based on feedback and resubmit'
         },
         'graded': { 
-            text: '✅ 已批改', 
+            text: '✅ Graded', 
             class: 'status-graded',
-            description: '老师已完成批改'
+            description: 'Teacher has completed grading'
         },
         'excellent': { 
-            text: '🌟 优秀', 
+            text: '🌟 Excellent', 
             class: 'status-excellent',
-            description: '优秀作业，值得表扬'
+            description: 'Excellent work, worthy of praise'
         }
     };
     return statusMap[status] || statusMap['pending'];
 }
 
-// 打开编辑作业模态框
+// Open edit assignment modal
 function openEditAssignmentModal(assignmentId) {
     const assignments = JSON.parse(localStorage.getItem('assignments') || '[]');
     const assignment = assignments.find(a => a.id == assignmentId);
     
     if (!assignment) {
-        showNotification('作业不存在！', 'error');
+        showNotification('Assignment not found!', 'error');
         return;
     }
     
@@ -941,7 +950,7 @@ function openEditAssignmentModal(assignmentId) {
     modal.classList.add('active');
 }
 
-// 保存编辑的作业
+// Save edited assignment
 function saveEditAssignment(event) {
     event.preventDefault();
     
@@ -963,14 +972,14 @@ function saveEditAssignment(event) {
         
         localStorage.setItem('assignments', JSON.stringify(assignments));
         closeModal('editAssignmentModal');
-        showNotification('作业更新成功！', 'success');
+        showNotification('Assignment updated successfully!', 'success');
         loadAssignments();
     }
 }
 
-// 删除作业
+// Delete assignment
 async function deleteAssignment(assignmentId) {
-    if (!confirm('确定要删除这个作业吗？此操作将同时删除 GitHub 仓库中的相关文件。')) {
+    if (!confirm('Are you sure you want to delete this assignment? This will also delete related files from GitHub repository.')) {
         return;
     }
     
@@ -978,11 +987,11 @@ async function deleteAssignment(assignmentId) {
     const assignment = assignments.find(a => a.id == assignmentId);
     
     if (!assignment) {
-        showNotification('作业不存在！', 'error');
+        showNotification('Assignment not found!', 'error');
         return;
     }
     
-    // 如果作业已提交，尝试删除 GitHub 上的文件
+    // If assignment is submitted, try to delete files from GitHub
     if (assignment.status === 'submitted' || assignment.status === 'grading' || 
         assignment.status === 'graded' || assignment.status === 'excellent' || 
         assignment.status === 'needs_revision') {
@@ -990,24 +999,24 @@ async function deleteAssignment(assignmentId) {
         const config = JSON.parse(localStorage.getItem('githubConfig') || '{}');
         if (config.username && config.repo && config.token) {
             try {
-                showNotification('正在删除 GitHub 上的文件...', 'info');
+                showNotification('Deleting files from GitHub...', 'info');
                 await deleteAssignmentFromGithub(assignmentId, config);
-                showNotification('✅ GitHub 文件已删除', 'success');
+                showNotification('✅ GitHub files deleted', 'success');
             } catch (error) {
-                console.error('删除 GitHub 文件失败:', error);
-                showNotification('⚠️ 本地作业已删除，但 GitHub 文件删除失败: ' + error.message, 'error');
+                console.error('Failed to delete GitHub files:', error);
+                showNotification('⚠️ Local assignment deleted, but GitHub file deletion failed: ' + error.message, 'error');
             }
         }
     }
     
-    // 从 localStorage 删除作业
+    // Delete assignment from localStorage
     const filtered = assignments.filter(a => a.id != assignmentId);
     localStorage.setItem('assignments', JSON.stringify(filtered));
-    showNotification('🗑️ 作业已删除', 'success');
+    showNotification('🗑️ Assignment deleted', 'success');
     loadAssignments();
 }
 
-// 从 GitHub 删除作业文件
+// Delete assignment files from GitHub
 async function deleteAssignmentFromGithub(assignmentId, config) {
     const basePath = `assignments/${assignmentId}`;
     
@@ -1079,7 +1088,7 @@ function openUpdateStatusModal(assignmentId) {
     const assignment = assignments.find(a => a.id == assignmentId);
     
     if (!assignment) {
-        showNotification('作业不存在！', 'error');
+        showNotification('Assignment not found!', 'error');
         return;
     }
     
@@ -1172,4 +1181,141 @@ if (window.location.pathname.includes('assignments.html')) {
     });
 }
 
-console.log('Team Space 已加载完成！');
+// ===== 工具函数：根据作业提交人员预生成团队成员 =====
+// 已废弃，改用 initializeDefaultMembers
+
+// ===== 初始化默认成员数据 =====
+function initializeDefaultMembers() {
+    console.log('🔧 初始化默认成员数据...');
+    
+    // 检查是否已有成员数据
+    const existingMembers = JSON.parse(localStorage.getItem('teamMembers') || '{}');
+    
+    // 如果已经有成员数据，不覆盖
+    if (Object.keys(existingMembers).length > 0) {
+        console.log('✅ 成员数据已存在，跳过初始化');
+        return;
+    }
+    
+    // 预设的7个成员
+    const defaultMembers = {
+        '1': {
+            name: 'Wang Chengle',
+            role: 'Team Member',
+            avatar: '👨‍💻',
+            avatarType: 'emoji'
+        },
+        '2': {
+            name: 'Chen Kangwen',
+            role: 'Team Member',
+            avatar: '👨‍💻',
+            avatarType: 'emoji'
+        },
+        '3': {
+            name: 'Wu Changhong',
+            role: 'Team Member',
+            avatar: '👨‍💻',
+            avatarType: 'emoji'
+        },
+        '4': {
+            name: 'Liu Xiehan',
+            role: 'Team Member',
+            avatar: '👨‍💻',
+            avatarType: 'emoji'
+        },
+        '5': {
+            name: 'Zhu Yihong',
+            role: 'Team Member',
+            avatar: '👨‍💻',
+            avatarType: 'emoji'
+        },
+        '6': {
+            name: 'Xu Ke',
+            role: 'Team Member',
+            avatar: '👨‍💻',
+            avatarType: 'emoji'
+        },
+        '7': {
+            name: 'Ge Chenfei',
+            role: 'Team Member',
+            avatar: '👩‍💻',
+            avatarType: 'emoji'
+        }
+    };
+    
+    // 保存到 localStorage
+    localStorage.setItem('teamMembers', JSON.stringify(defaultMembers));
+    
+    console.log('✅ Successfully initialized 7 default members');
+    console.log('Member list:', Object.values(defaultMembers).map(m => m.name).join(', '));
+}
+
+// Initialize default members on page load
+if (window.location.pathname.includes('team.html') || window.location.pathname.endsWith('team.html')) {
+    document.addEventListener('DOMContentLoaded', function() {
+        initializeDefaultMembers();
+    });
+}
+
+// Load projects on Final Project page
+if (window.location.pathname.includes('final-project.html')) {
+    document.addEventListener('DOMContentLoaded', function() {
+        loadProjects();
+    });
+}
+
+// Load projects from localStorage
+function loadProjects() {
+    const projectShowcase = document.getElementById('projectShowcase');
+    if (!projectShowcase) return;
+    
+    const projects = JSON.parse(localStorage.getItem('projects') || '[]');
+    
+    if (projects.length === 0) {
+        projectShowcase.innerHTML = `
+            <div style="text-align: center; padding: 60px 20px; color: var(--text-secondary);">
+                <div style="font-size: 64px; margin-bottom: 20px;">🚀</div>
+                <h3 style="font-size: 20px; font-weight: 600; margin-bottom: 8px; color: var(--text-primary);">No projects yet</h3>
+                <p style="font-size: 15px;">Click "New Project" button to create your first project</p>
+            </div>
+        `;
+        return;
+    }
+    
+    let html = '';
+    projects.forEach(project => {
+        const colors = [
+            'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+            'linear-gradient(135deg, #f093fb 0%, #f5576c 100%)',
+            'linear-gradient(135deg, #4facfe 0%, #00f2fe 100%)',
+            'linear-gradient(135deg, #43e97b 0%, #38f9d7 100%)'
+        ];
+        const randomColor = colors[Math.floor(Math.random() * colors.length)];
+        
+        const emojis = ['🚀', '💡', '⚡', '🎯', '🔥', '✨'];
+        const randomEmoji = emojis[Math.floor(Math.random() * emojis.length)];
+        
+        const tagsHtml = project.tags.map(tag => `<span class="tag">${tag}</span>`).join('');
+        
+        const buttonsHtml = `
+            ${project.demoLink ? `<a href="${project.demoLink}" class="btn btn-primary btn-small" target="_blank">View Demo</a>` : ''}
+            ${project.githubLink ? `<a href="${project.githubLink}" class="btn btn-secondary btn-small" target="_blank">GitHub</a>` : ''}
+        `;
+        
+        html += `
+            <div class="project-card">
+                <div class="project-image" style="background: ${randomColor};">${randomEmoji}</div>
+                <div class="project-content">
+                    <h3 class="project-title">${project.name}</h3>
+                    <p class="project-description">${project.description}</p>
+                    <div class="project-tags">${tagsHtml}</div>
+                    <div style="margin-top: 20px; display: flex; gap: 12px;">${buttonsHtml}</div>
+                </div>
+            </div>
+        `;
+    });
+    
+    projectShowcase.innerHTML = html;
+}
+
+console.log('Team Space loaded successfully!');

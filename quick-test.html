@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quick Test</title>
+</head>
+<body>
+    <h1>Quick Function Test</h1>
+    <div id="output"></div>
+    
+    <script>
+        const output = document.getElementById('output');
+        
+        // Test 1: Load script.js
+        const script = document.createElement('script');
+        script.src = 'script.js';
+        script.onload = function() {
+            output.innerHTML += '<p style="color:green">✅ script.js loaded successfully</p>';
+            
+            // Test 2: Check functions
+            const functions = [
+                'openModal',
+                'closeModal',
+                'openAddMemberModal',
+                'saveNewMember',
+                'openAddAssignmentModal',
+                'saveNewAssignment',
+                'openGithubConfigModal',
+                'saveGithubConfig',
+                'openAddProjectModal',
+                'saveNewProject',
+                'handleSubmitAssignment',
+                'uploadToGithub',
+                'initializeDefaultMembers',
+                'loadProjects'
+            ];
+            
+            output.innerHTML += '<h3>Function Check:</h3><ul>';
+            functions.forEach(fn => {
+                const exists = typeof window[fn] === 'function';
+                output.innerHTML += `<li style="color:${exists ? 'green' : 'red'}">${exists ? '✅' : '❌'} ${fn}</li>`;
+            });
+            output.innerHTML += '</ul>';
+            
+            // Test 3: Check localStorage
+            output.innerHTML += '<h3>localStorage Check:</h3>';
+            try {
+                const members = JSON.parse(localStorage.getItem('teamMembers') || '{}');
+                const assignments = JSON.parse(localStorage.getItem('assignments') || '[]');
+                const projects = JSON.parse(localStorage.getItem('projects') || '[]');
+                
+                output.innerHTML += `
+                    <p>Members: ${Object.keys(members).length} items</p>
+                    <p>Assignments: ${assignments.length} items</p>
+                    <p>Projects: ${projects.length} items</p>
+                `;
+            } catch (e) {
+                output.innerHTML += `<p style="color:red">Error: ${e.message}</p>`;
+            }
+        };
+        script.onerror = function() {
+            output.innerHTML += '<p style="color:red">❌ Failed to load script.js</p>';
+        };
+        document.head.appendChild(script);
+    </script>
+</body>
+</html>

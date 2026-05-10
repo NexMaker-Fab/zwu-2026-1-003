@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Member Profile - Team Space</title>
+    <link rel="icon" type="image/svg+xml" href="favicon.svg" id="dynamicFavicon">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <!-- Left Sidebar Navigation -->
+    <nav class="sidebar">
+        <div class="sidebar-header">
+            <div class="logo-icon" id="dynamicLogo">🐱</div>
+        </div>
+        <ul class="sidebar-menu">
+            <li><a href="index.html" title="Home">
+                <span class="menu-icon">🏠</span>
+                <span class="menu-text">Home</span>
+            </a></li>
+            <li><a href="team.html" title="Team">
+                <span class="menu-icon">👥</span>
+                <span class="menu-text">Team</span>
+            </a></li>
+            <li><a href="assignments.html" title="Assignments">
+                <span class="menu-icon">📝</span>
+                <span class="menu-text">Assignments</span>
+            </a></li>
+            <li><a href="final-project.html" title="Projects">
+                <span class="menu-icon">🚀</span>
+                <span class="menu-text">Projects</span>
+            </a></li>
+        </ul>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <!-- Member Profile Section -->
+        <section class="member-profile-section">
+            <div class="container">
+                <button class="btn btn-secondary btn-small" onclick="window.history.back()" style="margin-bottom: 24px;">← Back to Team</button>
+                
+                <div class="profile-card" id="profileCard">
+                    <!-- Profile will be loaded dynamically -->
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Edit Profile Modal -->
+    <div class="modal" id="editProfileModal">
+        <div class="modal-content modal-large">
+            <div class="modal-header">
+                <h3 class="modal-title">Edit Profile</h3>
+                <button class="modal-close" onclick="closeModal('editProfileModal')">&times;</button>
+            </div>
+            <form onsubmit="saveProfileEdit(event)">
+                <input type="hidden" id="editProfileId">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label class="form-label">Name</label>
+                        <input type="text" class="form-input" id="editProfileName" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Role</label>
+                        <input type="text" class="form-input" id="editProfileRole" required>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label class="form-label">Email</label>
+                        <input type="email" class="form-input" id="editProfileEmail" placeholder="example@email.com">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">GitHub</label>
+                        <input type="text" class="form-input" id="editProfileGithub" placeholder="username">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Bio</label>
+                    <textarea class="form-textarea" id="editProfileBio" rows="4" placeholder="Tell us about yourself..."></textarea>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Skills (comma-separated)</label>
+                    <input type="text" class="form-input" id="editProfileSkills" placeholder="e.g., JavaScript, Python, React">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Hobbies (comma-separated)</label>
+                    <input type="text" class="form-input" id="editProfileHobbies" placeholder="e.g., Reading, Gaming, Photography">
+                </div>
+                <div class="modal-actions">
+                    <button type="button" class="btn btn-secondary" onclick="closeModal('editProfileModal')">Cancel</button>
+                    <button type="submit" class="btn btn-primary">Save Changes</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Change Avatar Modal -->
+    <div class="modal" id="changeAvatarModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title">Change Avatar</h3>
+                <button class="modal-close" onclick="closeModal('changeAvatarModal')">&times;</button>
+            </div>
+            <div class="avatar-options">
+                <div class="avatar-option-section">
+                    <h4 style="margin-bottom: 12px; color: var(--text-primary);">Choose Emoji</h4>
+                    <div class="emoji-grid">
+                        <div class="emoji-item" onclick="selectEmoji('👨‍💻')">👨‍💻</div>
+                        <div class="emoji-item" onclick="selectEmoji('👩‍💻')">👩‍💻</div>
+                        <div class="emoji-item" onclick="selectEmoji('🎨')">🎨</div>
+                        <div class="emoji-item" onclick="selectEmoji('📊')">📊</div>
+                        <div class="emoji-item" onclick="selectEmoji('🚀')">🚀</div>
+                        <div class="emoji-item" onclick="selectEmoji('⭐')">⭐</div>
+                        <div class="emoji-item" onclick="selectEmoji('🔥')">🔥</div>
+                        <div class="emoji-item" onclick="selectEmoji('💡')">💡</div>
+                        <div class="emoji-item" onclick="selectEmoji('🎯')">🎯</div>
+                        <div class="emoji-item" onclick="selectEmoji('✨')">✨</div>
+                    </div>
+                </div>
+                <div class="avatar-option-section">
+                    <h4 style="margin-bottom: 12px; color: var(--text-primary);">Or Upload Image</h4>
+                    <input type="file" id="profileAvatarFileInput" accept="image/jpeg,image/png,image/gif" onchange="handleProfileAvatarUpload(event)" style="margin-bottom: 16px;">
+                    <div id="profileAvatarPreviewContainer" style="display: none; text-align: center;">
+                        <img id="profileAvatarPreview" style="width: 150px; height: 150px; border-radius: 50%; object-fit: cover; border: 3px solid var(--accent-color);">
+                    </div>
+                </div>
+            </div>
+            <div class="modal-actions">
+                <button type="button" class="btn btn-secondary" onclick="closeModal('changeAvatarModal')">Cancel</button>
+                <button type="button" class="btn btn-primary" id="confirmProfileAvatarBtn" onclick="confirmProfileAvatarChange()" disabled>Confirm</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>

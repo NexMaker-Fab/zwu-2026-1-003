@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="zh-CN">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>成员简介</title>
+    <title>Member Profile</title>
     <!-- Favicon 将由 JavaScript 动态生成 -->
     <link rel="stylesheet" href="styles.css">
 </head>
@@ -13,9 +13,9 @@
         <div class="nav-container">
             <div class="nav-brand">Team Space</div>
             <ul class="nav-menu">
-                <li><a href="index.html">首页</a></li>
-                <li><a href="team.html" class="active">团队介绍</a></li>
-                <li><a href="assignments.html">作业提交</a></li>
+                <li><a href="index.html">Home</a></li>
+                <li><a href="team.html" class="active">Team</a></li>
+                <li><a href="assignments.html">Assignments</a></li>
                 <li><a href="final-project.html">Final Project</a></li>
             </ul>
         </div>
@@ -25,8 +25,8 @@
     <section class="content-section" style="padding-top: 80px;">
         <div style="max-width: 900px; margin: 0 auto;">
             <!-- 返回按钮 -->
-            <a href="team.html" style="display: inline-flex; align-items: center; gap: 8px; color: var(--primary-color); text-decoration: none; font-size: 16px; margin-bottom: 40px; font-weight: 500;">
-                ← 返回团队列表
+            <a href="team.html" style="display: inline-flex; align-items: center; gap: 8px; color: var(--neon-cyan); text-decoration: none; font-size: 16px; margin-bottom: 40px; font-weight: 500;">
+                ← Back to Team
             </a>
 
             <!-- 成员信息卡片 -->
@@ -37,12 +37,12 @@
                         <div style="width: 200px; height: 200px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); border-radius: 20px; display: flex; align-items: center; justify-content: center; font-size: 100px; cursor: pointer; transition: var(--transition);" 
                              id="memberAvatar"
                              onclick="openAvatarModal()"
-                             title="点击修改头像">
+                             title="Click to change avatar">
                             👨‍💻
                         </div>
                         <button onclick="openAvatarModal()" 
-                                style="position: absolute; bottom: -10px; right: -10px; background: var(--primary-color); color: white; border: none; width: 40px; height: 40px; border-radius: 50%; cursor: pointer; font-size: 18px; box-shadow: 0 2px 8px rgba(0,0,0,0.2); transition: var(--transition);"
-                                title="修改头像">
+                                style="position: absolute; bottom: -10px; right: -10px; background: var(--neon-pink); color: white; border: none; width: 40px; height: 40px; border-radius: 50%; cursor: pointer; font-size: 18px; box-shadow: 0 2px 8px rgba(0,0,0,0.2); transition: var(--transition);"
+                                title="Change Avatar">
                             ✏️
                         </button>
                     </div>
@@ -50,15 +50,15 @@
                     <!-- 基本信息 -->
                     <div>
                         <h1 class="editable" data-field="memberName" style="font-size: 42px; font-weight: 700; margin-bottom: 12px; letter-spacing: -1.5px;">
-                            汪成乐
-                            <button class="edit-btn" onclick="openEditModal('memberName')">编辑</button>
+                            Wang Chengle
+                            <button class="edit-btn" onclick="openEditModal('memberName')">Edit</button>
                         </h1>
-                        <p class="editable" data-field="memberRole" style="font-size: 20px; color: var(--primary-color); font-weight: 500; margin-bottom: 20px;">
-                            团队成员
-                            <button class="edit-btn" onclick="openEditModal('memberRole')">编辑</button>
+                        <p class="editable" data-field="memberRole" style="font-size: 20px; color: var(--neon-pink); font-weight: 500; margin-bottom: 20px;">
+                            Team Member
+                            <button class="edit-btn" onclick="openEditModal('memberRole')">Edit</button>
                         </p>
                         <div style="display: flex; gap: 12px; flex-wrap: wrap;">
-                            <span class="tag">技能标签</span>
+                            <span class="tag">Skills</span>
                         </div>
                     </div>
                 </div>
@@ -66,21 +66,21 @@
 
             <!-- 个人简介 -->
             <div style="margin-bottom: 40px;">
-                <h2 style="font-size: 28px; font-weight: 600; margin-bottom: 20px; letter-spacing: -0.5px;">个人简介</h2>
+                <h2 style="font-size: 28px; font-weight: 600; margin-bottom: 20px; letter-spacing: -0.5px;">About Me</h2>
                 <div class="editable" data-field="memberBio" style="background: var(--bg-secondary); padding: 30px; border-radius: 16px;">
                     <p style="font-size: 17px; line-height: 1.8; color: var(--text-secondary);">
-                        我是一名充满热情的前端开发工程师，拥有5年的Web开发经验。专注于创建优雅、高性能的用户界面，对用户体验有着执着的追求。
+                        I am a passionate front-end developer with 5 years of web development experience. Focused on creating elegant, high-performance user interfaces with a dedication to user experience.
                     </p>
                     <p style="font-size: 17px; line-height: 1.8; color: var(--text-secondary); margin-top: 16px;">
-                        在工作中，我善于将复杂的需求转化为简洁直观的界面设计。热爱学习新技术，积极参与开源社区，相信技术可以改变世界。
+                        I excel at transforming complex requirements into simple and intuitive interface designs. I love learning new technologies and actively participate in the open-source community, believing that technology can change the world.
                     </p>
-                    <button class="edit-btn" onclick="openEditModal('memberBio')">编辑</button>
+                    <button class="edit-btn" onclick="openEditModal('memberBio')">Edit</button>
                 </div>
             </div>
 
             <!-- 技能专长 -->
             <div style="margin-bottom: 40px;">
-                <h2 style="font-size: 28px; font-weight: 600; margin-bottom: 20px; letter-spacing: -0.5px;">技能专长</h2>
+                <h2 style="font-size: 28px; font-weight: 600; margin-bottom: 20px; letter-spacing: -0.5px;">Skills</h2>
                 <div class="editable" data-field="memberSkills" style="background: var(--bg-secondary); padding: 30px; border-radius: 16px;">
                     <div style="display: grid; gap: 20px;">
                         <div>
@@ -89,7 +89,7 @@
                                 <span style="color: var(--text-secondary);">95%</span>
                             </div>
                             <div style="height: 8px; background: var(--border-color); border-radius: 4px; overflow: hidden;">
-                                <div style="width: 95%; height: 100%; background: var(--primary-color); border-radius: 4px;"></div>
+                                <div style="width: 95%; height: 100%; background: var(--neon-cyan); border-radius: 4px;"></div>
                             </div>
                         </div>
                         <div>
@@ -98,7 +98,7 @@
                                 <span style="color: var(--text-secondary);">90%</span>
                             </div>
                             <div style="height: 8px; background: var(--border-color); border-radius: 4px; overflow: hidden;">
-                                <div style="width: 90%; height: 100%; background: var(--primary-color); border-radius: 4px;"></div>
+                                <div style="width: 90%; height: 100%; background: var(--neon-cyan); border-radius: 4px;"></div>
                             </div>
                         </div>
                         <div>
@@ -107,7 +107,7 @@
                                 <span style="color: var(--text-secondary);">92%</span>
                             </div>
                             <div style="height: 8px; background: var(--border-color); border-radius: 4px; overflow: hidden;">
-                                <div style="width: 92%; height: 100%; background: var(--primary-color); border-radius: 4px;"></div>
+                                <div style="width: 92%; height: 100%; background: var(--neon-cyan); border-radius: 4px;"></div>
                             </div>
                         </div>
                         <div>
@@ -116,55 +116,55 @@
                                 <span style="color: var(--text-secondary);">75%</span>
                             </div>
                             <div style="height: 8px; background: var(--border-color); border-radius: 4px; overflow: hidden;">
-                                <div style="width: 75%; height: 100%; background: var(--primary-color); border-radius: 4px;"></div>
+                                <div style="width: 75%; height: 100%; background: var(--neon-cyan); border-radius: 4px;"></div>
                             </div>
                         </div>
                     </div>
-                    <button class="edit-btn" onclick="openEditModal('memberSkills')">编辑</button>
+                    <button class="edit-btn" onclick="openEditModal('memberSkills')">Edit</button>
                 </div>
             </div>
 
             <!-- 项目经历 -->
             <div style="margin-bottom: 40px;">
-                <h2 style="font-size: 28px; font-weight: 600; margin-bottom: 20px; letter-spacing: -0.5px;">项目经历</h2>
+                <h2 style="font-size: 28px; font-weight: 600; margin-bottom: 20px; letter-spacing: -0.5px;">Projects</h2>
                 <div class="editable" data-field="memberProjects" style="background: var(--bg-secondary); padding: 30px; border-radius: 16px;">
                     <div style="display: grid; gap: 24px;">
                         <div style="padding: 20px; background: var(--bg-primary); border-radius: 12px;">
-                            <h3 style="font-size: 18px; font-weight: 600; margin-bottom: 8px;">电商平台重构</h3>
+                            <h3 style="font-size: 18px; font-weight: 600; margin-bottom: 8px;">E-commerce Platform Refactoring</h3>
                             <p style="font-size: 15px; color: var(--text-secondary); line-height: 1.6;">
-                                负责前端架构升级，使用React重构核心页面，性能提升60%，用户转化率提升25%。
+                                Responsible for front-end architecture upgrade, refactored core pages using React, improved performance by 60%, increased user conversion rate by 25%.
                             </p>
                         </div>
                         <div style="padding: 20px; background: var(--bg-primary); border-radius: 12px;">
-                            <h3 style="font-size: 18px; font-weight: 600; margin-bottom: 8px;">数据可视化大屏</h3>
+                            <h3 style="font-size: 18px; font-weight: 600; margin-bottom: 8px;">Data Visualization Dashboard</h3>
                             <p style="font-size: 15px; color: var(--text-secondary); line-height: 1.6;">
-                                开发实时数据监控系统，集成ECharts实现多维度数据展示，支持千万级数据渲染。
+                                Developed real-time data monitoring system, integrated ECharts for multi-dimensional data display, supporting millions of data rendering.
                             </p>
                         </div>
                     </div>
-                    <button class="edit-btn" onclick="openEditModal('memberProjects')">编辑</button>
+                    <button class="edit-btn" onclick="openEditModal('memberProjects')">Edit</button>
                 </div>
             </div>
 
             <!-- 联系方式 -->
             <div>
-                <h2 style="font-size: 28px; font-weight: 600; margin-bottom: 20px; letter-spacing: -0.5px;">联系方式</h2>
+                <h2 style="font-size: 28px; font-weight: 600; margin-bottom: 20px; letter-spacing: -0.5px;">Contact</h2>
                 <div class="editable" data-field="memberContact" style="background: var(--bg-secondary); padding: 30px; border-radius: 16px;">
                     <div style="display: grid; gap: 16px;">
                         <div style="display: flex; align-items: center; gap: 12px;">
                             <span style="font-size: 20px;">📧</span>
-                            <span style="font-size: 16px;">zhangsan@example.com</span>
+                            <span style="font-size: 16px;">wangchengle@example.com</span>
                         </div>
                         <div style="display: flex; align-items: center; gap: 12px;">
                             <span style="font-size: 20px;">💼</span>
-                            <span style="font-size: 16px;">linkedin.com/in/zhangsan</span>
+                            <span style="font-size: 16px;">linkedin.com/in/wangchengle</span>
                         </div>
                         <div style="display: flex; align-items: center; gap: 12px;">
                             <span style="font-size: 20px;">🐙</span>
-                            <span style="font-size: 16px;">github.com/zhangsan</span>
+                            <span style="font-size: 16px;">github.com/wangchengle</span>
                         </div>
                     </div>
-                    <button class="edit-btn" onclick="openEditModal('memberContact')">编辑</button>
+                    <button class="edit-btn" onclick="openEditModal('memberContact')">Edit</button>
                 </div>
             </div>
         </div>
@@ -181,18 +181,18 @@
     <div class="modal" id="editModal">
         <div class="modal-content">
             <div class="modal-header">
-                <h3 class="modal-title">编辑内容</h3>
+                <h3 class="modal-title">Edit Content</h3>
                 <button class="modal-close" onclick="closeModal('editModal')">&times;</button>
             </div>
             <form id="editForm" onsubmit="saveEdit(event)">
                 <input type="hidden" id="editField" name="field">
                 <div class="form-group">
-                    <label class="form-label">内容</label>
+                    <label class="form-label">Content</label>
                     <textarea class="form-textarea" id="editContent" name="content" rows="8"></textarea>
                 </div>
                 <div style="display: flex; gap: 12px; justify-content: flex-end;">
-                    <button type="button" class="btn btn-secondary" onclick="closeModal('editModal')">取消</button>
-                    <button type="submit" class="btn btn-primary">保存</button>
+                    <button type="button" class="btn btn-secondary" onclick="closeModal('editModal')">Cancel</button>
+                    <button type="submit" class="btn btn-primary">Save</button>
                 </div>
             </form>
         </div>
@@ -202,38 +202,38 @@
     <div class="modal" id="avatarModal">
         <div class="modal-content" style="max-width: 600px;">
             <div class="modal-header">
-                <h3 class="modal-title">上传头像</h3>
+                <h3 class="modal-title">Upload Avatar</h3>
                 <button class="modal-close" onclick="closeModal('avatarModal')">&times;</button>
             </div>
             
-            <!-- 预览区域 -->
+            <!-- Preview Area -->
             <div style="text-align: center; padding: 30px 0;">
                 <div id="avatarPreview" style="width: 150px; height: 150px; margin: 0 auto 20px; border-radius: 20px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); display: flex; align-items: center; justify-content: center; font-size: 80px; overflow: hidden; box-shadow: 0 4px 12px rgba(0,0,0,0.15);">
                     👨‍💻
                 </div>
-                <p style="color: var(--text-secondary); font-size: 14px;">支持 JPG、PNG、GIF 格式，建议尺寸 200x200px</p>
+                <p style="color: var(--text-secondary); font-size: 14px;">Supports JPG, PNG, GIF formats, recommended size 200x200px</p>
             </div>
             
-            <!-- 上传按钮 -->
+            <!-- Upload Button -->
             <div style="text-align: center; margin-bottom: 20px;">
                 <input type="file" id="avatarFileInput" accept="image/*" style="display: none;" onchange="handleAvatarUpload(event)">
                 <button onclick="document.getElementById('avatarFileInput').click()" 
                         class="btn btn-primary" 
                         style="padding: 12px 30px; font-size: 16px;">
-                    📤 选择图片
+                    📤 Select Image
                 </button>
             </div>
             
-            <!-- 操作提示 -->
-            <div style="background: #f5f5f7; padding: 15px; border-radius: 12px; margin-bottom: 20px;">
+            <!-- Tips -->
+            <div style="background: var(--bg-hover); padding: 15px; border-radius: 12px; margin-bottom: 20px;">
                 <p style="font-size: 13px; color: var(--text-secondary); margin: 0; text-align: center;">
-                    💡 提示：图片会自动裁剪为正方形并压缩，确保加载速度
+                    💡 Tip: Images will be automatically cropped to square and compressed for fast loading
                 </p>
             </div>
             
             <div style="display: flex; gap: 12px; justify-content: flex-end;">
-                <button type="button" class="btn btn-secondary" onclick="closeModal('avatarModal')">取消</button>
-                <button type="button" class="btn btn-primary" onclick="confirmAvatarUpload()" id="confirmAvatarBtn" disabled>确认使用</button>
+                <button type="button" class="btn btn-secondary" onclick="closeModal('avatarModal')">Cancel</button>
+                <button type="button" class="btn btn-primary" onclick="confirmAvatarUpload()" id="confirmAvatarBtn" disabled>Confirm</button>
             </div>
         </div>
     </div>
@@ -261,13 +261,13 @@
             
             // 默认成员数据
             const defaultMembers = {
-                '1': { name: '汪成乐', role: '团队成员', avatar: '👨‍💻' },
-                '2': { name: '陈康文', role: '团队成员', avatar: '👨‍💻' },
-                '3': { name: '吴昌宏', role: '团队成员', avatar: '👨‍💻' },
-                '4': { name: '刘谢翰', role: '团队成员', avatar: '👨‍💻' },
-                '5': { name: '朱奕鸿', role: '团队成员', avatar: '👨‍💻' },
-                '6': { name: '许可', role: '团队成员', avatar: '👨‍💻' },
-                '7': { name: '葛宸菲', role: '团队成员', avatar: '👩‍💻' }
+                '1': { name: 'Wang Chengle', role: 'Team Member', avatar: '👨‍💻' },
+                '2': { name: 'Chen Kangwen', role: 'Team Member', avatar: '👨‍💻' },
+                '3': { name: 'Wu Changhong', role: 'Team Member', avatar: '👨‍💻' },
+                '4': { name: 'Liu Xiehan', role: 'Team Member', avatar: '👨‍💻' },
+                '5': { name: 'Zhu Yihong', role: 'Team Member', avatar: '👨‍💻' },
+                '6': { name: 'Xu Ke', role: 'Team Member', avatar: '👨‍💻' },
+                '7': { name: 'Ge Chenfei', role: 'Team Member', avatar: '👩‍💻' }
             };
 
             const member = savedMembers[memberId] || defaultMembers[memberId];
@@ -275,7 +275,7 @@
             if (member) {
                 console.log('👤 成员数据:', member.name, '头像类型:', member.avatarType || 'emoji');
                 
-                document.title = `${member.name} - 成员简介`;
+                document.title = `${member.name} - Member Profile`;
                 document.querySelector('[data-field="memberName"]').childNodes[0].textContent = member.name + ' ';
                 document.querySelector('[data-field="memberRole"]').childNodes[0].textContent = member.role + ' ';
                 
@@ -326,13 +326,13 @@
             
             // 验证文件类型
             if (!file.type.startsWith('image/')) {
-                showNotification('❌ 请选择图片文件！', 'error');
+                showNotification('❌ Please select an image file!', 'error');
                 return;
             }
             
             // 验证文件大小（最大 5MB）
             if (file.size > 5 * 1024 * 1024) {
-                showNotification('❌ 图片大小不能超过 5MB！', 'error');
+                showNotification('❌ Image size cannot exceed 5MB!', 'error');
                 return;
             }
             
@@ -407,7 +407,7 @@
             
             // 关闭模态框
             closeModal('avatarModal');
-            showNotification('✅ 头像已更新！', 'success');
+            showNotification('✅ Avatar updated!', 'success');
             
             // 重置
             uploadedImageData = null;

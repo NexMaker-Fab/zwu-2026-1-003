@@ -1,219 +1,357 @@
 <!DOCTYPE html>
-<html lang="zh-CN">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>团队介绍</title>
+    <title>Team</title>
     <link rel="icon" type="image/svg+xml" href="favicon.svg">
     <link rel="alternate icon" type="image/png" href="favicon.png">
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-    <!-- 导航栏 -->
+    <!-- Navigation Bar -->
     <nav class="navbar">
         <div class="nav-container">
             <div class="nav-brand">Team Space</div>
             <ul class="nav-menu">
-                <li><a href="index.html">首页</a></li>
-                <li><a href="team.html" class="active">团队介绍</a></li>
-                <li><a href="assignments.html">作业提交</a></li>
+                <li><a href="index.html">Home</a></li>
+                <li><a href="team.html" class="active">Team</a></li>
+                <li><a href="assignments.html">Assignments</a></li>
                 <li><a href="final-project.html">Final Project</a></li>
             </ul>
         </div>
     </nav>
 
-    <!-- 页面标题 -->
+    <!-- Page Header -->
     <header class="page-header">
         <h1 class="page-title editable" data-field="teamTitle">
-            我们的团队
-            <button class="edit-btn" onclick="openEditModal('teamTitle')">编辑</button>
+            Our Team
+            <button class="edit-btn" onclick="openEditModal('teamTitle')">Edit</button>
         </h1>
         <p class="page-subtitle editable" data-field="teamSubtitle">
-            一群充满激情和创造力的开发者
-            <button class="edit-btn" onclick="openEditModal('teamSubtitle')">编辑</button>
+            A group of passionate and creative developers
+            <button class="edit-btn" onclick="openEditModal('teamSubtitle')">Edit</button>
         </p>
     </header>
 
-    <!-- 团队介绍内容 -->
+    <!-- Team Description -->
     <section class="content-section">
         <div class="editable" data-field="teamDescription">
             <p style="font-size: 18px; line-height: 1.8; color: var(--text-secondary); text-align: center; max-width: 800px; margin: 0 auto;">
-                我们是一支充满活力和创新精神的团队，致力于通过技术解决实际问题。每个成员都拥有独特的技能和视角，共同推动项目的成功。
+                We are a dynamic and innovative team dedicated to solving real-world problems through technology. Each member brings unique skills and perspectives, driving the success of our projects together.
             </p>
-            <button class="edit-btn" onclick="openEditModal('teamDescription')">编辑</button>
+            <button class="edit-btn" onclick="openEditModal('teamDescription')">Edit</button>
         </div>
     </section>
 
-    <!-- 团队成员 -->
+    <!-- Team Members -->
     <section class="content-section">
-        <h2 style="font-size: 36px; font-weight: 600; text-align: center; margin-bottom: 20px; letter-spacing: -1px;">团队成员</h2>
-        
-        <div class="team-grid" id="teamGrid">
-            <!-- 成员卡片 1 -->
-            <div class="member-card" onclick="window.location.href='member.html?id=1'">
-                <div class="member-avatar">👨‍💻</div>
-                <div class="member-info">
-                    <h3 class="member-name">汪成乐</h3>
-                    <p class="member-role">团队成员</p>
-                    <p class="member-bio">简介待补充</p>
-                </div>
-            </div>
-
-            <!-- 成员卡片 2 -->
-            <div class="member-card" onclick="window.location.href='member.html?id=2'">
-                <div class="member-avatar">👨‍💻</div>
-                <div class="member-info">
-                    <h3 class="member-name">陈康文</h3>
-                    <p class="member-role">团队成员</p>
-                    <p class="member-bio">简介待补充</p>
-                </div>
-            </div>
-
-            <!-- 成员卡片 3 -->
-            <div class="member-card" onclick="window.location.href='member.html?id=3'">
-                <div class="member-avatar">👨‍💻</div>
-                <div class="member-info">
-                    <h3 class="member-name">吴昌宏</h3>
-                    <p class="member-role">团队成员</p>
-                    <p class="member-bio">简介待补充</p>
-                </div>
-            </div>
-
-            <!-- 成员卡片 4 -->
-            <div class="member-card" onclick="window.location.href='member.html?id=4'">
-                <div class="member-avatar">👨‍💻</div>
-                <div class="member-info">
-                    <h3 class="member-name">刘谢翰</h3>
-                    <p class="member-role">团队成员</p>
-                    <p class="member-bio">简介待补充</p>
-                </div>
-            </div>
-
-            <!-- 成员卡片 5 -->
-            <div class="member-card" onclick="window.location.href='member.html?id=5'">
-                <div class="member-avatar">👨‍💻</div>
-                <div class="member-info">
-                    <h3 class="member-name">朱奕鸿</h3>
-                    <p class="member-role">团队成员</p>
-                    <p class="member-bio">简介待补充</p>
-                </div>
-            </div>
-
-            <!-- 成员卡片 6 -->
-            <div class="member-card" onclick="window.location.href='member.html?id=6'">
-                <div class="member-avatar">👨‍💻</div>
-                <div class="member-info">
-                    <h3 class="member-name">许可</h3>
-                    <p class="member-role">团队成员</p>
-                    <p class="member-bio">简介待补充</p>
-                </div>
-            </div>
-
-            <!-- 成员卡片 7 -->
-            <div class="member-card" onclick="window.location.href='member.html?id=7'">
-                <div class="member-avatar">👩‍💻</div>
-                <div class="member-info">
-                    <h3 class="member-name">葛宸菲</h3>
-                    <p class="member-role">团队成员</p>
-                    <p class="member-bio">简介待补充</p>
-                </div>
-            </div>
+        <div class="members-section-header">
+            <h2 style="font-size: 28px; font-weight: 700; letter-spacing: -0.5px;">Team Members</h2>
+            <button class="btn btn-primary" onclick="openAddMemberModal()">+ Add New Member</button>
         </div>
+        
+        <div class="members-grid" id="teamGrid">
+            <!-- Member Card 1 -->
+            <div class="member-card">
+                <div class="member-avatar" id="avatar-1" onclick="openTeamAvatarModal(1)">
+                    👨‍💻
+                    <div class="avatar-upload-overlay">
+                        <span>📷</span>
+                    </div>
+                </div>
+                <div class="member-info" onclick="window.location.href='member.html?id=1'">
+                    <h3 class="member-name">Wang Chengle</h3>
+                    <p class="member-role">Team Member</p>
+                    <p class="member-bio">Profile coming soon</p>
+                </div>
+            </div>
 
-        <div class="text-center mt-20">
-            <button class="btn btn-primary" onclick="openAddMemberModal()">添加新成员</button>
+            <!-- Member Card 2 -->
+            <div class="member-card">
+                <div class="member-avatar" id="avatar-2" onclick="openTeamAvatarModal(2)">
+                    👨‍💻
+                    <div class="avatar-upload-overlay">
+                        <span>📷</span>
+                    </div>
+                </div>
+                <div class="member-info" onclick="window.location.href='member.html?id=2'">
+                    <h3 class="member-name">Chen Kangwen</h3>
+                    <p class="member-role">Team Member</p>
+                    <p class="member-bio">Profile coming soon</p>
+                </div>
+            </div>
+
+            <!-- Member Card 3 -->
+            <div class="member-card">
+                <div class="member-avatar" id="avatar-3" onclick="openTeamAvatarModal(3)">
+                    👨‍💻
+                    <div class="avatar-upload-overlay"><span>📷</span></div>
+                </div>
+                <div class="member-info" onclick="window.location.href='member.html?id=3'">
+                    <h3 class="member-name">Wu Changhong</h3>
+                    <p class="member-role">Team Member</p>
+                    <p class="member-bio">Profile coming soon</p>
+                </div>
+            </div>
+
+            <!-- Member Card 4 -->
+            <div class="member-card">
+                <div class="member-avatar" id="avatar-4" onclick="openTeamAvatarModal(4)">
+                    👨‍💻
+                    <div class="avatar-upload-overlay"><span>📷</span></div>
+                </div>
+                <div class="member-info" onclick="window.location.href='member.html?id=4'">
+                    <h3 class="member-name">Liu Xiehan</h3>
+                    <p class="member-role">Team Member</p>
+                    <p class="member-bio">Profile coming soon</p>
+                </div>
+            </div>
+
+            <!-- Member Card 5 -->
+            <div class="member-card">
+                <div class="member-avatar" id="avatar-5" onclick="openTeamAvatarModal(5)">
+                    👨‍💻
+                    <div class="avatar-upload-overlay"><span>📷</span></div>
+                </div>
+                <div class="member-info" onclick="window.location.href='member.html?id=5'">
+                    <h3 class="member-name">Zhu Yihong</h3>
+                    <p class="member-role">Team Member</p>
+                    <p class="member-bio">Profile coming soon</p>
+                </div>
+            </div>
+
+            <!-- Member Card 6 -->
+            <div class="member-card">
+                <div class="member-avatar" id="avatar-6" onclick="openTeamAvatarModal(6)">
+                    👨‍💻
+                    <div class="avatar-upload-overlay"><span>📷</span></div>
+                </div>
+                <div class="member-info" onclick="window.location.href='member.html?id=6'">
+                    <h3 class="member-name">Xu Ke</h3>
+                    <p class="member-role">Team Member</p>
+                    <p class="member-bio">Profile coming soon</p>
+                </div>
+            </div>
+
+            <!-- Member Card 7 -->
+            <div class="member-card">
+                <div class="member-avatar" id="avatar-7" onclick="openTeamAvatarModal(7)">
+                    👩‍💻
+                    <div class="avatar-upload-overlay"><span>📷</span></div>
+                </div>
+                <div class="member-info" onclick="window.location.href='member.html?id=7'">
+                    <h3 class="member-name">Ge Chenfei</h3>
+                    <p class="member-role">Team Member</p>
+                    <p class="member-bio">Profile coming soon</p>
+                </div>
+            </div>
         </div>
     </section>
 
-    <!-- 页脚 -->
+    <!-- Footer -->
     <footer class="footer">
         <div class="container">
             <p>&copy; 2026 Team Space. All rights reserved.</p>
         </div>
     </footer>
 
-    <!-- 编辑模态框 -->
+    <!-- Edit Modal -->
     <div class="modal" id="editModal">
         <div class="modal-content">
             <div class="modal-header">
-                <h3 class="modal-title">编辑内容</h3>
+                <h3 class="modal-title">Edit Content</h3>
                 <button class="modal-close" onclick="closeModal('editModal')">&times;</button>
             </div>
             <form id="editForm" onsubmit="saveEdit(event)">
                 <input type="hidden" id="editField" name="field">
                 <div class="form-group">
-                    <label class="form-label">内容</label>
+                    <label class="form-label">Content</label>
                     <textarea class="form-textarea" id="editContent" name="content" rows="6"></textarea>
                 </div>
                 <div style="display: flex; gap: 12px; justify-content: flex-end;">
-                    <button type="button" class="btn btn-secondary" onclick="closeModal('editModal')">取消</button>
-                    <button type="submit" class="btn btn-primary">保存</button>
+                    <button type="button" class="btn btn-secondary" onclick="closeModal('editModal')">Cancel</button>
+                    <button type="submit" class="btn btn-primary">Save</button>
                 </div>
             </form>
         </div>
     </div>
 
-    <!-- 添加成员模态框 -->
+    <!-- Add Member Modal -->
     <div class="modal" id="addMemberModal">
         <div class="modal-content">
             <div class="modal-header">
-                <h3 class="modal-title">添加新成员</h3>
+                <h3 class="modal-title">Add New Member</h3>
                 <button class="modal-close" onclick="closeModal('addMemberModal')">&times;</button>
             </div>
             <form id="addMemberForm" onsubmit="saveNewMember(event)">
                 <div class="form-group">
-                    <label class="form-label">姓名</label>
+                    <label class="form-label">Name</label>
                     <input type="text" class="form-input" id="memberName" required>
                 </div>
                 <div class="form-group">
-                    <label class="form-label">角色</label>
+                    <label class="form-label">Role</label>
                     <input type="text" class="form-input" id="memberRole" required>
                 </div>
                 <div class="form-group">
-                    <label class="form-label">简介</label>
+                    <label class="form-label">Bio</label>
                     <textarea class="form-textarea" id="memberBio" rows="4" required></textarea>
                 </div>
                 <div class="form-group">
-                    <label class="form-label">头像表情</label>
+                    <label class="form-label">Avatar Emoji</label>
                     <select class="form-select" id="memberAvatar">
-                        <option value="👨‍💻">👨‍💻 男程序员</option>
-                        <option value="👩‍💻">👩‍💻 女程序员</option>
-                        <option value="👨‍🎨">👨‍🎨 男设计师</option>
-                        <option value="👩‍🎨">👩‍🎨 女设计师</option>
-                        <option value="👨‍🔬">👨‍🔬 男科学家</option>
-                        <option value="👩‍🔬">👩‍🔬 女科学家</option>
-                        <option value="👨‍💼">👨‍💼 男经理</option>
-                        <option value="👩‍💼">👩‍💼 女经理</option>
+                        <option value="👨‍💻">👨‍💻 Male Developer</option>
+                        <option value="👩‍💻">👩‍💻 Female Developer</option>
+                        <option value="👨‍🎨">👨‍🎨 Male Designer</option>
+                        <option value="👩‍🎨">👩‍🎨 Female Designer</option>
+                        <option value="👨‍🔬">👨‍🔬 Male Scientist</option>
+                        <option value="👩‍🔬">👩‍🔬 Female Scientist</option>
+                        <option value="👨‍💼">👨‍💼 Male Manager</option>
+                        <option value="👩‍💼">👩‍💼 Female Manager</option>
                     </select>
                 </div>
                 <div style="display: flex; gap: 12px; justify-content: flex-end;">
-                    <button type="button" class="btn btn-secondary" onclick="closeModal('addMemberModal')">取消</button>
-                    <button type="submit" class="btn btn-primary">添加</button>
+                    <button type="button" class="btn btn-secondary" onclick="closeModal('addMemberModal')">Cancel</button>
+                    <button type="submit" class="btn btn-primary">Add</button>
                 </div>
             </form>
+        </div>
+    </div>
+
+    <!-- Avatar Upload Modal -->
+    <div class="modal" id="avatarUploadModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title">Upload Avatar</h3>
+                <button class="modal-close" onclick="closeModal('avatarUploadModal')">&times;</button>
+            </div>
+            <div class="form-group">
+                <label class="form-label">Select Image (JPG, PNG, GIF)</label>
+                <input type="file" id="avatarFileInput" accept="image/jpeg,image/png,image/gif" onchange="handleTeamAvatarUpload(event)">
+            </div>
+            <div id="avatarPreviewContainer" style="display: none; margin: 20px 0; text-align: center;">
+                <img id="avatarPreview" style="width: 150px; height: 150px; border-radius: 50%; object-fit: cover; border: 3px solid var(--yt-red);">
+            </div>
+            <div style="display: flex; gap: 12px; justify-content: flex-end;">
+                <button type="button" class="btn btn-secondary" onclick="closeModal('avatarUploadModal')">Cancel</button>
+                <button type="button" class="btn btn-primary" id="confirmAvatarBtn" onclick="confirmTeamAvatarUpload()" disabled>Confirm</button>
+            </div>
         </div>
     </div>
 
     <script src="script.js"></script>
     <script>
-        // 加载保存的头像
+        let currentMemberId = null;
+        let uploadedImageData = null;
+
+        // Open avatar upload modal
+        function openTeamAvatarModal(memberId) {
+            currentMemberId = memberId;
+            uploadedImageData = null;
+            document.getElementById('avatarFileInput').value = '';
+            document.getElementById('avatarPreviewContainer').style.display = 'none';
+            document.getElementById('confirmAvatarBtn').disabled = true;
+            openModal('avatarUploadModal');
+        }
+
+        // Handle avatar file upload
+        function handleTeamAvatarUpload(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+
+            // Validate file type
+            if (!file.type.startsWith('image/')) {
+                showNotification('❌ Please select an image file!', 'error');
+                return;
+            }
+
+            // Validate file size (max 5MB)
+            if (file.size > 5 * 1024 * 1024) {
+                showNotification('❌ File size must be less than 5MB!', 'error');
+                return;
+            }
+
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                const img = new Image();
+                img.onload = function() {
+                    processImage(img, function(processedDataUrl) {
+                        uploadedImageData = processedDataUrl;
+                        
+                        // Show preview
+                        const preview = document.getElementById('avatarPreview');
+                        preview.src = processedDataUrl;
+                        document.getElementById('avatarPreviewContainer').style.display = 'block';
+                        document.getElementById('confirmAvatarBtn').disabled = false;
+                    });
+                };
+                img.src = e.target.result;
+            };
+            reader.readAsDataURL(file);
+        }
+
+        // Process image: crop to square and resize
+        function processImage(img, callback) {
+            const canvas = document.createElement('canvas');
+            const ctx = canvas.getContext('2d');
+            
+            // Crop to square
+            const size = Math.min(img.width, img.height);
+            const x = (img.width - size) / 2;
+            const y = (img.height - size) / 2;
+            
+            // Set canvas size to 200x200
+            canvas.width = 200;
+            canvas.height = 200;
+            
+            // Draw cropped and resized image
+            ctx.drawImage(img, x, y, size, size, 0, 0, 200, 200);
+            
+            // Convert to base64
+            const dataUrl = canvas.toDataURL('image/jpeg', 0.8);
+            callback(dataUrl);
+        }
+
+        // Confirm avatar upload
+        function confirmTeamAvatarUpload() {
+            if (!uploadedImageData || !currentMemberId) return;
+
+            // Save to localStorage
+            const savedMembers = JSON.parse(localStorage.getItem('teamMembers') || '{}');
+            if (savedMembers[currentMemberId]) {
+                savedMembers[currentMemberId].avatar = uploadedImageData;
+                savedMembers[currentMemberId].avatarType = 'image';
+                localStorage.setItem('teamMembers', JSON.stringify(savedMembers));
+
+                // Update avatar display
+                const card = document.querySelector(`#avatar-${currentMemberId}`);
+                if (card) {
+                    card.innerHTML = '';
+                    card.style.backgroundImage = `url(${uploadedImageData})`;
+                    card.style.backgroundSize = 'cover';
+                    card.style.backgroundPosition = 'center';
+                }
+
+                showNotification('✅ Avatar updated successfully!', 'success');
+                closeModal('avatarUploadModal');
+            }
+        }
+
+        // Load saved avatars on page load
         document.addEventListener('DOMContentLoaded', function() {
             const savedMembers = JSON.parse(localStorage.getItem('teamMembers') || '{}');
             
-            // 遍历所有成员卡片，更新头像
             for (let i = 1; i <= 7; i++) {
                 const memberData = savedMembers[i];
                 if (memberData) {
-                    const card = document.querySelector(`.member-card:nth-child(${i}) .member-avatar`);
+                    const card = document.querySelector(`#avatar-${i}`);
                     if (card) {
                         if (memberData.avatarType === 'image' && memberData.avatar) {
-                            // 图片类型头像
                             card.innerHTML = '';
                             card.style.backgroundImage = `url(${memberData.avatar})`;
                             card.style.backgroundSize = 'cover';
                             card.style.backgroundPosition = 'center';
                         } else {
-                            // Emoji 类型头像
                             card.textContent = memberData.avatar || '👨‍💻';
                             card.style.backgroundImage = '';
                         }
