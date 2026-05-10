@@ -916,20 +916,55 @@ function updateMemberFavicon(member) {
     }
     
     if (member.avatarType === 'image' && member.avatar) {
-        // Create a dynamic SVG favicon with the member's image
-        const svgContent = `
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
-                <circle cx="50" cy="50" r="45" fill="#2d2d44"/>
-                <foreignObject x="10" y="10" width="80" height="80">
-                    <div xmlns="http://www.w3.org/1999/xhtml" style="width: 100%; height: 100%; display: flex; align-items: center; justify-content: center;">
-                        <img src="${member.avatar}" style="width: 70px; height: 70px; border-radius: 50%; object-fit: cover;">
-                    </div>
-                </foreignObject>
-            </svg>
-        `;
-        const blob = new Blob([svgContent], { type: 'image/svg+xml;charset=utf-8' });
-        const url = URL.createObjectURL(blob);
-        faviconLink.href = url;
+        // For image avatars, create a canvas-based favicon
+        const canvas = document.createElement('canvas');
+        canvas.width = 100;
+        canvas.height = 100;
+        const ctx = canvas.getContext('2d');
+        
+        // Draw background circle
+        ctx.fillStyle = '#2d2d44';
+        ctx.beginPath();
+        ctx.arc(50, 50, 45, 0, Math.PI * 2);
+        ctx.fill();
+        
+        // Load and draw the image
+        const img = new Image();
+        img.onload = function() {
+            // Create circular clipping path
+            ctx.save();
+            ctx.beginPath();
+            ctx.arc(50, 50, 40, 0, Math.PI * 2);
+            ctx.closePath();
+            ctx.clip();
+            
+            // Draw image centered and scaled
+            const size = 80;
+            const offset = (100 - size) / 2;
+            ctx.drawImage(img, offset, offset, size, size);
+            ctx.restore();
+            
+            // Convert canvas to blob and update favicon
+            canvas.toBlob(function(blob) {
+                if (blob) {
+                    const url = URL.createObjectURL(blob);
+                    faviconLink.href = url;
+                }
+            }, 'image/png');
+        };
+        img.onerror = function() {
+            // If image fails to load, fallback to emoji
+            const svgContent = `
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
+                    <circle cx="50" cy="50" r="45" fill="#2d2d44"/>
+                    <text x="50" y="70" font-size="60" text-anchor="middle">👤</text>
+                </svg>
+            `;
+            const blob = new Blob([svgContent], { type: 'image/svg+xml;charset=utf-8' });
+            const url = URL.createObjectURL(blob);
+            faviconLink.href = url;
+        };
+        img.src = member.avatar;
     } else {
         // Use emoji avatar - properly encode it
         const emoji = member.avatar || '🐱';
