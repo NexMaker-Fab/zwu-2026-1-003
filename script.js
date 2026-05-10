@@ -1,68 +1,47 @@
-// Team Space - Main Functionality Script
+// Team Space - Apple Minimalist Style
+// All functionality for team management, assignments, and projects
 
-// Initialize after page load
-document.addEventListener('DOMContentLoaded', function() {
-    initializePage();
-    loadSavedData();
-});
+// ==================== Utility Functions ====================
 
-// Initialize page
-function initializePage() {
-    // Add fade-in animation
-    const elements = document.querySelectorAll('.feature-card, .member-card, .assignment-item, .project-card, .exercise-card');
-    elements.forEach((el, index) => {
-        el.style.opacity = '0';
-        el.style.animation = `fadeIn 0.6s ease-out ${index * 0.1}s forwards`;
-    });
-}
-
-// Load saved data from localStorage
-function loadSavedData() {
-    const editableElements = document.querySelectorAll('[data-field]');
-    editableElements.forEach(element => {
-        const field = element.getAttribute('data-field');
-        const savedContent = localStorage.getItem(field);
-        if (savedContent) {
-            // Keep edit button, only update text content
-            const editBtn = element.querySelector('.edit-btn');
-            if (editBtn) {
-                element.innerHTML = savedContent + editBtn.outerHTML;
-            } else {
-                element.textContent = savedContent;
-            }
-        }
-    });
-}
-
-// Open edit modal
-function openEditModal(field) {
-    const modal = document.getElementById('editModal');
-    const fieldInput = document.getElementById('editField');
-    const contentInput = document.getElementById('editContent');
+// Update dynamic logo based on team members
+function updateDynamicLogo() {
+    const logoElement = document.getElementById('dynamicLogo');
+    if (!logoElement) return;
     
-    // Get current content
-    const element = document.querySelector(`[data-field="${field}"]`);
-    if (element) {
-        const editBtn = element.querySelector('.edit-btn');
-        let currentContent = '';
-        
-        if (editBtn) {
-            // Get text content without edit button
-            const clone = element.cloneNode(true);
-            const btn = clone.querySelector('.edit-btn');
-            if (btn) btn.remove();
-            currentContent = clone.textContent.trim();
-        } else {
-            currentContent = element.textContent.trim();
-        }
-        
-        fieldInput.value = field;
-        contentInput.value = currentContent;
-        modal.classList.add('active');
+    const members = JSON.parse(localStorage.getItem('teamMembers') || '{}');
+    const memberIds = Object.keys(members);
+    
+    if (memberIds.length === 0) {
+        // Default to black cat
+        logoElement.textContent = '🐱';
+        return;
+    }
+    
+    // Get the first member's avatar
+    const firstMember = members[memberIds[0]];
+    if (firstMember && firstMember.avatarType === 'emoji') {
+        logoElement.textContent = firstMember.avatar;
+    } else if (firstMember && firstMember.avatarType === 'image') {
+        // For image avatars, keep the cat but add a small indicator
+        logoElement.innerHTML = '🐱<span style="font-size: 12px; position: absolute; bottom: -5px; right: -5px;">🖼️</span>';
+    } else {
+        logoElement.textContent = '🐱';
     }
 }
 
-// Generic open modal function
+// Show notification
+function showNotification(message, type = 'success') {
+    const notification = document.createElement('div');
+    notification.className = `notification ${type}`;
+    notification.textContent = message;
+    document.body.appendChild(notification);
+    
+    setTimeout(() => {
+        notification.remove();
+    }, 3000);
+}
+
+// Open modal
 function openModal(modalId) {
     const modal = document.getElementById(modalId);
     if (modal) {
@@ -73,71 +52,199 @@ function openModal(modalId) {
 // Close modal
 function closeModal(modalId) {
     const modal = document.getElementById(modalId);
-    modal.classList.remove('active');
+    if (modal) {
+        modal.classList.remove('active');
+    }
 }
 
-// Save edited content
-function saveEdit(event) {
-    event.preventDefault();
+// Close modal when clicking outside
+document.addEventListener('click', function(e) {
+    if (e.target.classList.contains('modal')) {
+        e.target.classList.remove('active');
+    }
+});
+
+// ==================== Member Management ====================
+
+// Initialize default members
+function initializeDefaultMembers() {
+    console.log('🔧 Initializing default members...');
     
-    const field = document.getElementById('editField').value;
-    const content = document.getElementById('editContent').value;
+    const existingMembers = JSON.parse(localStorage.getItem('teamMembers') || '{}');
     
-    // Save to localStorage
-    localStorage.setItem(field, content);
-    
-    // Update page display
-    const element = document.querySelector(`[data-field="${field}"]`);
-    if (element) {
-        const editBtn = element.querySelector('.edit-btn');
-        if (editBtn) {
-            element.innerHTML = content + '\n            ' + editBtn.outerHTML;
-        } else {
-            element.textContent = content;
-        }
+    // Only initialize if no members exist
+    if (Object.keys(existingMembers).length > 0) {
+        console.log('✅ Member data already exists, skip initialization');
+        return;
     }
     
-    // Close modal
-    closeModal('editModal');
+    const defaultMembers = {
+        '1': { 
+            name: 'Wang Chengle', 
+            role: 'Team Member', 
+            avatar: '👨‍💻', 
+            avatarType: 'emoji',
+            bio: '',
+            hobbies: [],
+            email: '',
+            github: '',
+            skills: []
+        },
+        '2': { 
+            name: 'Wu Changhong', 
+            role: 'Team Member', 
+            avatar: '👨‍💻', 
+            avatarType: 'emoji',
+            bio: '',
+            hobbies: [],
+            email: '',
+            github: '',
+            skills: []
+        },
+        '3': { 
+            name: 'Liu Xiehan', 
+            role: 'Team Member', 
+            avatar: '👨‍💻', 
+            avatarType: 'emoji',
+            bio: '',
+            hobbies: [],
+            email: '',
+            github: '',
+            skills: []
+        },
+        '4': { 
+            name: 'Chen Kangwen', 
+            role: 'Team Member', 
+            avatar: '👨‍💻', 
+            avatarType: 'emoji',
+            bio: '',
+            hobbies: [],
+            email: '',
+            github: '',
+            skills: []
+        },
+        '5': { 
+            name: 'Ge Chenfei', 
+            role: 'Team Member', 
+            avatar: '👩‍💻', 
+            avatarType: 'emoji',
+            bio: '',
+            hobbies: [],
+            email: '',
+            github: '',
+            skills: []
+        },
+        '6': { 
+            name: 'Xu Ke', 
+            role: 'Team Member', 
+            avatar: '👨‍💻', 
+            avatarType: 'emoji',
+            bio: '',
+            hobbies: [],
+            email: '',
+            github: '',
+            skills: []
+        },
+        '7': { 
+            name: 'Zhu Yihong', 
+            role: 'Team Member', 
+            avatar: '👨‍💻', 
+            avatarType: 'emoji',
+            bio: '',
+            hobbies: [],
+            email: '',
+            github: '',
+            skills: []
+        },
+        '8': { 
+            name: 'Chen Yuzhe', 
+            role: 'Team Member', 
+            avatar: '👨‍💻', 
+            avatarType: 'emoji',
+            bio: '',
+            hobbies: [],
+            email: '',
+            github: '',
+            skills: []
+        }
+    };
     
-    // Show success notification
-    showNotification('Saved successfully!', 'success');
+    localStorage.setItem('teamMembers', JSON.stringify(defaultMembers));
+    console.log('✅ Successfully initialized 8 team members');
+}
+
+// Load and display members
+function loadMembers() {
+    const membersGrid = document.getElementById('membersGrid');
+    if (!membersGrid) return;
+    
+    const members = JSON.parse(localStorage.getItem('teamMembers') || '{}');
+    console.log('📋 Loading members:', Object.keys(members).length, 'members found');
+    
+    if (Object.keys(members).length === 0) {
+        membersGrid.innerHTML = `
+            <div style="text-align: center; padding: 60px 20px; color: var(--text-secondary); grid-column: 1/-1;">
+                <div style="font-size: 64px; margin-bottom: 20px;">👥</div>
+                <h3 style="font-size: 20px; font-weight: 600; margin-bottom: 8px; color: var(--text-primary);">No team members yet</h3>
+                <p style="font-size: 15px;">Click "Add New Member" button to add your first member</p>
+            </div>
+        `;
+        return;
+    }
+    
+    let html = '';
+    Object.entries(members).forEach(([id, member]) => {
+        const avatarDisplay = member.avatarType === 'image' 
+            ? `<img src="${member.avatar}" style="width: 100%; height: 100%; object-fit: cover;">`
+            : member.avatar;
+        
+        // Build skills preview
+        const skillsPreview = (member.skills && member.skills.length > 0)
+            ? `<div class="member-skills">${member.skills.slice(0, 3).map(s => `<span class="mini-skill-tag">${s}</span>`).join('')}</div>`
+            : '';
+        
+        html += `
+            <div class="member-card">
+                <button class="edit-member-btn" onclick="event.stopPropagation(); openEditMemberModal(${id})">✏️ Edit</button>
+                <div class="member-avatar" onclick="openTeamAvatarModal(${id})">
+                    ${avatarDisplay}
+                    <div class="avatar-upload-overlay">
+                        <span>📷</span>
+                    </div>
+                </div>
+                <div class="member-info" onclick="window.location.href='member.html?id=${id}'">
+                    <h3 class="member-name">${member.name}</h3>
+                    <p class="member-role">${member.role}</p>
+                    ${skillsPreview}
+                    <p class="member-bio">${member.bio || 'Click to view profile →'}</p>
+                </div>
+            </div>
+        `;
+    });
+    
+    membersGrid.innerHTML = html;
 }
 
 // Open add member modal
 function openAddMemberModal() {
-    const modal = document.getElementById('addMemberModal');
-    modal.classList.add('active');
+    openModal('addMemberModal');
 }
 
 // Save new member
 function saveNewMember(event) {
     event.preventDefault();
     
-    const name = document.getElementById('memberName').value;
-    const role = document.getElementById('memberRole').value;
-    const bio = document.getElementById('memberBio').value;
+    const name = document.getElementById('memberName').value.trim();
+    const role = document.getElementById('memberRole').value.trim();
+    const bio = document.getElementById('memberBio').value.trim();
     const avatar = document.getElementById('memberAvatar').value;
     
-    // Create new member card
-    const teamGrid = document.getElementById('teamGrid');
-    const memberId = Date.now(); // Use timestamp as unique ID
+    if (!name || !role) {
+        showNotification('❌ Please fill in all required fields!', 'error');
+        return;
+    }
     
-    const memberCard = document.createElement('div');
-    memberCard.className = 'member-card';
-    memberCard.onclick = function() { window.location.href = `member.html?id=${memberId}`; };
-    memberCard.innerHTML = `
-        <div class="member-avatar">${avatar}</div>
-        <div class="member-info">
-            <h3 class="member-name">${name}</h3>
-            <p class="member-role">${role}</p>
-            <p class="member-bio">${bio}</p>
-        </div>
-    `;
-    
-    teamGrid.appendChild(memberCard);
-    
-    // Save to localStorage (using object format to match initialization)
+    // Save to localStorage
     const members = JSON.parse(localStorage.getItem('teamMembers') || '{}');
     const newId = Object.keys(members).length + 1;
     members[newId] = {
@@ -149,681 +256,241 @@ function saveNewMember(event) {
     };
     localStorage.setItem('teamMembers', JSON.stringify(members));
     
-    // Close modal and reset form
+    showNotification('✅ Member added successfully!');
     closeModal('addMemberModal');
-    document.getElementById('addMemberForm').reset();
     
-    showNotification('Member added successfully!', 'success');
+    // Reset form
+    event.target.reset();
+    
+    // Reload members
+    loadMembers();
+    populateSubmitterOptions();
+}
+
+// Avatar upload variables
+let currentMemberId = null;
+let uploadedImageData = null;
+
+// Open avatar upload modal
+function openTeamAvatarModal(memberId) {
+    currentMemberId = memberId;
+    uploadedImageData = null;
+    document.getElementById('avatarFileInput').value = '';
+    document.getElementById('avatarPreviewContainer').style.display = 'none';
+    document.getElementById('confirmAvatarBtn').disabled = true;
+    openModal('avatarUploadModal');
+}
+
+// Handle avatar file upload
+function handleTeamAvatarUpload(event) {
+    const file = event.target.files[0];
+    if (!file) return;
+
+    // Validate file type
+    if (!file.type.startsWith('image/')) {
+        showNotification('❌ Please select an image file!', 'error');
+        return;
+    }
+
+    // Validate file size (max 5MB)
+    if (file.size > 5 * 1024 * 1024) {
+        showNotification('❌ File size must be less than 5MB!', 'error');
+        return;
+    }
+
+    const reader = new FileReader();
+    reader.onload = function(e) {
+        const img = new Image();
+        img.onload = function() {
+            processImage(img, function(processedDataUrl) {
+                uploadedImageData = processedDataUrl;
+                
+                // Show preview
+                const preview = document.getElementById('avatarPreview');
+                preview.src = processedDataUrl;
+                document.getElementById('avatarPreviewContainer').style.display = 'block';
+                document.getElementById('confirmAvatarBtn').disabled = false;
+            });
+        };
+        img.src = e.target.result;
+    };
+    reader.readAsDataURL(file);
+}
+
+// Process image: crop to square and resize
+function processImage(img, callback) {
+    const canvas = document.createElement('canvas');
+    const ctx = canvas.getContext('2d');
+    
+    // Crop to square
+    const size = Math.min(img.width, img.height);
+    const x = (img.width - size) / 2;
+    const y = (img.height - size) / 2;
+    
+    // Set canvas size to 200x200
+    canvas.width = 200;
+    canvas.height = 200;
+    
+    // Draw cropped and resized image
+    ctx.drawImage(img, x, y, size, size, 0, 0, 200, 200);
+    
+    // Convert to base64
+    const dataUrl = canvas.toDataURL('image/jpeg', 0.8);
+    callback(dataUrl);
+}
+
+// Confirm avatar upload
+function confirmTeamAvatarUpload() {
+    if (!uploadedImageData || !currentMemberId) return;
+
+    // Save to localStorage
+    const savedMembers = JSON.parse(localStorage.getItem('teamMembers') || '{}');
+    if (savedMembers[currentMemberId]) {
+        savedMembers[currentMemberId].avatar = uploadedImageData;
+        savedMembers[currentMemberId].avatarType = 'image';
+        localStorage.setItem('teamMembers', JSON.stringify(savedMembers));
+
+        showNotification('✅ Avatar updated successfully!');
+        closeModal('avatarUploadModal');
+        
+        // Reload members
+        loadMembers();
+        
+        // Update dynamic logo
+        updateDynamicLogo();
+        
+        // If we're on the member profile page, reload to update favicon
+        if (window.location.pathname.includes('member.html')) {
+            setTimeout(() => {
+                window.location.reload();
+            }, 500);
+        }
+    }
+}
+
+// Open edit member modal
+function openEditMemberModal(memberId) {
+    const members = JSON.parse(localStorage.getItem('teamMembers') || '{}');
+    const member = members[memberId];
+    
+    if (!member) {
+        showNotification('❌ Member not found!', 'error');
+        return;
+    }
+    
+    document.getElementById('editMemberId').value = memberId;
+    document.getElementById('editMemberName').value = member.name;
+    document.getElementById('editMemberRole').value = member.role;
+    document.getElementById('editMemberBio').value = member.bio || '';
+    
+    openModal('editMemberModal');
+}
+
+// Save edited member
+function saveEditedMember(event) {
+    event.preventDefault();
+    
+    const memberId = document.getElementById('editMemberId').value;
+    const name = document.getElementById('editMemberName').value.trim();
+    const role = document.getElementById('editMemberRole').value.trim();
+    const bio = document.getElementById('editMemberBio').value.trim();
+    
+    if (!name || !role) {
+        showNotification('❌ Please fill in all required fields!', 'error');
+        return;
+    }
+    
+    const members = JSON.parse(localStorage.getItem('teamMembers') || '{}');
+    if (members[memberId]) {
+        members[memberId].name = name;
+        members[memberId].role = role;
+        members[memberId].bio = bio;
+        
+        localStorage.setItem('teamMembers', JSON.stringify(members));
+        
+        showNotification('✅ Member updated successfully!');
+        closeModal('editMemberModal');
+        
+        // Reload members
+        loadMembers();
+        populateSubmitterOptions();
+        
+        // Update dynamic logo
+        updateDynamicLogo();
+    }
+}
+
+// ==================== Assignment Management ====================
+
+// Populate submitter dropdown
+function populateSubmitterOptions() {
+    const submitterSelect = document.getElementById('assignmentSubmitter');
+    if (!submitterSelect) return;
+    
+    const members = JSON.parse(localStorage.getItem('teamMembers') || '{}');
+    
+    let options = '<option value="">Select a member</option>';
+    Object.entries(members).forEach(([id, member]) => {
+        options += `<option value="${member.name}">${member.name}</option>`;
+    });
+    
+    submitterSelect.innerHTML = options;
 }
 
 // Open add assignment modal
 function openAddAssignmentModal() {
-    const modal = document.getElementById('addAssignmentModal');
-    modal.classList.add('active');
+    populateSubmitterOptions();
+    openModal('addAssignmentModal');
 }
 
 // Save new assignment
 function saveNewAssignment(event) {
     event.preventDefault();
     
-    const title = document.getElementById('assignmentTitleInput').value;
-    const description = document.getElementById('assignmentDescInput').value;
-    const deadline = document.getElementById('assignmentDeadlineInput').value;
-    const submitter = document.getElementById('assignmentSubmitterInput').value;
+    const title = document.getElementById('assignmentTitle').value.trim();
+    const description = document.getElementById('assignmentDescription').value.trim();
+    const deadline = document.getElementById('assignmentDeadline').value;
+    const submitter = document.getElementById('assignmentSubmitter').value;
     
-    // Save to localStorage
+    if (!title || !deadline || !submitter) {
+        showNotification('❌ Please fill in all required fields!', 'error');
+        return;
+    }
+    
     const assignments = JSON.parse(localStorage.getItem('assignments') || '[]');
-    const assignId = Date.now();
-    
-    assignments.push({
-        id: assignId,
+    const newAssignment = {
+        id: Date.now(),
         title: title,
         description: description,
         deadline: deadline,
         submitter: submitter,
         status: 'pending',
         createdAt: new Date().toISOString()
-    });
+    };
+    
+    assignments.push(newAssignment);
     localStorage.setItem('assignments', JSON.stringify(assignments));
     
-    // Close modal and reset form
+    showNotification('✅ Assignment created successfully!');
     closeModal('addAssignmentModal');
-    document.getElementById('addAssignmentForm').reset();
     
-    showNotification('Assignment created successfully!', 'success');
+    // Reset form
+    event.target.reset();
     
-    // Refresh assignment list
-    if (window.location.pathname.includes('assignments.html')) {
-        loadAssignments();
-    }
+    // Reload assignments
+    loadAssignments();
 }
 
-// Open add project modal
-function openAddProjectModal() {
-    const modal = document.getElementById('addProjectModal');
-    modal.classList.add('active');
-}
-
-// Save new project
-function saveNewProject(event) {
-    event.preventDefault();
-    
-    const name = document.getElementById('projectNameInput').value;
-    const description = document.getElementById('projectDescInput').value;
-    const tagsStr = document.getElementById('projectTagsInput').value;
-    const demoLink = document.getElementById('projectDemoInput').value;
-    const githubLink = document.getElementById('projectGithubInput').value;
-    
-    // Parse tags
-    const tags = tagsStr.split(',').map(tag => tag.trim()).filter(tag => tag);
-    
-    // Create new project card
-    const projectShowcase = document.getElementById('projectShowcase');
-    const projectId = Date.now();
-    
-    const colors = [
-        'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
-        'linear-gradient(135deg, #f093fb 0%, #f5576c 100%)',
-        'linear-gradient(135deg, #4facfe 0%, #00f2fe 100%)',
-        'linear-gradient(135deg, #43e97b 0%, #38f9d7 100%)'
-    ];
-    const randomColor = colors[Math.floor(Math.random() * colors.length)];
-    
-    const emojis = ['🚀', '💡', '⚡', '🎯', '🔥', '✨'];
-    const randomEmoji = emojis[Math.floor(Math.random() * emojis.length)];
-    
-    const tagsHtml = tags.map(tag => `<span class="tag">${tag}</span>`).join('');
-    
-    const buttonsHtml = `
-        ${demoLink ? `<a href="${demoLink}" class="btn btn-primary btn-small" target="_blank">View Demo</a>` : ''}
-        ${githubLink ? `<a href="${githubLink}" class="btn btn-secondary btn-small" target="_blank">GitHub</a>` : ''}
-    `;
-    
-    const projectCard = document.createElement('div');
-    projectCard.className = 'project-card';
-    projectCard.innerHTML = `
-        <div class="project-image" style="background: ${randomColor};">${randomEmoji}</div>
-        <div class="project-content">
-            <h3 class="project-title">${name}</h3>
-            <p class="project-description">${description}</p>
-            <div class="project-tags">${tagsHtml}</div>
-            <div style="margin-top: 20px; display: flex; gap: 12px;">${buttonsHtml}</div>
-        </div>
-    `;
-    
-    projectShowcase.appendChild(projectCard);
-    
-    // Save to localStorage
-    const projects = JSON.parse(localStorage.getItem('projects') || '[]');
-    projects.push({
-        id: projectId,
-        name: name,
-        description: description,
-        tags: tags,
-        demoLink: demoLink,
-        githubLink: githubLink
-    });
-    localStorage.setItem('projects', JSON.stringify(projects));
-    
-    // Close modal and reset form
-    closeModal('addProjectModal');
-    document.getElementById('addProjectForm').reset();
-    
-    showNotification('Project created successfully!', 'success');
-}
-
-// Open add exercise modal
-function openAddExerciseModal() {
-    const modal = document.getElementById('addExerciseModal');
-    modal.classList.add('active');
-}
-
-// Save new exercise
-function saveNewExercise(event) {
-    event.preventDefault();
-    
-    const title = document.getElementById('exerciseTitleInput').value;
-    const content = document.getElementById('exerciseContentInput').value;
-    const tagsStr = document.getElementById('exerciseTagsInput').value;
-    const date = document.getElementById('exerciseDateInput').value;
-    
-    // Parse tags
-    const tags = tagsStr.split(',').map(tag => tag.trim()).filter(tag => tag);
-    
-    // Create new exercise card
-    const exerciseGrid = document.getElementById('exerciseGrid');
-    const exerciseId = Date.now();
-    
-    const tagsHtml = tags.map(tag => `<span class="tag">${tag}</span>`).join('');
-    
-    const exerciseCard = document.createElement('div');
-    exerciseCard.className = 'exercise-card';
-    exerciseCard.innerHTML = `
-        <div class="exercise-date">${date}</div>
-        <h3 class="exercise-title">${title}</h3>
-        <p class="exercise-content">${content}</p>
-        <div style="margin-top: 16px; display: flex; gap: 8px; flex-wrap: wrap;">${tagsHtml}</div>
-    };
-        
-    // Insert at the beginning
-    if (exerciseGrid.firstChild) {
-        exerciseGrid.insertBefore(exerciseCard, exerciseGrid.firstChild);
-    } else {
-        exerciseGrid.appendChild(exerciseCard);
-    }
-    
-    // Save to localStorage
-    const exercises = JSON.parse(localStorage.getItem('exercises') || '[]');
-    exercises.unshift({
-        id: exerciseId,
-        title: title,
-        content: content,
-        tags: tags,
-        date: date
-    });
-    localStorage.setItem('exercises', JSON.stringify(exercises));
-    
-    // Close modal and reset form
-    closeModal('addExerciseModal');
-    document.getElementById('addExerciseForm').reset();
-    
-    showNotification('Exercise created successfully!', 'success');
-}
-
-// Show notification
-function showNotification(message, type = 'info') {
-    // Create notification element
-    const notification = document.createElement('div');
-    notification.style.cssText = `
-        position: fixed;
-        top: 80px;
-        right: 20px;
-        background: ${type === 'success' ? '#34c759' : '#0071e3'};
-        color: white;
-        padding: 16px 24px;
-        border-radius: 12px;
-        box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
-        z-index: 3000;
-        font-size: 15px;
-        font-weight: 500;
-        animation: slideIn 0.3s ease-out;
-    `;
-    notification.textContent = message;
-    
-    document.body.appendChild(notification);
-    
-    // Auto dismiss after 3 seconds
-    setTimeout(() => {
-        notification.style.animation = 'slideOut 0.3s ease-out';
-        setTimeout(() => {
-            document.body.removeChild(notification);
-        }, 300);
-    }, 3000);
-}
-
-// Close modal when clicking outside
-document.addEventListener('click', function(event) {
-    if (event.target.classList.contains('modal')) {
-        event.target.classList.remove('active');
-    }
-});
-
-// Close modal with ESC key
-document.addEventListener('keydown', function(event) {
-    if (event.key === 'Escape') {
-        const modals = document.querySelectorAll('.modal.active');
-        modals.forEach(modal => {
-            modal.classList.remove('active');
-        });
-    }
-});
-
-// Add CSS animations
-const style = document.createElement('style');
-style.textContent = `
-    @keyframes slideIn {
-        from {
-            transform: translateX(400px);
-            opacity: 0;
-        }
-        to {
-            transform: translateX(0);
-            opacity: 1;
-        }
-    }
-    
-    @keyframes slideOut {
-        from {
-            transform: translateX(0);
-            opacity: 1;
-        }
-        to {
-            transform: translateX(400px);
-            opacity: 0;
-        }
-    }
-`;
-document.head.appendChild(style);
-
-// Utility function: format date
-function formatDate(date) {
-    const d = new Date(date);
-    const year = d.getFullYear();
-    const month = String(d.getMonth() + 1).padStart(2, '0');
-    const day = String(d.getDate()).padStart(2, '0');
-    return `${year}-${month}-${day}`;
-}
-
-// Utility function: generate unique ID
-function generateId() {
-    return Date.now().toString(36) + Math.random().toString(36).substr(2);
-}
-
-// ==================== Assignment Management ====================
-
-// Global variable to store selected files
-let selectedFiles = [];
-
-// Open GitHub config modal
-function openGithubConfigModal() {
-    const modal = document.getElementById('githubConfigModal');
-    if (!modal) return;
-    
-    // Load saved configuration
-    const config = JSON.parse(localStorage.getItem('githubConfig') || '{}');
-    if (config.username) document.getElementById('githubUsername').value = config.username;
-    if (config.repo) document.getElementById('githubRepo').value = config.repo;
-    if (config.token) document.getElementById('githubToken').value = config.token;
-    if (config.branch) document.getElementById('githubBranch').value = config.branch;
-    
-    modal.classList.add('active');
-}
-
-// Save GitHub configuration
-function saveGithubConfig(event) {
-    event.preventDefault();
-    
-    const config = {
-        username: document.getElementById('githubUsername').value,
-        repo: document.getElementById('githubRepo').value,
-        token: document.getElementById('githubToken').value,
-        branch: document.getElementById('githubBranch').value || 'main'
-    };
-    
-    localStorage.setItem('githubConfig', JSON.stringify(config));
-    closeModal('githubConfigModal');
-    showNotification('✅ GitHub configuration saved!', 'success');
-}
-
-// Test GitHub connection
-async function testGithubConnection() {
-    const username = document.getElementById('githubUsername').value;
-    const repo = document.getElementById('githubRepo').value;
-    const token = document.getElementById('githubToken').value;
-    const branch = document.getElementById('githubBranch').value || 'main';
-    
-    if (!username || !repo || !token) {
-        showNotification('⚠️ Please fill in all required fields', 'error');
-        return;
-    }
-    
-    showNotification('🔍 Testing connection...', 'info');
-    
-    try {
-        // Test repository access
-        const url = `https://api.github.com/repos/${username}/${repo}`;
-        const response = await fetch(url, {
-            headers: {
-                'Authorization': `token ${token}`,
-                'Accept': 'application/vnd.github.v3+json'
-            }
-        });
-        
-        if (!response.ok) {
-            if (response.status === 404) {
-                throw new Error('Repository not found, please check username and repo name');
-            } else if (response.status === 401) {
-                throw new Error('Token is invalid or expired');
-            } else if (response.status === 403) {
-                throw new Error('No permission to access this repository');
-            } else {
-                throw new Error('Connection failed: ' + response.statusText);
-            }
-        }
-        
-        const repoData = await response.json();
-        
-        // Test if branch exists
-        const branchUrl = `https://api.github.com/repos/${username}/${repo}/branches/${branch}`;
-        const branchResponse = await fetch(branchUrl, {
-            headers: {
-                'Authorization': `token ${token}`,
-                'Accept': 'application/vnd.github.v3+json'
-            }
-        });
-        
-        if (!branchResponse.ok) {
-            throw new Error(`Branch '${branch}' does not exist`);
-        }
-        
-        showNotification(`✅ Connection successful!\nRepository: ${repoData.full_name}\nBranch: ${branch}\nSize: ${repoData.size} KB`, 'success');
-    } catch (error) {
-        console.error('Connection test failed:', error);
-        showNotification('❌ Connection failed: ' + error.message, 'error');
-    }
-}
-
-// Drag and drop event handling
-function handleDragOver(event) {
-    event.preventDefault();
-    event.currentTarget.style.borderColor = 'var(--primary-color)';
-    event.currentTarget.style.background = 'rgba(0, 113, 227, 0.05)';
-}
-
-function handleDragLeave(event) {
-    event.currentTarget.style.borderColor = 'var(--border-color)';
-    event.currentTarget.style.background = 'var(--bg-secondary)';
-}
-
-function handleDrop(event) {
-    event.preventDefault();
-    event.currentTarget.style.borderColor = 'var(--border-color)';
-    event.currentTarget.style.background = 'var(--bg-secondary)';
-    
-    const files = event.dataTransfer.files;
-    handleFiles(files);
-}
-
-function handleFileSelect(event) {
-    const files = event.target.files;
-    handleFiles(files);
-}
-
-function handleFiles(files) {
-    selectedFiles = Array.from(files);
-    displaySelectedFiles();
-}
-
-function displaySelectedFiles() {
-    const container = document.getElementById('selectedFiles');
-    if (!container) return;
-    
-    if (selectedFiles.length === 0) {
-        container.innerHTML = '';
-        return;
-    }
-    
-    let html = '<div style="display: grid; gap: 10px;">';
-    selectedFiles.forEach((file, index) => {
-        const icon = getFileIcon(file.name);
-        const size = formatFileSize(file.size);
-        html += `
-            <div style="display: flex; align-items: center; justify-content: space-between; padding: 12px; background: var(--bg-secondary); border-radius: 8px;">
-                <div style="display: flex; align-items: center; gap: 10px; flex: 1;">
-                    <span style="font-size: 24px;">${icon}</span>
-                    <div style="flex: 1; min-width: 0;">
-                        <div style="font-size: 14px; font-weight: 500; color: var(--text-primary); overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">${file.name}</div>
-                        <div style="font-size: 12px; color: var(--text-secondary);">${size}</div>
-                    </div>
-                </div>
-                <button type="button" onclick="removeFile(${index})" style="background: none; border: none; cursor: pointer; font-size: 18px; color: var(--text-secondary); padding: 4px;">&times;</button>
-            </div>
-        `;
-    });
-    html += '</div>';
-    
-    container.innerHTML = html;
-}
-
-function removeFile(index) {
-    selectedFiles.splice(index, 1);
-    displaySelectedFiles();
-}
-
-function getFileIcon(filename) {
-    const ext = filename.split('.').pop().toLowerCase();
-    const icons = {
-        'pdf': '📄',
-        'doc': '📝', 'docx': '📝',
-        'ppt': '📊', 'pptx': '📊',
-        'xls': '📈', 'xlsx': '📈',
-        'mp4': '🎥', 'avi': '🎥', 'mov': '🎥', 'wmv': '🎥', 'flv': '🎥', 'mkv': '🎥',
-        'jpg': '🖼️', 'jpeg': '🖼️', 'png': '🖼️', 'gif': '🖼️', 'svg': '🖼️',
-        'zip': '📦', 'rar': '📦', '7z': '📦',
-        'txt': '📃', 'md': '📃',
-        'py': '🐍', 'js': '⚡', 'html': '🌐', 'css': '🎨'
-    };
-    return icons[ext] || '📎';
-}
-
-function formatFileSize(bytes) {
-    if (bytes === 0) return '0 B';
-    const k = 1024;
-    const sizes = ['B', 'KB', 'MB', 'GB'];
-    const i = Math.floor(Math.log(bytes) / Math.log(k));
-    return Math.round(bytes / Math.pow(k, i) * 100) / 100 + ' ' + sizes[i];
-}
-
-// Open submit assignment modal
-function openSubmitAssignmentModal(assignmentId) {
-    const modal = document.getElementById('submitAssignmentModal');
-    if (!modal) return;
-    
-    document.getElementById('submitAssignmentId').value = assignmentId;
-    selectedFiles = [];
-    displaySelectedFiles();
-    document.getElementById('submissionNote').value = '';
-    
-    modal.classList.add('active');
-}
-
-// Handle assignment submission
-async function handleSubmitAssignment(event) {
-    event.preventDefault();
-    
-    const assignmentId = document.getElementById('submitAssignmentId').value;
-    const note = document.getElementById('submissionNote').value;
-    
-    if (selectedFiles.length === 0) {
-        showNotification('Please select at least one file!', 'error');
-        return;
-    }
-    
-    // Get GitHub configuration
-    const config = JSON.parse(localStorage.getItem('githubConfig') || '{}');
-    if (!config.username || !config.repo || !config.token) {
-        showNotification('⚠️ Please configure GitHub information first!', 'error');
-        setTimeout(() => openGithubConfigModal(), 1500);
-        return;
-    }
-    
-    showNotification('📤 Uploading to GitHub...', 'info');
-    
-    try {
-        let uploadCount = 0;
-        const totalFiles = selectedFiles.length;
-        
-        // Upload all files to GitHub
-        for (let i = 0; i < selectedFiles.length; i++) {
-            const file = selectedFiles[i];
-            showNotification(`📤 Uploading ${i + 1}/${totalFiles}: ${file.name}`, 'info');
-            
-            try {
-                await uploadToGithub(file, config, assignmentId);
-                uploadCount++;
-            } catch (fileError) {
-                console.error(`File ${file.name} upload failed:`, fileError);
-                throw new Error(`File ${file.name} upload failed: ${fileError.message}`);
-            }
-        }
-        
-        // Automatically update assignment status to "submitted"
-        updateAssignmentStatus(assignmentId, 'submitted', note);
-                
-        // Add status history record
-        addStatusHistory(assignmentId, 'submitted', `Student submitted assignment with ${uploadCount} file(s)`);
-        
-        // Close modal
-        closeModal('submitAssignmentModal');
-        selectedFiles = [];
-        
-        showNotification(`✅ Assignment submitted successfully! ${uploadCount} file(s) synced to GitHub`, 'success');
-        
-        // Refresh assignment list
-        loadAssignments();
-    } catch (error) {
-        console.error('Upload failed:', error);
-        showNotification('❌ Upload failed: ' + error.message, 'error');
-    }
-}
-
-// Upload file to GitHub
-async function uploadToGithub(file, config, assignmentId) {
-    const reader = new FileReader();
-    
-    return new Promise((resolve, reject) => {
-        reader.onload = async function(e) {
-            try {
-                const content = e.target.result.split(',')[1]; // Get Base64 content
-                const path = `assignments/${assignmentId}/${file.name}`;
-                
-                // GitHub API URL
-                const url = `https://api.github.com/repos/${config.username}/${config.repo}/contents/${path}`;
-                
-                // Check if file already exists
-                let sha = null;
-                try {
-                    const checkResponse = await fetch(url, {
-                        headers: {
-                            'Authorization': `token ${config.token}`,
-                            'Accept': 'application/vnd.github.v3+json'
-                        }
-                    });
-                    
-                    if (checkResponse.ok) {
-                        const existingFile = await checkResponse.json();
-                        sha = existingFile.sha;
-                        console.log(`File already exists, will update: ${file.name}`);
-                    }
-                } catch (e) {
-                    // File does not exist, continue upload
-                    console.log(`New file upload: ${file.name}`);
-                }
-                
-                // Upload or update file
-                const response = await fetch(url, {
-                    method: 'PUT',
-                    headers: {
-                        'Authorization': `token ${config.token}`,
-                        'Content-Type': 'application/json',
-                        'Accept': 'application/vnd.github.v3+json'
-                    },
-                    body: JSON.stringify({
-                        message: sha ? `Update ${file.name} for assignment ${assignmentId}` : `Upload ${file.name} for assignment ${assignmentId}`,
-                        content: content,
-                        branch: config.branch,
-                        ...(sha && { sha: sha })
-                    })
-                });
-                
-                if (!response.ok) {
-                    const errorData = await response.json();
-                    const errorMsg = errorData.message || 'Upload failed';
-                    
-                    // Provide more detailed error information
-                    if (response.status === 404) {
-                        throw new Error('Repository not found or no access permission');
-                    } else if (response.status === 403) {
-                        throw new Error('Token is invalid or insufficient permissions');
-                    } else if (response.status === 422) {
-                        throw new Error('Invalid file format or too large (max 25MB)');
-                    } else {
-                        throw new Error(errorMsg);
-                    }
-                }
-                
-                const result = await response.json();
-                console.log(`✅ File uploaded successfully: ${file.name}`, result.content.html_url);
-                resolve(result);
-            } catch (error) {
-                console.error('❌ Upload error:', error);
-                reject(error);
-            }
-        };
-        
-        reader.onerror = () => {
-            console.error('File read failed');
-            reject(new Error('File read failed'));
-        };
-        
-        reader.readAsDataURL(file);
-    });
-}
-
-// Update assignment status
-function updateAssignmentStatus(assignmentId, status, note = '') {
-    const assignments = JSON.parse(localStorage.getItem('assignments') || '[]');
-    const assignment = assignments.find(a => a.id == assignmentId);
-    
-    if (assignment) {
-        const oldStatus = assignment.status;
-        assignment.status = status;
-        assignment.submittedAt = new Date().toISOString();
-        
-        // Save note if provided
-        if (note) {
-            assignment.submissionNote = note;
-        }
-        
-        localStorage.setItem('assignments', JSON.stringify(assignments));
-        
-        // Record status change
-        console.log(`Assignment ${assignmentId} status changed from ${oldStatus} to ${status}`);
-    }
-}
-
-// Add status history record
-function addStatusHistory(assignmentId, newStatus, action) {
-    const assignments = JSON.parse(localStorage.getItem('assignments') || '[]');
-    const assignment = assignments.find(a => a.id == assignmentId);
-    
-    if (assignment) {
-        if (!assignment.statusHistory) {
-            assignment.statusHistory = [];
-        }
-        
-        assignment.statusHistory.push({
-            status: newStatus,
-            action: action,
-            timestamp: new Date().toISOString(),
-            operator: getCurrentUser()
-        });
-        
-        // Keep only the last 10 records
-        if (assignment.statusHistory.length > 10) {
-            assignment.statusHistory = assignment.statusHistory.slice(-10);
-        }
-        
-        localStorage.setItem('assignments', JSON.stringify(assignments));
-    }
-}
-
-// Get current user (simplified version, should actually get from login system)
-function getCurrentUser() {
-    // This can be extended to get from localStorage or login system
-    return 'Current User';
-}
-
-// Load assignment list
+// Load and display assignments
 function loadAssignments() {
-    const assignmentList = document.getElementById('assignmentList');
-    if (!assignmentList) return;
+    const assignmentsList = document.getElementById('assignmentsList');
+    if (!assignmentsList) return;
     
     const assignments = JSON.parse(localStorage.getItem('assignments') || '[]');
     
     if (assignments.length === 0) {
-        assignmentList.innerHTML = `
-            <div id="emptyState" style="text-align: center; padding: 60px 20px; color: var(--text-secondary);">
+        assignmentsList.innerHTML = `
+            <div style="text-align: center; padding: 60px 20px; color: var(--text-secondary);">
                 <div style="font-size: 64px; margin-bottom: 20px;">📝</div>
                 <h3 style="font-size: 20px; font-weight: 600; margin-bottom: 8px; color: var(--text-primary);">No assignments yet</h3>
                 <p style="font-size: 15px;">Click "New Assignment" button to create your first assignment</p>
@@ -834,446 +501,273 @@ function loadAssignments() {
     
     let html = '';
     assignments.forEach(assignment => {
-        const statusInfo = getStatusInfo(assignment.status);
+        const statusClass = `status-${assignment.status}`;
+        const statusText = {
+            'pending': '⏳ Pending',
+            'submitted': '📤 Submitted',
+            'grading': '🔍 Grading',
+            'completed': '✅ Completed'
+        }[assignment.status] || assignment.status;
         
         html += `
-            <div class="assignment-item">
+            <div class="assignment-card">
                 <div class="assignment-header">
-                    <h3 class="assignment-title">${assignment.title}</h3>
-                    <span class="assignment-status ${statusInfo.class}" title="${statusInfo.description}">${statusInfo.text}</span>
-                </div>
-                <div class="assignment-meta">
-                    <span>📅 Deadline: ${assignment.deadline}</span>
-                    <span>👤 Submitter: ${assignment.submitter === '全体成员' ? '👥 All Members' : assignment.submitter}</span>
-                    ${assignment.grade ? `<span>⭐ Grade: ${assignment.grade}</span>` : ''}
-                </div>
-                <p class="assignment-description">${assignment.description}</p>
-                ${assignment.feedback ? `
-                    <div style="margin-top: 12px; padding: 12px; background: #fff9e6; border-left: 4px solid #ffa500; border-radius: 8px;">
-                        <p style="font-size: 14px; color: var(--text-primary); margin: 0;">
-                            <strong>💬 Feedback:</strong>${assignment.feedback}
-                        </p>
+                    <div>
+                        <h3 class="assignment-title">${assignment.title}</h3>
+                        <div class="assignment-meta">
+                            👤 ${assignment.submitter} | 📅 Deadline: ${assignment.deadline}
+                        </div>
                     </div>
-                ` : ''}
-                ${assignment.statusHistory && assignment.statusHistory.length > 0 ? `
-                    <div style="margin-top: 12px; padding: 10px; background: #f5f5f7; border-radius: 8px; font-size: 13px;">
-                        <details>
-                            <summary style="cursor: pointer; color: var(--text-secondary); font-weight: 500;">📋 View Status History (${assignment.statusHistory.length})</summary>
-                            <div style="margin-top: 10px; max-height: 150px; overflow-y: auto;">
-                                ${assignment.statusHistory.slice().reverse().map(h => `
-                                    <div style="padding: 6px 0; border-bottom: 1px solid #e0e0e0;">
-                                        <span style="color: var(--primary-color);">${getStatusInfo(h.status).text}</span>
-                                        <span style="color: var(--text-secondary); margin-left: 8px;">${h.action}</span>
-                                        <span style="color: #999; margin-left: 8px; font-size: 12px;">${new Date(h.timestamp).toLocaleString('en-US')}</span>
-                                    </div>
-                                `).join('')}
-                            </div>
-                        </details>
-                    </div>
-                ` : ''}
-                <div style="margin-top: 16px; display: flex; gap: 10px; flex-wrap: wrap;">
-                    ${assignment.status !== 'submitted' && assignment.status !== 'grading' && assignment.status !== 'graded' && assignment.status !== 'excellent' ? `
-                        <button class="btn btn-primary btn-small" onclick="openSubmitAssignmentModal('${assignment.id}')">📤 Submit Assignment</button>
-                    ` : ''}
-                    <button class="btn btn-secondary btn-small" onclick="openUpdateStatusModal('${assignment.id}')">📊 Update Status</button>
-                    <button class="btn btn-secondary btn-small" onclick="openEditAssignmentModal('${assignment.id}')">✏️ Edit</button>
-                    <button class="btn btn-small" style="background: #ff4444; color: white;" onclick="deleteAssignment('${assignment.id}')">🗑️ Delete</button>
-                    ${(assignment.status === 'submitted' || assignment.status === 'grading' || assignment.status === 'graded' || assignment.status === 'excellent' || assignment.status === 'needs_revision') ? `
-                        <a href="https://github.com/${JSON.parse(localStorage.getItem('githubConfig') || '{}').username}/${JSON.parse(localStorage.getItem('githubConfig') || '{}').repo}/tree/main/assignments/${assignment.id}" 
-                           target="_blank" 
-                           class="btn btn-secondary btn-small">
-                            🔗 GitHub
-                        </a>
-                    ` : ''}
+                    <span class="assignment-status ${statusClass}">${statusText}</span>
+                </div>
+                ${assignment.description ? `<p class="assignment-description">${assignment.description}</p>` : ''}
+                <div class="assignment-actions">
+                    <button class="btn btn-primary btn-small" onclick="openSubmitAssignmentModal(${assignment.id})">📤 Submit</button>
+                    <button class="btn btn-secondary btn-small" onclick="deleteAssignment(${assignment.id})">Delete</button>
                 </div>
             </div>
         `;
     });
     
-    assignmentList.innerHTML = html;
+    assignmentsList.innerHTML = html;
 }
 
-// Get status information
-function getStatusInfo(status) {
-    const statusMap = {
-        'pending': { 
-            text: '⏳ Pending', 
-            class: 'status-pending',
-            description: 'Assignment created, waiting for student submission'
-        },
-        'submitted': { 
-            text: '📤 Submitted', 
-            class: 'status-submitted',
-            description: 'Student submitted, waiting for teacher grading'
-        },
-        'grading': { 
-            text: '🔍 Grading', 
-            class: 'status-graded',
-            description: 'Teacher is grading'
-        },
-        'needs_revision': { 
-            text: '✏️ Needs Revision', 
-            class: 'status-needs-revision',
-            description: 'Student needs to revise based on feedback and resubmit'
-        },
-        'graded': { 
-            text: '✅ Graded', 
-            class: 'status-graded',
-            description: 'Teacher has completed grading'
-        },
-        'excellent': { 
-            text: '🌟 Excellent', 
-            class: 'status-excellent',
-            description: 'Excellent work, worthy of praise'
-        }
-    };
-    return statusMap[status] || statusMap['pending'];
+// Open submit assignment modal
+function openSubmitAssignmentModal(assignmentId) {
+    document.getElementById('submitAssignmentId').value = assignmentId;
+    openModal('submitAssignmentModal');
 }
 
-// Open edit assignment modal
-function openEditAssignmentModal(assignmentId) {
-    const assignments = JSON.parse(localStorage.getItem('assignments') || '[]');
-    const assignment = assignments.find(a => a.id == assignmentId);
-    
-    if (!assignment) {
-        showNotification('Assignment not found!', 'error');
-        return;
-    }
-    
-    document.getElementById('editAssignmentId').value = assignmentId;
-    document.getElementById('editAssignmentTitle').value = assignment.title;
-    document.getElementById('editAssignmentDesc').value = assignment.description;
-    document.getElementById('editAssignmentDeadline').value = assignment.deadline;
-    document.getElementById('editAssignmentSubmitter').value = assignment.submitter;
-    
-    const modal = document.getElementById('editAssignmentModal');
-    modal.classList.add('active');
-}
-
-// Save edited assignment
-function saveEditAssignment(event) {
+// Handle assignment submission
+async function handleSubmitAssignment(event) {
     event.preventDefault();
     
-    const assignmentId = document.getElementById('editAssignmentId').value;
-    const title = document.getElementById('editAssignmentTitle').value;
-    const description = document.getElementById('editAssignmentDesc').value;
-    const deadline = document.getElementById('editAssignmentDeadline').value;
-    const submitter = document.getElementById('editAssignmentSubmitter').value;
+    const assignmentId = parseInt(document.getElementById('submitAssignmentId').value);
+    const submissionLink = document.getElementById('submissionLink').value.trim();
+    const notes = document.getElementById('submissionNotes').value.trim();
     
+    // Convert files to base64
+    const filesData = await convertFilesToBase64(selectedAssignmentFiles);
+    
+    // Update assignment status
     const assignments = JSON.parse(localStorage.getItem('assignments') || '[]');
-    const index = assignments.findIndex(a => a.id == assignmentId);
+    const assignment = assignments.find(a => a.id === assignmentId);
     
-    if (index !== -1) {
-        assignments[index].title = title;
-        assignments[index].description = description;
-        assignments[index].deadline = deadline;
-        assignments[index].submitter = submitter;
-        assignments[index].updatedAt = new Date().toISOString();
+    if (assignment) {
+        assignment.status = 'submitted';
+        assignment.submissionLink = submissionLink;
+        assignment.notes = notes;
+        assignment.files = filesData;
+        assignment.submittedAt = new Date().toISOString();
         
         localStorage.setItem('assignments', JSON.stringify(assignments));
-        closeModal('editAssignmentModal');
-        showNotification('Assignment updated successfully!', 'success');
+        
+        showNotification('✅ Assignment submitted successfully!');
+        closeModal('submitAssignmentModal');
+        
+        // Reset form
+        event.target.reset();
+        selectedAssignmentFiles = [];
+        document.getElementById('selectedFilesList').innerHTML = '';
+        
+        // Reload assignments
         loadAssignments();
+        
+        // Try to sync to GitHub
+        uploadToGithub(assignment);
     }
 }
 
 // Delete assignment
-async function deleteAssignment(assignmentId) {
-    if (!confirm('Are you sure you want to delete this assignment? This will also delete related files from GitHub repository.')) {
-        return;
-    }
+function deleteAssignment(assignmentId) {
+    if (!confirm('Are you sure you want to delete this assignment?')) return;
     
     const assignments = JSON.parse(localStorage.getItem('assignments') || '[]');
-    const assignment = assignments.find(a => a.id == assignmentId);
-    
-    if (!assignment) {
-        showNotification('Assignment not found!', 'error');
-        return;
-    }
-    
-    // If assignment is submitted, try to delete files from GitHub
-    if (assignment.status === 'submitted' || assignment.status === 'grading' || 
-        assignment.status === 'graded' || assignment.status === 'excellent' || 
-        assignment.status === 'needs_revision') {
-        
-        const config = JSON.parse(localStorage.getItem('githubConfig') || '{}');
-        if (config.username && config.repo && config.token) {
-            try {
-                showNotification('Deleting files from GitHub...', 'info');
-                await deleteAssignmentFromGithub(assignmentId, config);
-                showNotification('✅ GitHub files deleted', 'success');
-            } catch (error) {
-                console.error('Failed to delete GitHub files:', error);
-                showNotification('⚠️ Local assignment deleted, but GitHub file deletion failed: ' + error.message, 'error');
-            }
-        }
-    }
-    
-    // Delete assignment from localStorage
-    const filtered = assignments.filter(a => a.id != assignmentId);
+    const filtered = assignments.filter(a => a.id !== assignmentId);
     localStorage.setItem('assignments', JSON.stringify(filtered));
-    showNotification('🗑️ Assignment deleted', 'success');
+    
+    showNotification('✅ Assignment deleted!');
     loadAssignments();
 }
 
-// Delete assignment files from GitHub
-async function deleteAssignmentFromGithub(assignmentId, config) {
-    const basePath = `assignments/${assignmentId}`;
+// ==================== GitHub Integration ====================
+
+// Open GitHub config modal
+function openGithubConfigModal() {
+    // Load existing config
+    const config = JSON.parse(localStorage.getItem('githubConfig') || '{}');
+    if (config.username) {
+        document.getElementById('githubUsername').value = config.username;
+    }
+    if (config.repo) {
+        document.getElementById('githubRepo').value = config.repo;
+    }
+    if (config.token) {
+        document.getElementById('githubToken').value = config.token;
+    }
+    if (config.branch) {
+        document.getElementById('githubBranch').value = config.branch;
+    }
+    
+    openModal('githubConfigModal');
+}
+
+// Save GitHub configuration
+function saveGithubConfig(event) {
+    event.preventDefault();
+    
+    const config = {
+        username: document.getElementById('githubUsername').value.trim(),
+        repo: document.getElementById('githubRepo').value.trim(),
+        token: document.getElementById('githubToken').value.trim(),
+        branch: document.getElementById('githubBranch').value.trim() || 'main'
+    };
+    
+    if (!config.username || !config.repo) {
+        showNotification('❌ Please fill in username and repository!', 'error');
+        return;
+    }
+    
+    localStorage.setItem('githubConfig', JSON.stringify(config));
+    showNotification('✅ GitHub configuration saved!');
+    closeModal('githubConfigModal');
+}
+
+// Test GitHub connection
+async function testGithubConnection() {
+    const config = JSON.parse(localStorage.getItem('githubConfig') || '{}');
+    
+    if (!config.username || !config.token) {
+        showNotification('❌ Please configure username and token first!', 'error');
+        return;
+    }
     
     try {
-        // 获取该作业目录下的所有文件
-        const url = `https://api.github.com/repos/${config.username}/${config.repo}/contents/${basePath}`;
-        
-        const response = await fetch(url, {
+        const response = await fetch(`https://api.github.com/users/${config.username}`, {
             headers: {
-                'Authorization': `token ${config.token}`,
-                'Accept': 'application/vnd.github.v3+json'
+                'Authorization': `token ${config.token}`
             }
         });
         
-        if (!response.ok) {
-            if (response.status === 404) {
-                // 目录不存在，无需删除
-                console.log('GitHub 上该作业目录不存在');
-                return;
-            }
-            throw new Error('获取文件列表失败');
+        if (response.ok) {
+            showNotification('✅ GitHub connection successful!');
+        } else {
+            showNotification('❌ GitHub connection failed!', 'error');
         }
-        
-        const files = await response.json();
-        
-        // 逐个删除文件
-        for (const file of files) {
-            if (file.type === 'file') {
-                await deleteFileFromGithub(file.path, file.sha, config, `Delete ${file.name} for assignment ${assignmentId}`);
-            }
-        }
-        
-        console.log(`成功删除作业 ${assignmentId} 的所有文件`);
     } catch (error) {
-        console.error('删除作业文件时出错:', error);
-        throw error;
+        showNotification('❌ Connection error: ' + error.message, 'error');
     }
 }
 
-// 删除单个文件 from GitHub
-async function deleteFileFromGithub(path, sha, config, message) {
-    const url = `https://api.github.com/repos/${config.username}/${config.repo}/contents/${path}`;
+// Upload assignment to GitHub
+async function uploadToGithub(assignment) {
+    const config = JSON.parse(localStorage.getItem('githubConfig') || '{}');
     
-    const response = await fetch(url, {
-        method: 'DELETE',
-        headers: {
-            'Authorization': `token ${config.token}`,
-            'Content-Type': 'application/json',
-            'Accept': 'application/vnd.github.v3+json'
-        },
-        body: JSON.stringify({
-            message: message,
-            sha: sha,
-            branch: config.branch
-        })
-    });
-    
-    if (!response.ok) {
-        const error = await response.json();
-        throw new Error(error.message || '删除文件失败');
-    }
-    
-    return true;
-}
-
-// 打开修改状态模态框
-function openUpdateStatusModal(assignmentId) {
-    const assignments = JSON.parse(localStorage.getItem('assignments') || '[]');
-    const assignment = assignments.find(a => a.id == assignmentId);
-    
-    if (!assignment) {
-        showNotification('Assignment not found!', 'error');
+    if (!config.username || !config.repo || !config.token) {
+        console.log('GitHub not configured, skipping sync');
         return;
     }
     
-    document.getElementById('statusAssignmentId').value = assignmentId;
-    
-    // 显示当前状态
-    const statusInfo = getStatusInfo(assignment.status);
-    document.getElementById('currentStatusDisplay').innerHTML = `
-        <span style="font-size: 20px; margin-right: 8px;">${statusInfo.text.split(' ')[0]}</span>
-        <strong>${statusInfo.text.split(' ').slice(1).join(' ')}</strong>
-    `;
-    
-    // 设置新状态默认值
-    document.getElementById('newStatusSelect').value = assignment.status;
-    
-    // 填充已有成绩和评语
-    document.getElementById('gradeInput').value = assignment.grade || '';
-    document.getElementById('feedbackInput').value = assignment.feedback || '';
-    
-    const modal = document.getElementById('updateStatusModal');
-    modal.classList.add('active');
+    try {
+        const content = {
+            title: assignment.title,
+            description: assignment.description,
+            submitter: assignment.submitter,
+            deadline: assignment.deadline,
+            submissionLink: assignment.submissionLink,
+            submittedAt: assignment.submittedAt
+        };
+        
+        const encodedContent = btoa(JSON.stringify(content, null, 2));
+        
+        const response = await fetch(
+            `https://api.github.com/repos/${config.username}/${config.repo}/contents/assignments/${assignment.id}.json`,
+            {
+                method: 'PUT',
+                headers: {
+                    'Authorization': `token ${config.token}`,
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    message: `Add assignment: ${assignment.title}`,
+                    content: encodedContent,
+                    branch: config.branch
+                })
+            }
+        );
+        
+        if (response.ok) {
+            showNotification('✅ Synced to GitHub successfully!');
+        } else {
+            console.error('GitHub sync failed:', await response.text());
+        }
+    } catch (error) {
+        console.error('GitHub sync error:', error);
+    }
 }
 
-// 保存状态更新
-function saveUpdateStatus(event) {
+// ==================== Project Management ====================
+
+// Open add project modal
+function openAddProjectModal() {
+    openModal('addProjectModal');
+}
+
+// Save new project
+async function saveNewProject(event) {
     event.preventDefault();
     
-    const assignmentId = document.getElementById('statusAssignmentId').value;
-    const newStatus = document.getElementById('newStatusSelect').value;
-    const grade = document.getElementById('gradeInput').value;
-    const feedback = document.getElementById('feedbackInput').value;
+    const name = document.getElementById('projectName').value.trim();
+    const description = document.getElementById('projectDescription').value.trim();
+    const tags = document.getElementById('projectTags').value.split(',').map(t => t.trim()).filter(t => t);
+    const demoLink = document.getElementById('projectDemoLink').value.trim();
+    const githubLink = document.getElementById('projectGithubLink').value.trim();
     
-    const assignments = JSON.parse(localStorage.getItem('assignments') || '[]');
-    const assignment = assignments.find(a => a.id == assignmentId);
-    
-    if (assignment) {
-        const oldStatus = assignment.status;
-        
-        // 智能状态流转逻辑
-        let autoMessage = '';
-        
-        // 如果从"已批改"或"优秀"改为"需修改"，自动提示学生需要重新提交
-        if ((oldStatus === 'graded' || oldStatus === 'excellent') && newStatus === 'needs_revision') {
-            autoMessage = '⚠️ 作业状态已变更为“需修改”，请学生根据评语修改后重新提交';
-        }
-        
-        // 如果从"需修改"改为"已提交"，自动提示老师待批改
-        if (oldStatus === 'needs_revision' && newStatus === 'submitted') {
-            autoMessage = '✅ 学生已重新提交，状态自动变更为“待批改”';
-            // 自动将状态改为 grading（待批改）
-            assignment.status = 'grading';
-        } else {
-            assignment.status = newStatus;
-        }
-        
-        // 保存成绩和评语
-        if (grade) assignment.grade = grade;
-        if (feedback) assignment.feedback = feedback;
-        assignment.statusUpdatedAt = new Date().toISOString();
-        
-        // 添加状态历史
-        const actionMap = {
-            'pending': '设置为待提交',
-            'submitted': '提交作业',
-            'grading': '开始批改',
-            'needs_revision': '标记为需修改',
-            'graded': '完成批改',
-            'excellent': '标记为优秀'
-        };
-        addStatusHistory(assignmentId, assignment.status, actionMap[assignment.status] || '状态变更');
-        
-        localStorage.setItem('assignments', JSON.stringify(assignments));
-        closeModal('updateStatusModal');
-        
-        // 显示成功消息，如果有自动流转提示则一起显示
-        if (autoMessage) {
-            showNotification(autoMessage, 'info');
-        } else {
-            showNotification('✅ 状态更新成功！', 'success');
-        }
-        
-        loadAssignments();
-    }
-}
-
-// 页面加载时初始化作业列表
-if (window.location.pathname.includes('assignments.html')) {
-    document.addEventListener('DOMContentLoaded', function() {
-        loadAssignments();
-    });
-}
-
-// ===== 工具函数：根据作业提交人员预生成团队成员 =====
-// 已废弃，改用 initializeDefaultMembers
-
-// ===== 初始化默认成员数据 =====
-function initializeDefaultMembers() {
-    console.log('🔧 初始化默认成员数据...');
-    
-    // 检查是否已有成员数据
-    const existingMembers = JSON.parse(localStorage.getItem('teamMembers') || '{}');
-    
-    // 如果已经有成员数据，不覆盖
-    if (Object.keys(existingMembers).length > 0) {
-        console.log('✅ 成员数据已存在，跳过初始化');
+    if (!name) {
+        showNotification('❌ Please enter a project name!', 'error');
         return;
     }
     
-    // 预设的7个成员
-    const defaultMembers = {
-        '1': {
-            name: 'Wang Chengle',
-            role: 'Team Member',
-            avatar: '👨‍💻',
-            avatarType: 'emoji'
-        },
-        '2': {
-            name: 'Chen Kangwen',
-            role: 'Team Member',
-            avatar: '👨‍💻',
-            avatarType: 'emoji'
-        },
-        '3': {
-            name: 'Wu Changhong',
-            role: 'Team Member',
-            avatar: '👨‍💻',
-            avatarType: 'emoji'
-        },
-        '4': {
-            name: 'Liu Xiehan',
-            role: 'Team Member',
-            avatar: '👨‍💻',
-            avatarType: 'emoji'
-        },
-        '5': {
-            name: 'Zhu Yihong',
-            role: 'Team Member',
-            avatar: '👨‍💻',
-            avatarType: 'emoji'
-        },
-        '6': {
-            name: 'Xu Ke',
-            role: 'Team Member',
-            avatar: '👨‍💻',
-            avatarType: 'emoji'
-        },
-        '7': {
-            name: 'Ge Chenfei',
-            role: 'Team Member',
-            avatar: '👩‍💻',
-            avatarType: 'emoji'
-        }
+    // Convert files to base64
+    const filesData = await convertFilesToBase64(selectedProjectFiles);
+    
+    const projects = JSON.parse(localStorage.getItem('projects') || '[]');
+    const newProject = {
+        id: Date.now(),
+        name: name,
+        description: description,
+        tags: tags,
+        demoLink: demoLink,
+        githubLink: githubLink,
+        files: filesData,
+        createdAt: new Date().toISOString()
     };
     
-    // 保存到 localStorage
-    localStorage.setItem('teamMembers', JSON.stringify(defaultMembers));
+    projects.push(newProject);
+    localStorage.setItem('projects', JSON.stringify(projects));
     
-    console.log('✅ Successfully initialized 7 default members');
-    console.log('Member list:', Object.values(defaultMembers).map(m => m.name).join(', '));
+    showNotification('✅ Project created successfully!');
+    closeModal('addProjectModal');
+    
+    // Reset form
+    event.target.reset();
+    selectedProjectFiles = [];
+    document.getElementById('selectedProjectFilesList').innerHTML = '';
+    
+    // Reload projects
+    loadProjects();
 }
 
-// Initialize default members on page load
-if (window.location.pathname.includes('team.html') || window.location.pathname.endsWith('team.html')) {
-    document.addEventListener('DOMContentLoaded', function() {
-        initializeDefaultMembers();
-    });
-}
-
-// Load projects on Final Project page
-if (window.location.pathname.includes('final-project.html')) {
-    document.addEventListener('DOMContentLoaded', function() {
-        loadProjects();
-    });
-}
-
-// Load projects from localStorage
+// Load and display projects
 function loadProjects() {
-    const projectShowcase = document.getElementById('projectShowcase');
-    if (!projectShowcase) return;
+    const projectsGrid = document.getElementById('projectsGrid');
+    if (!projectsGrid) return;
     
     const projects = JSON.parse(localStorage.getItem('projects') || '[]');
     
     if (projects.length === 0) {
-        projectShowcase.innerHTML = `
-            <div style="text-align: center; padding: 60px 20px; color: var(--text-secondary);">
+        projectsGrid.innerHTML = `
+            <div style="text-align: center; padding: 60px 20px; color: var(--text-secondary); grid-column: 1/-1;">
                 <div style="font-size: 64px; margin-bottom: 20px;">🚀</div>
                 <h3 style="font-size: 20px; font-weight: 600; margin-bottom: 8px; color: var(--text-primary);">No projects yet</h3>
                 <p style="font-size: 15px;">Click "New Project" button to create your first project</p>
@@ -1285,10 +779,10 @@ function loadProjects() {
     let html = '';
     projects.forEach(project => {
         const colors = [
-            'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
-            'linear-gradient(135deg, #f093fb 0%, #f5576c 100%)',
-            'linear-gradient(135deg, #4facfe 0%, #00f2fe 100%)',
-            'linear-gradient(135deg, #43e97b 0%, #38f9d7 100%)'
+            'linear-gradient(135deg, #0071e3 0%, #5e5ce6 100%)',
+            'linear-gradient(135deg, #ff375f 0%, #ff9f0a 100%)',
+            'linear-gradient(135deg, #30d158 0%, #64d2ff 100%)',
+            'linear-gradient(135deg, #bf5af2 0%, #ff375f 100%)'
         ];
         const randomColor = colors[Math.floor(Math.random() * colors.length)];
         
@@ -1309,13 +803,444 @@ function loadProjects() {
                     <h3 class="project-title">${project.name}</h3>
                     <p class="project-description">${project.description}</p>
                     <div class="project-tags">${tagsHtml}</div>
-                    <div style="margin-top: 20px; display: flex; gap: 12px;">${buttonsHtml}</div>
+                    <div style="display: flex; gap: 12px;">${buttonsHtml}</div>
                 </div>
             </div>
         `;
     });
     
-    projectShowcase.innerHTML = html;
+    projectsGrid.innerHTML = html;
 }
 
-console.log('Team Space loaded successfully!');
+// ==================== Page Initialization ====================
+
+// Load member profile page
+function loadMemberProfile() {
+    const urlParams = new URLSearchParams(window.location.search);
+    const memberId = urlParams.get('id');
+    
+    console.log('🔍 Loading member profile for ID:', memberId);
+    
+    if (!memberId) {
+        window.location.href = 'team.html';
+        return;
+    }
+    
+    const members = JSON.parse(localStorage.getItem('teamMembers') || '{}');
+    const member = members[memberId];
+    
+    console.log('👤 Member data:', member);
+    
+    if (!member) {
+        console.error('❌ Member not found with ID:', memberId);
+        window.location.href = 'team.html';
+        return;
+    }
+    
+    // Update page title
+    document.title = `${member.name} - Team Space`;
+    
+    // Update favicon to member's avatar
+    updateMemberFavicon(member);
+    
+    // Render profile card
+    const profileCard = document.getElementById('profileCard');
+    if (!profileCard) return;
+    
+    const avatarDisplay = member.avatarType === 'image' 
+        ? `<img src="${member.avatar}" style="width: 100%; height: 100%; object-fit: cover;">`
+        : `<div style="font-size: 180px;">${member.avatar}</div>`;
+    
+    // Build skills tags
+    const skillsHtml = (member.skills && member.skills.length > 0) 
+        ? `<div class="profile-section">
+            <h3>Skills</h3>
+            <div class="skills-tags">
+                ${member.skills.map(skill => `<span class="skill-tag">${skill}</span>`).join('')}
+            </div>
+           </div>`
+        : '';
+    
+    // Build hobbies tags
+    const hobbiesHtml = (member.hobbies && member.hobbies.length > 0)
+        ? `<div class="profile-section">
+            <h3>Hobbies</h3>
+            <div class="hobbies-tags">
+                ${member.hobbies.map(hobby => `<span class="hobby-tag">🎯 ${hobby}</span>`).join('')}
+            </div>
+           </div>`
+        : '';
+    
+    // Build contact info
+    const contactHtml = `
+        <div class="profile-section">
+            <h3>Contact</h3>
+            <div class="contact-info">
+                ${member.email ? `<div class="contact-item"><span class="contact-icon">📧</span><a href="mailto:${member.email}">${member.email}</a></div>` : ''}
+                ${member.github ? `<div class="contact-item"><span class="contact-icon">💻</span><a href="https://github.com/${member.github}" target="_blank">github.com/${member.github}</a></div>` : ''}
+            </div>
+        </div>
+    `;
+    
+    profileCard.innerHTML = `
+        <div class="profile-header">
+            <div class="profile-avatar" onclick="openChangeAvatarModal(${memberId})">
+                ${avatarDisplay}
+                <div class="avatar-edit-overlay">
+                    <span>📷 Change Avatar</span>
+                </div>
+            </div>
+            <div class="profile-info">
+                <h1 class="profile-name">${member.name}</h1>
+                <p class="profile-role">${member.role}</p>
+                <button class="btn btn-primary" onclick="openEditProfileModal(${memberId})">✏️ Edit Profile</button>
+            </div>
+        </div>
+        <div class="profile-body">
+            ${member.bio ? `<div class="profile-section"><h3>About</h3><p class="profile-bio">${member.bio}</p></div>` : ''}
+            ${contactHtml}
+            ${skillsHtml}
+            ${hobbiesHtml}
+        </div>
+    `;
+}
+
+// Update favicon to member's avatar
+function updateMemberFavicon(member) {
+    const faviconLink = document.getElementById('dynamicFavicon');
+    if (!faviconLink) return;
+    
+    // Clean up old object URLs to prevent memory leaks
+    if (faviconLink.href && faviconLink.href.startsWith('blob:')) {
+        URL.revokeObjectURL(faviconLink.href);
+    }
+    
+    if (member.avatarType === 'image' && member.avatar) {
+        // Create a dynamic SVG favicon with the member's image
+        const svgContent = `
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
+                <circle cx="50" cy="50" r="45" fill="#2d2d44"/>
+                <foreignObject x="10" y="10" width="80" height="80">
+                    <div xmlns="http://www.w3.org/1999/xhtml" style="width: 100%; height: 100%; display: flex; align-items: center; justify-content: center;">
+                        <img src="${member.avatar}" style="width: 70px; height: 70px; border-radius: 50%; object-fit: cover;">
+                    </div>
+                </foreignObject>
+            </svg>
+        `;
+        const blob = new Blob([svgContent], { type: 'image/svg+xml;charset=utf-8' });
+        const url = URL.createObjectURL(blob);
+        faviconLink.href = url;
+    } else {
+        // Use emoji avatar - properly encode it
+        const emoji = member.avatar || '🐱';
+        const svgContent = `
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
+                <circle cx="50" cy="50" r="45" fill="#2d2d44"/>
+                <text x="50" y="70" font-size="60" text-anchor="middle">${emoji}</text>
+            </svg>
+        `;
+        const blob = new Blob([svgContent], { type: 'image/svg+xml;charset=utf-8' });
+        const url = URL.createObjectURL(blob);
+        faviconLink.href = url;
+    }
+}
+
+// Open edit profile modal
+function openEditProfileModal(memberId) {
+    const members = JSON.parse(localStorage.getItem('teamMembers') || '{}');
+    const member = members[memberId];
+    
+    if (!member) return;
+    
+    document.getElementById('editProfileId').value = memberId;
+    document.getElementById('editProfileName').value = member.name;
+    document.getElementById('editProfileRole').value = member.role;
+    document.getElementById('editProfileEmail').value = member.email || '';
+    document.getElementById('editProfileGithub').value = member.github || '';
+    document.getElementById('editProfileBio').value = member.bio || '';
+    document.getElementById('editProfileSkills').value = (member.skills || []).join(', ');
+    document.getElementById('editProfileHobbies').value = (member.hobbies || []).join(', ');
+    
+    openModal('editProfileModal');
+}
+
+// Save profile edit
+function saveProfileEdit(event) {
+    event.preventDefault();
+    
+    const memberId = document.getElementById('editProfileId').value;
+    const name = document.getElementById('editProfileName').value.trim();
+    const role = document.getElementById('editProfileRole').value.trim();
+    const email = document.getElementById('editProfileEmail').value.trim();
+    const github = document.getElementById('editProfileGithub').value.trim();
+    const bio = document.getElementById('editProfileBio').value.trim();
+    const skills = document.getElementById('editProfileSkills').value.split(',').map(s => s.trim()).filter(s => s);
+    const hobbies = document.getElementById('editProfileHobbies').value.split(',').map(h => h.trim()).filter(h => h);
+    
+    if (!name || !role) {
+        showNotification('❌ Please fill in all required fields!', 'error');
+        return;
+    }
+    
+    const members = JSON.parse(localStorage.getItem('teamMembers') || '{}');
+    if (members[memberId]) {
+        members[memberId].name = name;
+        members[memberId].role = role;
+        members[memberId].email = email;
+        members[memberId].github = github;
+        members[memberId].bio = bio;
+        members[memberId].skills = skills;
+        members[memberId].hobbies = hobbies;
+        
+        localStorage.setItem('teamMembers', JSON.stringify(members));
+        
+        showNotification('✅ Profile updated successfully!');
+        closeModal('editProfileModal');
+        
+        // Reload profile
+        loadMemberProfile();
+        updateDynamicLogo();
+    }
+}
+
+// Avatar change variables for profile page
+let profileAvatarData = null;
+let selectedEmoji = null;
+
+// Open change avatar modal
+function openChangeAvatarModal(memberId) {
+    currentMemberId = memberId;
+    profileAvatarData = null;
+    selectedEmoji = null;
+    document.getElementById('profileAvatarFileInput').value = '';
+    document.getElementById('profileAvatarPreviewContainer').style.display = 'none';
+    document.getElementById('confirmProfileAvatarBtn').disabled = true;
+    openModal('changeAvatarModal');
+}
+
+// Select emoji avatar
+function selectEmoji(emoji) {
+    selectedEmoji = emoji;
+    profileAvatarData = null;
+    
+    // Show preview
+    const preview = document.getElementById('profileAvatarPreview');
+    preview.src = `data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200"><text x="100" y="140" font-size="120" text-anchor="middle">${encodeURIComponent(emoji)}</text></svg>`;
+    document.getElementById('profileAvatarPreviewContainer').style.display = 'block';
+    document.getElementById('confirmProfileAvatarBtn').disabled = false;
+}
+
+// Handle profile avatar upload
+function handleProfileAvatarUpload(event) {
+    const file = event.target.files[0];
+    if (!file) return;
+
+    if (!file.type.startsWith('image/')) {
+        showNotification('❌ Please select an image file!', 'error');
+        return;
+    }
+
+    if (file.size > 5 * 1024 * 1024) {
+        showNotification('❌ File size must be less than 5MB!', 'error');
+        return;
+    }
+
+    const reader = new FileReader();
+    reader.onload = function(e) {
+        const img = new Image();
+        img.onload = function() {
+            processImage(img, function(processedDataUrl) {
+                profileAvatarData = processedDataUrl;
+                selectedEmoji = null;
+                
+                const preview = document.getElementById('profileAvatarPreview');
+                preview.src = processedDataUrl;
+                document.getElementById('profileAvatarPreviewContainer').style.display = 'block';
+                document.getElementById('confirmProfileAvatarBtn').disabled = false;
+            });
+        };
+        img.src = e.target.result;
+    };
+    reader.readAsDataURL(file);
+}
+
+// Confirm profile avatar change
+function confirmProfileAvatarChange() {
+    if (!currentMemberId) return;
+    
+    const members = JSON.parse(localStorage.getItem('teamMembers') || '{}');
+    if (members[currentMemberId]) {
+        if (selectedEmoji) {
+            members[currentMemberId].avatar = selectedEmoji;
+            members[currentMemberId].avatarType = 'emoji';
+        } else if (profileAvatarData) {
+            members[currentMemberId].avatar = profileAvatarData;
+            members[currentMemberId].avatarType = 'image';
+        }
+        
+        localStorage.setItem('teamMembers', JSON.stringify(members));
+        
+        showNotification('✅ Avatar updated successfully!');
+        closeModal('changeAvatarModal');
+        
+        // Reload profile to show new avatar
+        loadMemberProfile();
+        
+        // Update sidebar logo
+        updateDynamicLogo();
+        
+        // Force refresh the page to update favicon properly
+        setTimeout(() => {
+            window.location.reload();
+        }, 500);
+    }
+}
+
+// ==================== File Upload Functions ====================
+
+let selectedAssignmentFiles = [];
+let selectedProjectFiles = [];
+
+// Handle file selection for assignments
+function handleFileSelect(event) {
+    const files = Array.from(event.target.files);
+    selectedAssignmentFiles = files;
+    displaySelectedFiles('selectedFilesList', files);
+}
+
+// Handle file selection for projects
+function handleProjectFileSelect(event) {
+    const files = Array.from(event.target.files);
+    selectedProjectFiles = files;
+    displaySelectedFiles('selectedProjectFilesList', files);
+}
+
+// Display selected files
+function displaySelectedFiles(containerId, files) {
+    const container = document.getElementById(containerId);
+    if (!container) return;
+    
+    if (files.length === 0) {
+        container.innerHTML = '';
+        return;
+    }
+    
+    let html = '<div style="margin-top: 12px;">';
+    files.forEach((file, index) => {
+        const fileSize = formatFileSize(file.size);
+        const icon = getFileIcon(file.type);
+        html += `
+            <div class="file-item">
+                <span class="file-icon">${icon}</span>
+                <span class="file-name">${file.name}</span>
+                <span class="file-size">${fileSize}</span>
+                <button type="button" class="file-remove" onclick="removeFile('${containerId}', ${index})">&times;</button>
+            </div>
+        `;
+    });
+    html += '</div>';
+    
+    container.innerHTML = html;
+}
+
+// Format file size
+function formatFileSize(bytes) {
+    if (bytes === 0) return '0 Bytes';
+    const k = 1024;
+    const sizes = ['Bytes', 'KB', 'MB', 'GB'];
+    const i = Math.floor(Math.log(bytes) / Math.log(k));
+    return Math.round(bytes / Math.pow(k, i) * 100) / 100 + ' ' + sizes[i];
+}
+
+// Get file icon based on type
+function getFileIcon(mimeType) {
+    if (mimeType.startsWith('image/')) return '🖼️';
+    if (mimeType.startsWith('video/')) return '🎥';
+    if (mimeType.includes('pdf')) return '📄';
+    if (mimeType.includes('word') || mimeType.includes('document')) return '📝';
+    if (mimeType.includes('excel') || mimeType.includes('spreadsheet')) return '📊';
+    if (mimeType.includes('powerpoint') || mimeType.includes('presentation')) return '📽️';
+    if (mimeType.includes('zip') || mimeType.includes('rar') || mimeType.includes('archive')) return '📦';
+    return '📄';
+}
+
+// Remove file from selection
+function removeFile(containerId, index) {
+    if (containerId === 'selectedFilesList') {
+        selectedAssignmentFiles.splice(index, 1);
+        displaySelectedFiles('selectedFilesList', selectedAssignmentFiles);
+    } else if (containerId === 'selectedProjectFilesList') {
+        selectedProjectFiles.splice(index, 1);
+        displaySelectedFiles('selectedProjectFilesList', selectedProjectFiles);
+    }
+}
+
+// Convert files to base64 for storage
+async function convertFilesToBase64(files) {
+    const promises = files.map(file => {
+        return new Promise((resolve) => {
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                resolve({
+                    name: file.name,
+                    type: file.type,
+                    size: file.size,
+                    data: e.target.result
+                });
+            };
+            reader.readAsDataURL(file);
+        });
+    });
+    
+    return await Promise.all(promises);
+}
+
+// Initialize on page load
+document.addEventListener('DOMContentLoaded', function() {
+    // Update dynamic logo on all pages
+    updateDynamicLogo();
+    
+    // Load member profile if on member page
+    if (window.location.pathname.includes('member.html') || window.location.pathname.endsWith('member.html')) {
+        loadMemberProfile();
+    }
+    
+    // Initialize default members on team page
+    if (window.location.pathname.includes('team.html') || window.location.pathname.endsWith('team.html')) {
+        initializeDefaultMembers();
+        loadMembers();
+    }
+    
+    // Load assignments on assignments page
+    if (window.location.pathname.includes('assignments.html') || window.location.pathname.endsWith('assignments.html')) {
+        loadAssignments();
+        populateSubmitterOptions();
+    }
+    
+    // Load projects on final-project page
+    if (window.location.pathname.includes('final-project.html') || window.location.pathname.endsWith('final-project.html')) {
+        loadProjects();
+    }
+    
+    // Update stats on homepage
+    if (window.location.pathname.includes('index.html') || window.location.pathname.endsWith('index.html') || window.location.pathname === '/') {
+        updateHomepageStats();
+    }
+    
+    console.log('Team Space loaded successfully!');
+});
+
+// Update homepage statistics
+function updateHomepageStats() {
+    const members = JSON.parse(localStorage.getItem('teamMembers') || '{}');
+    const assignments = JSON.parse(localStorage.getItem('assignments') || '[]');
+    const projects = JSON.parse(localStorage.getItem('projects') || '[]');
+    
+    const statMembers = document.getElementById('statMembers');
+    const statAssignments = document.getElementById('statAssignments');
+    const statProjects = document.getElementById('statProjects');
+    
+    if (statMembers) statMembers.textContent = Object.keys(members).length;
+    if (statAssignments) statAssignments.textContent = assignments.length;
+    if (statProjects) statProjects.textContent = projects.length;
+}

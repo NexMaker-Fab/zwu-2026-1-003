@@ -3,108 +3,104 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Final Project</title>
+    <title>Projects - Team Space</title>
     <link rel="icon" type="image/svg+xml" href="favicon.svg">
-    <link rel="alternate icon" type="image/png" href="favicon.png">
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-    <!-- Navigation Bar -->
-    <nav class="navbar">
-        <div class="nav-container">
-            <div class="nav-brand">Team Space</div>
-            <ul class="nav-menu">
-                <li><a href="index.html">Home</a></li>
-                <li><a href="team.html">Team</a></li>
-                <li><a href="assignments.html">Assignments</a></li>
-                <li><a href="final-project.html" class="active">Final Project</a></li>
-            </ul>
+    <!-- Left Sidebar Navigation -->
+    <nav class="sidebar">
+        <div class="sidebar-header">
+            <div class="logo-icon">🐱</div>
         </div>
+        <ul class="sidebar-menu">
+            <li><a href="index.html" title="Home">
+                <span class="menu-icon">🏠</span>
+                <span class="menu-text">Home</span>
+            </a></li>
+            <li><a href="team.html" title="Team">
+                <span class="menu-icon">👥</span>
+                <span class="menu-text">Team</span>
+            </a></li>
+            <li><a href="assignments.html" title="Assignments">
+                <span class="menu-icon">📝</span>
+                <span class="menu-text">Assignments</span>
+            </a></li>
+            <li><a href="final-project.html" class="active" title="Projects">
+                <span class="menu-icon">🚀</span>
+                <span class="menu-text">Projects</span>
+            </a></li>
+        </ul>
     </nav>
 
+    <!-- Main Content -->
+    <main class="main-content">
+
     <!-- Page Header -->
-    <header class="page-header">
-        <h1 class="page-title editable" data-field="projectPageTitle">
-            Final Project
-            <button class="edit-btn" onclick="openEditModal('projectPageTitle')">Edit</button>
-        </h1>
-        <p class="page-subtitle editable" data-field="projectPageSubtitle">
-            Showcase our final project achievements
-            <button class="edit-btn" onclick="openEditModal('projectPageSubtitle')">Edit</button>
-        </p>
-    </header>
-
-    <!-- Project Showcase -->
-    <section class="content-section">
-        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px;">
-            <h2 style="font-size: 28px; font-weight: 600; letter-spacing: -0.5px;">Projects</h2>
-            <button class="btn btn-primary" onclick="openAddProjectModal()">+ New Project</button>
-        </div>
-
-        <div class="project-showcase" id="projectShowcase">
-            <!-- Projects will be added here dynamically -->
+    <section class="page-header">
+        <div class="container">
+            <h1 class="page-title">Final Projects</h1>
+            <p class="page-subtitle">Showcase our final project achievements</p>
         </div>
     </section>
 
-    <!-- Footer -->
-    <footer class="footer">
+    <!-- Projects Section -->
+    <section class="content-section">
         <div class="container">
-            <p>&copy; 2026 Team Space. All rights reserved.</p>
-        </div>
-    </footer>
-
-    <!-- Edit Modal -->
-    <div class="modal" id="editModal">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h3 class="modal-title">Edit Content</h3>
-                <button class="modal-close" onclick="closeModal('editModal')">&times;</button>
+            <div class="section-header">
+                <h2 class="section-title">Project Showcase</h2>
+                <button class="btn btn-primary" onclick="openAddProjectModal()">+ New Project</button>
             </div>
-            <form id="editForm" onsubmit="saveEdit(event)">
-                <input type="hidden" id="editField" name="field">
-                <div class="form-group">
-                    <label class="form-label">Content</label>
-                    <textarea class="form-textarea" id="editContent" name="content" rows="6"></textarea>
-                </div>
-                <div style="display: flex; gap: 12px; justify-content: flex-end;">
-                    <button type="button" class="btn btn-secondary" onclick="closeModal('editModal')">Cancel</button>
-                    <button type="submit" class="btn btn-primary">Save</button>
-                </div>
-            </form>
+
+            <div class="projects-grid" id="projectsGrid">
+                <!-- Projects will be loaded dynamically -->
+            </div>
         </div>
-    </div>
+    </section>
+
+    </main>
 
     <!-- Add Project Modal -->
     <div class="modal" id="addProjectModal">
-        <div class="modal-content">
+        <div class="modal-content modal-large">
             <div class="modal-header">
                 <h3 class="modal-title">New Project</h3>
                 <button class="modal-close" onclick="closeModal('addProjectModal')">&times;</button>
             </div>
-            <form id="addProjectForm" onsubmit="saveNewProject(event)">
+            <form onsubmit="saveNewProject(event)">
                 <div class="form-group">
                     <label class="form-label">Project Name</label>
-                    <input type="text" class="form-input" id="projectNameInput" required>
+                    <input type="text" class="form-input" id="projectName" required placeholder="Enter project name">
                 </div>
                 <div class="form-group">
                     <label class="form-label">Description</label>
-                    <textarea class="form-textarea" id="projectDescInput" rows="4" required></textarea>
+                    <textarea class="form-textarea" id="projectDescription" rows="4" placeholder="Project description"></textarea>
                 </div>
                 <div class="form-group">
-                    <label class="form-label">Tech Tags (comma separated)</label>
-                    <input type="text" class="form-input" id="projectTagsInput" placeholder="e.g., React, Node.js, MongoDB">
+                    <label class="form-label">Tags (comma-separated)</label>
+                    <input type="text" class="form-input" id="projectTags" placeholder="e.g., React, Node.js, MongoDB">
                 </div>
                 <div class="form-group">
-                    <label class="form-label">Demo Link</label>
-                    <input type="url" class="form-input" id="projectDemoInput" placeholder="https://...">
+                    <label class="form-label">Demo Link (Optional)</label>
+                    <input type="url" class="form-input" id="projectDemoLink" placeholder="https://...">
                 </div>
                 <div class="form-group">
-                    <label class="form-label">GitHub Link</label>
-                    <input type="url" class="form-input" id="projectGithubInput" placeholder="https://github.com/...">
+                    <label class="form-label">GitHub Link (Optional)</label>
+                    <input type="url" class="form-input" id="projectGithubLink" placeholder="https://github.com/...">
                 </div>
-                <div style="display: flex; gap: 12px; justify-content: flex-end;">
+                <div class="form-group">
+                    <label class="form-label">Upload Project Files</label>
+                    <div class="file-upload-area" id="projectFileUploadArea" onclick="document.getElementById('projectFiles').click()">
+                        <div class="file-upload-icon">📁</div>
+                        <p>Click to upload or drag and drop</p>
+                        <small>Images, Videos, Documents, Archives (Max 50MB per file)</small>
+                    </div>
+                    <input type="file" id="projectFiles" multiple accept="image/*,video/*,.pdf,.doc,.docx,.xls,.xlsx,.ppt,.pptx,.zip,.rar,.7z" style="display: none;" onchange="handleProjectFileSelect(event)">
+                    <div id="selectedProjectFilesList" class="selected-files-list"></div>
+                </div>
+                <div class="modal-actions">
                     <button type="button" class="btn btn-secondary" onclick="closeModal('addProjectModal')">Cancel</button>
-                    <button type="submit" class="btn btn-primary">Create</button>
+                    <button type="submit" class="btn btn-primary">Create Project</button>
                 </div>
             </form>
         </div>

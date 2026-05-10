@@ -3,184 +3,95 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Assignments</title>
+    <title>Assignments - Team Space</title>
     <link rel="icon" type="image/svg+xml" href="favicon.svg">
-    <link rel="alternate icon" type="image/png" href="favicon.png">
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-    <!-- Navigation Bar -->
-    <nav class="navbar">
-        <div class="nav-container">
-            <div class="nav-brand">Team Space</div>
-            <ul class="nav-menu">
-                <li><a href="index.html">Home</a></li>
-                <li><a href="team.html">Team</a></li>
-                <li><a href="assignments.html" class="active">Assignments</a></li>
-                <li><a href="final-project.html">Final Project</a></li>
-            </ul>
+    <!-- Left Sidebar Navigation -->
+    <nav class="sidebar">
+        <div class="sidebar-header">
+            <div class="logo-icon">🐱</div>
         </div>
+        <ul class="sidebar-menu">
+            <li><a href="index.html" title="Home">
+                <span class="menu-icon">🏠</span>
+                <span class="menu-text">Home</span>
+            </a></li>
+            <li><a href="team.html" title="Team">
+                <span class="menu-icon">👥</span>
+                <span class="menu-text">Team</span>
+            </a></li>
+            <li><a href="assignments.html" class="active" title="Assignments">
+                <span class="menu-icon">📝</span>
+                <span class="menu-text">Assignments</span>
+            </a></li>
+            <li><a href="final-project.html" title="Projects">
+                <span class="menu-icon">🚀</span>
+                <span class="menu-text">Projects</span>
+            </a></li>
+        </ul>
     </nav>
 
+    <!-- Main Content -->
+    <main class="main-content">
+
     <!-- Page Header -->
-    <header class="page-header">
-        <h1 class="page-title editable" data-field="assignmentTitle">
-            Assignment Submission
-            <button class="edit-btn" onclick="openEditModal('assignmentTitle')">Edit</button>
-        </h1>
-        <p class="page-subtitle editable" data-field="assignmentSubtitle">
-            Manage and submit course assignments
-            <button class="edit-btn" onclick="openEditModal('assignmentSubtitle')">Edit</button>
-        </p>
-    </header>
-
-    <!-- 作业列表 -->
-    <section class="content-section">
-        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px;">
-            <h2 style="font-size: 28px; font-weight: 600; letter-spacing: -0.5px;">Assignments</h2>
-            <div style="display: flex; gap: 12px;">
-                <button class="btn btn-secondary" onclick="openGithubConfigModal()">⚙️ GitHub Config</button>
-                <button class="btn btn-primary" onclick="openAddAssignmentModal()">+ New Assignment</button>
-            </div>
-        </div>
-
-        <div class="assignment-list" id="assignmentList">
-            <!-- Assignments will be loaded dynamically via JavaScript -->
-            <div id="emptyState" style="text-align: center; padding: 60px 20px; color: var(--text-secondary);">
-                <div style="font-size: 64px; margin-bottom: 20px;">📝</div>
-                <h3 style="font-size: 20px; font-weight: 600; margin-bottom: 8px; color: var(--text-primary);">No Assignments Yet</h3>
-                <p style="font-size: 15px;">Click "New Assignment" to create your first assignment</p>
-            </div>
-        </div>
-    </section>
-
-    <!-- 提交流程说明 -->
-    <section class="content-section" style="background: var(--bg-secondary); border-radius: 24px; margin: 40px auto; max-width: 1200px;">
-        <h2 style="font-size: 28px; font-weight: 600; margin-bottom: 20px; text-align: center; letter-spacing: -0.5px;">Submission Process</h2>
-        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 30px; padding: 20px;">
-            <div style="text-align: center;">
-                <div style="width: 60px; height: 60px; background: var(--yt-red); color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 24px; font-weight: 600; margin: 0 auto 16px;">1</div>
-                <h3 style="font-size: 18px; font-weight: 600; margin-bottom: 8px;">Create Assignment</h3>
-                <p style="font-size: 15px; color: var(--text-secondary);">Click "New Assignment" button and fill in the details</p>
-            </div>
-            <div style="text-align: center;">
-                <div style="width: 60px; height: 60px; background: var(--yt-red); color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 24px; font-weight: 600; margin: 0 auto 16px;">2</div>
-                <h3 style="font-size: 18px; font-weight: 600; margin-bottom: 8px;">Upload Files</h3>
-                <p style="font-size: 15px; color: var(--text-secondary);">Upload code files or provide GitHub link</p>
-            </div>
-            <div style="text-align: center;">
-                <div style="width: 60px; height: 60px; background: var(--yt-red); color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 24px; font-weight: 600; margin: 0 auto 16px;">3</div>
-                <h3 style="font-size: 18px; font-weight: 600; margin-bottom: 8px;">Wait for Grading</h3>
-                <p style="font-size: 15px; color: var(--text-secondary);">Teacher will grade and provide feedback</p>
-            </div>
-        </div>
-    </section>
-
-    <!-- Footer -->
-    <footer class="footer">
+    <section class="page-header">
         <div class="container">
-            <p>&copy; 2026 Team Space. All rights reserved.</p>
+            <h1 class="page-title">Assignments</h1>
+            <p class="page-subtitle">Manage and track assignment submissions</p>
         </div>
-    </footer>
+    </section>
 
-    <!-- Edit Modal -->
-    <div class="modal" id="editModal">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h3 class="modal-title">Edit Content</h3>
-                <button class="modal-close" onclick="closeModal('editModal')">&times;</button>
+    <!-- Assignments Section -->
+    <section class="content-section">
+        <div class="container">
+            <div class="section-header">
+                <h2 class="section-title">Assignment List</h2>
+                <div class="header-actions">
+                    <button class="btn btn-secondary" onclick="openGithubConfigModal()">⚙️ GitHub Config</button>
+                    <button class="btn btn-primary" onclick="openAddAssignmentModal()">+ New Assignment</button>
+                </div>
             </div>
-            <form id="editForm" onsubmit="saveEdit(event)">
-                <input type="hidden" id="editField" name="field">
-                <div class="form-group">
-                    <label class="form-label">Content</label>
-                    <textarea class="form-textarea" id="editContent" name="content" rows="6"></textarea>
-                </div>
-                <div style="display: flex; gap: 12px; justify-content: flex-end;">
-                    <button type="button" class="btn btn-secondary" onclick="closeModal('editModal')">Cancel</button>
-                    <button type="submit" class="btn btn-primary">Save</button>
-                </div>
-            </form>
+
+            <div class="assignments-list" id="assignmentsList">
+                <!-- Assignments will be loaded dynamically -->
+            </div>
         </div>
-    </div>
+    </section>
+
+    </main>
 
     <!-- Add Assignment Modal -->
     <div class="modal" id="addAssignmentModal">
-        <div class="modal-content" style="max-width: 700px;">
+        <div class="modal-content">
             <div class="modal-header">
                 <h3 class="modal-title">New Assignment</h3>
                 <button class="modal-close" onclick="closeModal('addAssignmentModal')">&times;</button>
             </div>
-            <form id="addAssignmentForm" onsubmit="saveNewAssignment(event)">
+            <form onsubmit="saveNewAssignment(event)">
                 <div class="form-group">
-                    <label class="form-label">Assignment Title</label>
-                    <input type="text" class="form-input" id="assignmentTitleInput" required placeholder="e.g., First Programming Assignment">
+                    <label class="form-label">Title</label>
+                    <input type="text" class="form-input" id="assignmentTitle" required placeholder="Assignment title">
                 </div>
                 <div class="form-group">
                     <label class="form-label">Description</label>
-                    <textarea class="form-textarea" id="assignmentDescInput" rows="4" required placeholder="Please describe the assignment requirements in detail..."></textarea>
+                    <textarea class="form-textarea" id="assignmentDescription" rows="4" placeholder="Assignment description"></textarea>
                 </div>
                 <div class="form-group">
-                    <label class="form-label">截止日期</label>
-                    <input type="date" class="form-input" id="assignmentDeadlineInput" required>
+                    <label class="form-label">Deadline</label>
+                    <input type="date" class="form-input" id="assignmentDeadline" required>
                 </div>
                 <div class="form-group">
                     <label class="form-label">Submitter</label>
-                    <select class="form-select" id="assignmentSubmitterInput" required>
-                        <option value="">Select member</option>
-                        <option value="全体成员">👥 All Members</option>
-                        <option value="Wang Chengle">Wang Chengle</option>
-                        <option value="Chen Kangwen">Chen Kangwen</option>
-                        <option value="Wu Changhong">Wu Changhong</option>
-                        <option value="Liu Xiehan">Liu Xiehan</option>
-                        <option value="Zhu Yihong">Zhu Yihong</option>
-                        <option value="Xu Ke">Xu Ke</option>
-                        <option value="Ge Chenfei">Ge Chenfei</option>
+                    <select class="form-select" id="assignmentSubmitter" required>
+                        <option value="">Select a member</option>
                     </select>
                 </div>
-                <div style="display: flex; gap: 12px; justify-content: flex-end;">
+                <div class="modal-actions">
                     <button type="button" class="btn btn-secondary" onclick="closeModal('addAssignmentModal')">Cancel</button>
-                    <button type="submit" class="btn btn-primary">Create</button>
-                </div>
-            </form>
-        </div>
-    </div>
-
-    <!-- Submit Assignment Modal -->
-    <div class="modal" id="submitAssignmentModal">
-        <div class="modal-content" style="max-width: 700px;">
-            <div class="modal-header">
-                <h3 class="modal-title">Submit Assignment</h3>
-                <button class="modal-close" onclick="closeModal('submitAssignmentModal')">&times;</button>
-            </div>
-            <form id="submitAssignmentForm" onsubmit="handleSubmitAssignment(event)">
-                <input type="hidden" id="submitAssignmentId">
-                <div class="form-group">
-                    <label class="form-label">选择文件</label>
-                    <div style="border: 2px dashed var(--border-color); border-radius: 12px; padding: 30px; text-align: center; background: var(--bg-secondary); cursor: pointer; transition: var(--transition);" 
-                         ondragover="handleDragOver(event)" 
-                         ondragleave="handleDragLeave(event)" 
-                         ondrop="handleDrop(event)"
-                         onclick="document.getElementById('fileInput').click()">
-                        <div style="font-size: 48px; margin-bottom: 12px;">📁</div>
-                        <p style="font-size: 16px; color: var(--text-primary); margin-bottom: 8px; font-weight: 500;">Click or drag files here</p>
-                        <p style="font-size: 13px; color: var(--text-secondary);">Supports PPT, PDF, Word, Video and other file types</p>
-                        <input type="file" id="fileInput" style="display: none;" multiple onchange="handleFileSelect(event)">
-                    </div>
-                </div>
-                <div id="selectedFiles" style="margin-bottom: 20px;"></div>
-                <div class="form-group">
-                    <label class="form-label">Note (Optional)</label>
-                    <textarea class="form-textarea" id="submissionNote" rows="3" placeholder="Add any notes or comments..."></textarea>
-                </div>
-                <div style="background: #f0f9ff; border-left: 4px solid var(--primary-color); padding: 16px; border-radius: 8px; margin-bottom: 20px;">
-                    <p style="font-size: 14px; color: var(--text-primary); margin: 0;">
-                        <strong>💡 Tip:</strong> Files will be automatically synced to your GitHub repository
-                    </p>
-                </div>
-                <div style="display: flex; gap: 12px; justify-content: flex-end;">
-                    <button type="button" class="btn btn-secondary" onclick="closeModal('submitAssignmentModal')">Cancel</button>
-                    <button type="submit" class="btn btn-primary">Submit to GitHub</button>
+                    <button type="submit" class="btn btn-primary">Create Assignment</button>
                 </div>
             </form>
         </div>
@@ -193,10 +104,10 @@
                 <h3 class="modal-title">GitHub Configuration</h3>
                 <button class="modal-close" onclick="closeModal('githubConfigModal')">&times;</button>
             </div>
-            <form id="githubConfigForm" onsubmit="saveGithubConfig(event)">
+            <form onsubmit="saveGithubConfig(event)">
                 <div class="form-group">
                     <label class="form-label">GitHub Username</label>
-                    <input type="text" class="form-input" id="githubUsername" required placeholder="e.g., your-username">
+                    <input type="text" class="form-input" id="githubUsername" required placeholder="Your GitHub username">
                 </div>
                 <div class="form-group">
                     <label class="form-label">Repository Name</label>
@@ -204,105 +115,52 @@
                 </div>
                 <div class="form-group">
                     <label class="form-label">Personal Access Token</label>
-                    <input type="password" class="form-input" id="githubToken" required placeholder="ghp_xxxxxxxxxxxx">
-                    <p style="font-size: 12px; color: var(--text-secondary); margin-top: 6px;">
-                        Generate in GitHub Settings > Developer settings > Personal access tokens
-                    </p>
+                    <input type="password" class="form-input" id="githubToken" placeholder="ghp_xxxxxxxxxxxx">
+                    <small class="form-hint">Generate at: Settings → Developer settings → Personal access tokens</small>
                 </div>
                 <div class="form-group">
-                    <label class="form-label">Branch Name</label>
+                    <label class="form-label">Branch</label>
                     <input type="text" class="form-input" id="githubBranch" value="main" placeholder="main">
                 </div>
-                <div style="display: flex; gap: 12px; justify-content: flex-end;">
+                <div class="modal-actions">
                     <button type="button" class="btn btn-secondary" onclick="closeModal('githubConfigModal')">Cancel</button>
-                    <button type="button" class="btn btn-secondary" onclick="testGithubConnection()">🔍 Test Connection</button>
+                    <button type="button" class="btn btn-secondary" onclick="testGithubConnection()">Test Connection</button>
                     <button type="submit" class="btn btn-primary">Save Configuration</button>
                 </div>
             </form>
         </div>
     </div>
 
-    <!-- Edit Assignment Modal -->
-    <div class="modal" id="editAssignmentModal">
-        <div class="modal-content" style="max-width: 700px;">
+    <!-- Submit Assignment Modal -->
+    <div class="modal" id="submitAssignmentModal">
+        <div class="modal-content modal-large">
             <div class="modal-header">
-                <h3 class="modal-title">Edit Assignment</h3>
-                <button class="modal-close" onclick="closeModal('editAssignmentModal')">&times;</button>
+                <h3 class="modal-title">Submit Assignment</h3>
+                <button class="modal-close" onclick="closeModal('submitAssignmentModal')">&times;</button>
             </div>
-            <form id="editAssignmentForm" onsubmit="saveEditAssignment(event)">
-                <input type="hidden" id="editAssignmentId">
+            <form onsubmit="handleSubmitAssignment(event)">
+                <input type="hidden" id="submitAssignmentId">
                 <div class="form-group">
-                    <label class="form-label">Title</label>
-                    <input type="text" class="form-input" id="editAssignmentTitle" required>
-                </div>
-                <div class="form-group">
-                    <label class="form-label">Description</label>
-                    <textarea class="form-textarea" id="editAssignmentDesc" rows="4" required></textarea>
+                    <label class="form-label">Submission Link (Optional)</label>
+                    <input type="url" class="form-input" id="submissionLink" placeholder="https://github.com/...">
                 </div>
                 <div class="form-group">
-                    <label class="form-label">Deadline</label>
-                    <input type="date" class="form-input" id="editAssignmentDeadline" required>
+                    <label class="form-label">Upload Files</label>
+                    <div class="file-upload-area" id="fileUploadArea" onclick="document.getElementById('assignmentFiles').click()">
+                        <div class="file-upload-icon">📁</div>
+                        <p>Click to upload or drag and drop</p>
+                        <small>Images, Videos, Documents, Archives (Max 50MB per file)</small>
+                    </div>
+                    <input type="file" id="assignmentFiles" multiple accept="image/*,video/*,.pdf,.doc,.docx,.xls,.xlsx,.ppt,.pptx,.zip,.rar,.7z" style="display: none;" onchange="handleFileSelect(event)">
+                    <div id="selectedFilesList" class="selected-files-list"></div>
                 </div>
                 <div class="form-group">
-                    <label class="form-label">Submitter</label>
-                    <select class="form-select" id="editAssignmentSubmitter" required>
-                        <option value="">Select member</option>
-                        <option value="全体成员">👥 All Members</option>
-                        <option value="Wang Chengle">Wang Chengle</option>
-                        <option value="Chen Kangwen">Chen Kangwen</option>
-                        <option value="Wu Changhong">Wu Changhong</option>
-                        <option value="Liu Xiehan">Liu Xiehan</option>
-                        <option value="Zhu Yihong">Zhu Yihong</option>
-                        <option value="Xu Ke">Xu Ke</option>
-                        <option value="Ge Chenfei">Ge Chenfei</option>
-                    </select>
+                    <label class="form-label">Notes (Optional)</label>
+                    <textarea class="form-textarea" id="submissionNotes" rows="3" placeholder="Additional notes"></textarea>
                 </div>
-                <div style="display: flex; gap: 12px; justify-content: flex-end;">
-                    <button type="button" class="btn btn-secondary" onclick="closeModal('editAssignmentModal')">Cancel</button>
-                    <button type="submit" class="btn btn-primary">Save Changes</button>
-                </div>
-            </form>
-        </div>
-    </div>
-
-    <!-- Update Status Modal -->
-    <div class="modal" id="updateStatusModal">
-        <div class="modal-content" style="max-width: 500px;">
-            <div class="modal-header">
-                <h3 class="modal-title">Update Assignment Status</h3>
-                <button class="modal-close" onclick="closeModal('updateStatusModal')">&times;</button>
-            </div>
-            <form id="updateStatusForm" onsubmit="saveUpdateStatus(event)">
-                <input type="hidden" id="statusAssignmentId">
-                <div class="form-group">
-                    <label class="form-label">Current Status</label>
-                    <div id="currentStatusDisplay" style="padding: 12px; background: var(--bg-secondary); border-radius: 8px; font-size: 15px;"></div>
-                </div>
-                <div class="form-group">
-                    <label class="form-label">New Status</label>
-                    <select class="form-select" id="newStatusSelect" required>
-                        <option value="pending">⏳ Pending - Assignment created, waiting for submission</option>
-                        <option value="submitted">📤 Submitted - Student submitted, waiting for grading</option>
-                        <option value="grading">🔍 Grading - Teacher is grading</option>
-                        <option value="needs_revision">✏️ Needs Revision - Student needs to revise and resubmit</option>
-                        <option value="graded">✅ Graded - Teacher completed grading</option>
-                        <option value="excellent">🌟 Excellent - Outstanding work</option>
-                    </select>
-                    <p style="font-size: 12px; color: var(--text-secondary); margin-top: 6px;">
-                        💡 Tip: When changing from "Graded" to "Needs Revision", the system will automatically prompt student to resubmit
-                    </p>
-                </div>
-                <div class="form-group">
-                    <label class="form-label">Grade (Optional)</label>
-                    <input type="text" class="form-input" id="gradeInput" placeholder="e.g., 95/100 or A+">
-                </div>
-                <div class="form-group">
-                    <label class="form-label">Feedback (Optional)</label>
-                    <textarea class="form-textarea" id="feedbackInput" rows="3" placeholder="Add feedback or comments..."></textarea>
-                </div>
-                <div style="display: flex; gap: 12px; justify-content: flex-end;">
-                    <button type="button" class="btn btn-secondary" onclick="closeModal('updateStatusModal')">Cancel</button>
-                    <button type="submit" class="btn btn-primary">Update Status</button>
+                <div class="modal-actions">
+                    <button type="button" class="btn btn-secondary" onclick="closeModal('submitAssignmentModal')">Cancel</button>
+                    <button type="submit" class="btn btn-primary">Submit & Sync to GitHub</button>
                 </div>
             </form>
         </div>
