@@ -1305,8 +1305,11 @@ let selectedProjectFiles = [];
 // Handle file selection for assignments
 function handleFileSelect(event) {
     const files = Array.from(event.target.files);
-    selectedAssignmentFiles = files;
-    displaySelectedFiles('selectedFilesList', files);
+    // Append new files to existing ones
+    selectedAssignmentFiles = [...selectedAssignmentFiles, ...files];
+    displaySelectedFiles('selectedFilesList', selectedAssignmentFiles);
+    // Clear the input so the same file can be selected again
+    event.target.value = '';
 }
 
 // Handle file selection for projects
@@ -1326,15 +1329,33 @@ function displaySelectedFiles(containerId, files) {
         return;
     }
     
-    let html = '<div style="margin-top: 12px;">';
+    let html = '<div class="selected-files-container">';
     files.forEach((file, index) => {
         const fileSize = formatFileSize(file.size);
         const icon = getFileIcon(file.type);
+        const isImage = file.type.startsWith('image/');
+        const isVideo = file.type.startsWith('video/');
+        
+        // Create preview URL for images and videos
+        const previewUrl = (isImage || isVideo) ? URL.createObjectURL(file) : null;
+        
         html += `
             <div class="file-item">
-                <span class="file-icon">${icon}</span>
-                <span class="file-name">${file.name}</span>
-                <span class="file-size">${fileSize}</span>
+                ${previewUrl ? `
+                    <div class="file-preview" onclick="openFilePreview('${previewUrl}', '${file.type}', '${file.name}')">
+                        ${isImage ? `<img src="${previewUrl}" alt="${file.name}">` : ''}
+                        ${isVideo ? `<video src="${previewUrl}"></video>` : ''}
+                        <div class="preview-overlay">
+                            <span class="preview-icon">🔍</span>
+                        </div>
+                    </div>
+                ` : `
+                    <div class="file-icon-large">${icon}</div>
+                `}
+                <div class="file-info">
+                    <span class="file-name">${file.name}</span>
+                    <span class="file-size">${fileSize}</span>
+                </div>
                 <button type="button" class="file-remove" onclick="removeFile('${containerId}', ${index})">&times;</button>
             </div>
         `;
@@ -1374,6 +1395,26 @@ function removeFile(containerId, index) {
         selectedProjectFiles.splice(index, 1);
         displaySelectedFiles('selectedProjectFilesList', selectedProjectFiles);
     }
+}
+
+// Open file preview modal
+function openFilePreview(url, type, name) {
+    document.getElementById('previewFileName').textContent = name;
+    const container = document.getElementById('previewContainer');
+    
+    if (type.startsWith('image/')) {
+        container.innerHTML = `<img src="${url}" alt="${name}" class="preview-image">`;
+    } else if (type.startsWith('video/')) {
+        container.innerHTML = `
+            <video src="${url}" controls class="preview-video">
+                Your browser does not support the video tag.
+            </video>
+        `;
+    } else {
+        container.innerHTML = '<p style="text-align: center; color: var(--text-secondary);">Preview not available for this file type.</p>';
+    }
+    
+    openModal('filePreviewModal');
 }
 
 // Convert files to base64 for storage
