@@ -1052,17 +1052,46 @@ async function uploadToGithub(assignment) {
             assignmentId: assignment.id
         });
         
+        // Step 1: Try to get existing file to retrieve its sha
+        let sha = null;
+        try {
+            const getResponse = await fetch(apiUrl, {
+                headers: {
+                    'Authorization': `token ${config.token}`
+                }
+            });
+            
+            if (getResponse.ok) {
+                const existingFile = await getResponse.json();
+                sha = existingFile.sha;
+                console.log('📄 Existing file found, sha:', sha);
+            } else if (getResponse.status === 404) {
+                console.log('✨ New file, will be created');
+            }
+        } catch (getError) {
+            console.log('️ Could not check existing file:', getError.message);
+        }
+        
+        // Step 2: Prepare request body
+        const requestBody = {
+            message: sha ? `Update assignment: ${assignment.title}` : `Add assignment: ${assignment.title}`,
+            content: encodedContent,
+            branch: config.branch || 'main'
+        };
+        
+        // Add sha if file exists
+        if (sha) {
+            requestBody.sha = sha;
+        }
+        
+        // Step 3: PUT request to create/update file
         const response = await fetch(apiUrl, {
             method: 'PUT',
             headers: {
                 'Authorization': `token ${config.token}`,
                 'Content-Type': 'application/json'
             },
-            body: JSON.stringify({
-                message: `Add assignment: ${assignment.title}`,
-                content: encodedContent,
-                branch: config.branch || 'main'
-            })
+            body: JSON.stringify(requestBody)
         });
         
         const responseData = await response.json();
@@ -1082,7 +1111,7 @@ async function uploadToGithub(assignment) {
             showNotification('✅ Synced to GitHub successfully!');
             return true;
         } else {
-            console.error('❌ GitHub sync failed:', response.status, responseData);
+            console.error(' GitHub sync failed:', response.status, responseData);
             
             let errorMessage = 'GitHub sync failed: ';
             if (responseData.message) {
