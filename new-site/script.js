@@ -672,6 +672,10 @@ function loadAssignments() {
 // Open submit assignment modal
 function openSubmitAssignmentModal(assignmentId) {
     document.getElementById('submitAssignmentId').value = assignmentId;
+    // Reset file selection when opening modal
+    selectedAssignmentFiles = [];
+    document.getElementById('selectedFilesList').innerHTML = '';
+    document.getElementById('assignmentFiles').value = '';
     openModal('submitAssignmentModal');
 }
 
