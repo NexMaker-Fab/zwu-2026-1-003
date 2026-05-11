@@ -113,8 +113,11 @@ function initializeDefaultMembers() {
     
     const existingMembers = JSON.parse(localStorage.getItem('teamMembers') || '{}');
     
-    // Only initialize if no members exist
-    if (Object.keys(existingMembers).length > 0) {
+    // Always ensure we have the 8 team members
+    const requiredMembers = ['1', '2', '3', '4', '5', '6', '7', '8'];
+    const needsInit = requiredMembers.some(id => !existingMembers[id]);
+    
+    if (!needsInit && Object.keys(existingMembers).length > 0) {
         console.log('✅ Member data already exists, skip initialization');
         return;
     }
@@ -123,7 +126,7 @@ function initializeDefaultMembers() {
         '1': { 
             name: 'Wang Chengle', 
             role: 'Team Member', 
-            avatar: '👨‍💻', 
+            avatar: '👨\u200d💻', 
             avatarType: 'emoji',
             bio: '',
             hobbies: [],
@@ -134,7 +137,7 @@ function initializeDefaultMembers() {
         '2': { 
             name: 'Wu Changhong', 
             role: 'Team Member', 
-            avatar: '👨‍💻', 
+            avatar: '👨\u200d💻', 
             avatarType: 'emoji',
             bio: '',
             hobbies: [],
@@ -145,7 +148,7 @@ function initializeDefaultMembers() {
         '3': { 
             name: 'Liu Xiehan', 
             role: 'Team Member', 
-            avatar: '👨‍💻', 
+            avatar: '👨\u200d💻', 
             avatarType: 'emoji',
             bio: '',
             hobbies: [],
@@ -156,7 +159,7 @@ function initializeDefaultMembers() {
         '4': { 
             name: 'Chen Kangwen', 
             role: 'Team Member', 
-            avatar: '👨‍💻', 
+            avatar: '👨\u200d💻', 
             avatarType: 'emoji',
             bio: '',
             hobbies: [],
@@ -167,7 +170,7 @@ function initializeDefaultMembers() {
         '5': { 
             name: 'Ge Chenfei', 
             role: 'Team Member', 
-            avatar: '👩‍💻', 
+            avatar: '👩\u200d💻', 
             avatarType: 'emoji',
             bio: '',
             hobbies: [],
@@ -178,7 +181,7 @@ function initializeDefaultMembers() {
         '6': { 
             name: 'Xu Ke', 
             role: 'Team Member', 
-            avatar: '👨‍💻', 
+            avatar: '👨\u200d💻', 
             avatarType: 'emoji',
             bio: '',
             hobbies: [],
@@ -189,7 +192,7 @@ function initializeDefaultMembers() {
         '7': { 
             name: 'Zhu Yihong', 
             role: 'Team Member', 
-            avatar: '👨‍💻', 
+            avatar: '👨\u200d💻', 
             avatarType: 'emoji',
             bio: '',
             hobbies: [],
@@ -200,7 +203,7 @@ function initializeDefaultMembers() {
         '8': { 
             name: 'Chen Yuzhe', 
             role: 'Team Member', 
-            avatar: '👨‍💻', 
+            avatar: '👨\u200d💻', 
             avatarType: 'emoji',
             bio: '',
             hobbies: [],
@@ -210,8 +213,11 @@ function initializeDefaultMembers() {
         }
     };
     
-    localStorage.setItem('teamMembers', JSON.stringify(defaultMembers));
-    console.log('✅ Successfully initialized 8 team members');
+    // Merge with existing members (preserve any custom data)
+    const mergedMembers = { ...defaultMembers, ...existingMembers };
+    
+    localStorage.setItem('teamMembers', JSON.stringify(mergedMembers));
+    console.log('✅ Successfully initialized/updated 8 team members');
 }
 
 // Load and display members
@@ -1023,28 +1029,135 @@ async function uploadToGithub(assignment) {
     }
     
     try {
-        const content = {
+        console.log('📤 Starting upload to GitHub:', {
+            username: config.username,
+            repo: config.repo,
+            branch: config.branch || 'main',
+            assignmentId: assignment.id
+        });
+        
+        // Step 1: Upload all files first
+        let fileUrls = [];
+        if (assignment.files && assignment.files.length > 0) {
+            showNotification('📤 Uploading files to GitHub...');
+            
+            for (let i = 0; i < assignment.files.length; i++) {
+                const file = assignment.files[i];
+                console.log(`📁 Uploading file ${i + 1}/${assignment.files.length}: ${file.name}`);
+                
+                // Extract base64 data from data URL
+                let base64Data = '';
+                if (file.data && file.data.startsWith('data:')) {
+                    base64Data = file.data.split(',')[1]; // Remove data:image/xxx;base64, prefix
+                } else if (file.content) {
+                    base64Data = file.content;
+                }
+                
+                if (!base64Data) {
+                    console.warn('⚠️ No file data found for:', file.name);
+                    continue;
+                }
+                
+                const filePath = `assignments/${assignment.id}/${file.name}`;
+                const apiUrl = `https://api.github.com/repos/${config.username}/${config.repo}/contents/${filePath}`;
+                
+                // Get sha if file exists
+                let sha = null;
+                try {
+                    const getResponse = await fetch(apiUrl, {
+                        headers: { 'Authorization': `token ${config.token}` }
+                    });
+                    if (getResponse.ok) {
+                        const existingFile = await getResponse.json();
+                        sha = existingFile.sha;
+                    }
+                } catch (e) {
+                    // File doesn't exist yet
+                }
+                
+                // Upload file
+                const requestBody = {
+                    message: `Upload file: ${file.name}`,
+                    content: base64Data,
+                    branch: config.branch || 'main'
+                };
+                
+                if (sha) {
+                    requestBody.sha = sha;
+                }
+                
+                const response = await fetch(apiUrl, {
+                    method: 'PUT',
+                    headers: {
+                        'Authorization': `token ${config.token}`,
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(requestBody)
+                });
+                
+                if (!response.ok) {
+                    const errorData = await response.json();
+                    console.error('❌ Failed to upload file:', file.name, errorData);
+                    showNotification(`❌ Failed to upload ${file.name}`, 'error');
+                    return false;
+                }
+                
+                const uploadResult = await response.json();
+                fileUrls.push({
+                    name: file.name,
+                    type: file.type,
+                    size: file.size,
+                    url: uploadResult.content.download_url,
+                    githubUrl: uploadResult.content.html_url
+                });
+                
+                console.log(`✅ Uploaded ${file.name}:`, uploadResult.content.html_url);
+            }
+        }
+        
+        // Step 2: Upload assignment metadata JSON
+        showNotification(' Uploading assignment data...');
+        
+        const metadata = {
             title: assignment.title,
             description: assignment.description,
             submitter: assignment.submitter,
             deadline: assignment.deadline,
             submissionLink: assignment.submissionLink,
             submittedAt: assignment.submittedAt,
-            files: assignment.files ? assignment.files.map(f => ({ name: f.name, type: f.type, size: f.size })) : []
+            teacherEvaluation: assignment.teacherEvaluation,
+            status: assignment.status,
+            files: fileUrls.length > 0 ? fileUrls : (assignment.files ? assignment.files.map(f => ({ name: f.name, type: f.type, size: f.size })) : [])
         };
         
-        const encodedContent = btoa(unescape(encodeURIComponent(JSON.stringify(content, null, 2))));
-        
+        const encodedContent = btoa(unescape(encodeURIComponent(JSON.stringify(metadata, null, 2))));
         const filePath = `assignments/${assignment.id}.json`;
         const apiUrl = `https://api.github.com/repos/${config.username}/${config.repo}/contents/${filePath}`;
         
-        console.log('📤 Uploading to GitHub:', {
-            url: apiUrl,
-            username: config.username,
-            repo: config.repo,
-            branch: config.branch || 'main',
-            assignmentId: assignment.id
-        });
+        // Get sha if file exists
+        let sha = null;
+        try {
+            const getResponse = await fetch(apiUrl, {
+                headers: { 'Authorization': `token ${config.token}` }
+            });
+            if (getResponse.ok) {
+                const existingFile = await getResponse.json();
+                sha = existingFile.sha;
+            }
+        } catch (e) {
+            // File doesn't exist yet
+        }
+        
+        // Upload metadata
+        const requestBody = {
+            message: `Sync assignment: ${assignment.title}`,
+            content: encodedContent,
+            branch: config.branch || 'main'
+        };
+        
+        if (sha) {
+            requestBody.sha = sha;
+        }
         
         const response = await fetch(apiUrl, {
             method: 'PUT',
@@ -1052,17 +1165,15 @@ async function uploadToGithub(assignment) {
                 'Authorization': `token ${config.token}`,
                 'Content-Type': 'application/json'
             },
-            body: JSON.stringify({
-                message: `Add assignment: ${assignment.title}`,
-                content: encodedContent,
-                branch: config.branch || 'main'
-            })
+            body: JSON.stringify(requestBody)
         });
         
         const responseData = await response.json();
         
         if (response.ok) {
-            console.log('✅ GitHub upload successful:', responseData);
+            console.log('✅ GitHub sync successful');
+            console.log('📁 Uploaded files:', fileUrls.length);
+            console.log('📄 Metadata URL:', responseData.content?.html_url);
             
             // Update sync status in localStorage
             const assignments = JSON.parse(localStorage.getItem('assignments') || '[]');
@@ -1073,7 +1184,7 @@ async function uploadToGithub(assignment) {
                 localStorage.setItem('assignments', JSON.stringify(assignments));
             }
             
-            showNotification('✅ Synced to GitHub successfully!');
+            showNotification(`✅ Synced to GitHub! (${fileUrls.length} files uploaded)`);
             return true;
         } else {
             console.error('❌ GitHub sync failed:', response.status, responseData);

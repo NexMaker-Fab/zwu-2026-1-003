@@ -1029,62 +1029,136 @@ async function uploadToGithub(assignment) {
     }
     
     try {
-        const content = {
-            title: assignment.title,
-            description: assignment.description,
-            submitter: assignment.submitter,
-            deadline: assignment.deadline,
-            submissionLink: assignment.submissionLink,
-            submittedAt: assignment.submittedAt,
-            files: assignment.files ? assignment.files.map(f => ({ name: f.name, type: f.type, size: f.size })) : []
-        };
-        
-        const encodedContent = btoa(unescape(encodeURIComponent(JSON.stringify(content, null, 2))));
-        
-        const filePath = `assignments/${assignment.id}.json`;
-        const apiUrl = `https://api.github.com/repos/${config.username}/${config.repo}/contents/${filePath}`;
-        
-        console.log('📤 Uploading to GitHub:', {
-            url: apiUrl,
+        console.log('📤 Starting upload to GitHub:', {
             username: config.username,
             repo: config.repo,
             branch: config.branch || 'main',
             assignmentId: assignment.id
         });
         
-        // Step 1: Try to get existing file to retrieve its sha
+        // Step 1: Upload all files first
+        let fileUrls = [];
+        if (assignment.files && assignment.files.length > 0) {
+            showNotification('📤 Uploading files to GitHub...');
+            
+            for (let i = 0; i < assignment.files.length; i++) {
+                const file = assignment.files[i];
+                console.log(`📁 Uploading file ${i + 1}/${assignment.files.length}: ${file.name}`);
+                
+                // Extract base64 data from data URL
+                let base64Data = '';
+                if (file.data && file.data.startsWith('data:')) {
+                    base64Data = file.data.split(',')[1]; // Remove data:image/xxx;base64, prefix
+                } else if (file.content) {
+                    base64Data = file.content;
+                }
+                
+                if (!base64Data) {
+                    console.warn('⚠️ No file data found for:', file.name);
+                    continue;
+                }
+                
+                const filePath = `assignments/${assignment.id}/${file.name}`;
+                const apiUrl = `https://api.github.com/repos/${config.username}/${config.repo}/contents/${filePath}`;
+                
+                // Get sha if file exists
+                let sha = null;
+                try {
+                    const getResponse = await fetch(apiUrl, {
+                        headers: { 'Authorization': `token ${config.token}` }
+                    });
+                    if (getResponse.ok) {
+                        const existingFile = await getResponse.json();
+                        sha = existingFile.sha;
+                    }
+                } catch (e) {
+                    // File doesn't exist yet
+                }
+                
+                // Upload file
+                const requestBody = {
+                    message: `Upload file: ${file.name}`,
+                    content: base64Data,
+                    branch: config.branch || 'main'
+                };
+                
+                if (sha) {
+                    requestBody.sha = sha;
+                }
+                
+                const response = await fetch(apiUrl, {
+                    method: 'PUT',
+                    headers: {
+                        'Authorization': `token ${config.token}`,
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(requestBody)
+                });
+                
+                if (!response.ok) {
+                    const errorData = await response.json();
+                    console.error('❌ Failed to upload file:', file.name, errorData);
+                    showNotification(`❌ Failed to upload ${file.name}`, 'error');
+                    return false;
+                }
+                
+                const uploadResult = await response.json();
+                fileUrls.push({
+                    name: file.name,
+                    type: file.type,
+                    size: file.size,
+                    url: uploadResult.content.download_url,
+                    githubUrl: uploadResult.content.html_url
+                });
+                
+                console.log(`✅ Uploaded ${file.name}:`, uploadResult.content.html_url);
+            }
+        }
+        
+        // Step 2: Upload assignment metadata JSON
+        showNotification(' Uploading assignment data...');
+        
+        const metadata = {
+            title: assignment.title,
+            description: assignment.description,
+            submitter: assignment.submitter,
+            deadline: assignment.deadline,
+            submissionLink: assignment.submissionLink,
+            submittedAt: assignment.submittedAt,
+            teacherEvaluation: assignment.teacherEvaluation,
+            status: assignment.status,
+            files: fileUrls.length > 0 ? fileUrls : (assignment.files ? assignment.files.map(f => ({ name: f.name, type: f.type, size: f.size })) : [])
+        };
+        
+        const encodedContent = btoa(unescape(encodeURIComponent(JSON.stringify(metadata, null, 2))));
+        const filePath = `assignments/${assignment.id}.json`;
+        const apiUrl = `https://api.github.com/repos/${config.username}/${config.repo}/contents/${filePath}`;
+        
+        // Get sha if file exists
         let sha = null;
         try {
             const getResponse = await fetch(apiUrl, {
-                headers: {
-                    'Authorization': `token ${config.token}`
-                }
+                headers: { 'Authorization': `token ${config.token}` }
             });
-            
             if (getResponse.ok) {
                 const existingFile = await getResponse.json();
                 sha = existingFile.sha;
-                console.log('📄 Existing file found, sha:', sha);
-            } else if (getResponse.status === 404) {
-                console.log('✨ New file, will be created');
             }
-        } catch (getError) {
-            console.log('️ Could not check existing file:', getError.message);
+        } catch (e) {
+            // File doesn't exist yet
         }
         
-        // Step 2: Prepare request body
+        // Upload metadata
         const requestBody = {
-            message: sha ? `Update assignment: ${assignment.title}` : `Add assignment: ${assignment.title}`,
+            message: `Sync assignment: ${assignment.title}`,
             content: encodedContent,
             branch: config.branch || 'main'
         };
         
-        // Add sha if file exists
         if (sha) {
             requestBody.sha = sha;
         }
         
-        // Step 3: PUT request to create/update file
         const response = await fetch(apiUrl, {
             method: 'PUT',
             headers: {
@@ -1097,7 +1171,9 @@ async function uploadToGithub(assignment) {
         const responseData = await response.json();
         
         if (response.ok) {
-            console.log('✅ GitHub upload successful:', responseData);
+            console.log('✅ GitHub sync successful');
+            console.log('📁 Uploaded files:', fileUrls.length);
+            console.log('📄 Metadata URL:', responseData.content?.html_url);
             
             // Update sync status in localStorage
             const assignments = JSON.parse(localStorage.getItem('assignments') || '[]');
@@ -1108,10 +1184,10 @@ async function uploadToGithub(assignment) {
                 localStorage.setItem('assignments', JSON.stringify(assignments));
             }
             
-            showNotification('✅ Synced to GitHub successfully!');
+            showNotification(`✅ Synced to GitHub! (${fileUrls.length} files uploaded)`);
             return true;
         } else {
-            console.error(' GitHub sync failed:', response.status, responseData);
+            console.error('❌ GitHub sync failed:', response.status, responseData);
             
             let errorMessage = 'GitHub sync failed: ';
             if (responseData.message) {
