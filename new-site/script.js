@@ -538,6 +538,20 @@ function renderMarkdown(text) {
     return html;
 }
 
+// Format time ago
+function timeAgo(dateString) {
+    const date = new Date(dateString);
+    const now = new Date();
+    const seconds = Math.floor((now - date) / 1000);
+    
+    if (seconds < 60) return 'just now';
+    if (seconds < 3600) return `${Math.floor(seconds / 60)} minutes ago`;
+    if (seconds < 86400) return `${Math.floor(seconds / 3600)} hours ago`;
+    if (seconds < 604800) return `${Math.floor(seconds / 86400)} days ago`;
+    
+    return date.toLocaleDateString();
+}
+
 // Render submitted files in assignment card
 function renderSubmittedFiles(files, assignmentId) {
     let html = '<div class="submitted-files-section">';
@@ -620,6 +634,59 @@ function deleteSubmittedFile(assignmentId, fileIndex) {
     loadAssignments();
 }
 
+// Render GitHub sync status badge
+function renderGithubSyncStatus(assignment) {
+    const isSynced = assignment.githubSynced || false;
+    const syncedAt = assignment.githubSyncedAt || null;
+    
+    if (isSynced && syncedAt) {
+        const syncDate = new Date(syncedAt).toLocaleString();
+        return `
+            <div class="github-sync-status synced">
+                <span class="sync-badge">✅ Synced to GitHub</span>
+                <span class="sync-time" title="${syncDate}">Last synced: ${timeAgo(syncedAt)}</span>
+            </div>
+        `;
+    } else {
+        return `
+            <div class="github-sync-status not-synced">
+                <span class="sync-badge">⏸️ Not Synced</span>
+            </div>
+        `;
+    }
+}
+
+// Manual sync assignment to GitHub
+async function syncAssignmentToGithub(assignmentId) {
+    const assignments = JSON.parse(localStorage.getItem('assignments') || '[]');
+    const assignment = assignments.find(a => a.id === assignmentId);
+    
+    if (!assignment) {
+        showNotification('❌ Assignment not found!', 'error');
+        return;
+    }
+    
+    // Show loading notification
+    showNotification('🔄 Syncing to GitHub...');
+    
+    try {
+        await uploadToGithub(assignment);
+        
+        // Update sync status in localStorage
+        assignment.githubSynced = true;
+        assignment.githubSyncedAt = new Date().toISOString();
+        localStorage.setItem('assignments', JSON.stringify(assignments));
+        
+        showNotification('✅ Successfully synced to GitHub!');
+        
+        // Reload to update status badge
+        loadAssignments();
+    } catch (error) {
+        console.error('Sync error:', error);
+        showNotification('❌ Failed to sync to GitHub. Please check your configuration.', 'error');
+    }
+}
+
 // Download file
 function downloadFile(dataUrl, filename) {
     const link = document.createElement('a');
@@ -662,6 +729,9 @@ function loadAssignments() {
         const isEvaluated = assignment.isEvaluated || false;
         const evaluationStatus = isEvaluated ? '<span class="evaluation-badge evaluated">✅ Evaluated</span>' : '<span class="evaluation-badge pending">⏸️ Not Evaluated</span>';
         
+        // Check GitHub sync status
+        const githubSyncStatus = renderGithubSyncStatus(assignment);
+        
         // Render submitted files if any
         const submittedFilesHtml = (assignment.files && assignment.files.length > 0) 
             ? renderSubmittedFiles(assignment.files, assignment.id)
@@ -678,12 +748,14 @@ function loadAssignments() {
                     </div>
                     <span class="assignment-status ${statusClass}">${statusText}</span>
                 </div>
+                ${githubSyncStatus}
                 ${assignment.description ? `<div class="assignment-description" style="white-space: pre-wrap; line-height: 1.8;">${renderMarkdown(assignment.description)}</div>` : ''}
                 ${submittedFilesHtml}
                 ${evaluationStatus}
                 ${assignment.teacherEvaluation ? `<div class="teacher-evaluation"><strong>Teacher's Comments:</strong><br>${renderMarkdown(assignment.teacherEvaluation)}</div>` : ''}
                 <div class="assignment-actions">
                     <button class="btn btn-primary btn-small" onclick="openSubmitAssignmentModal(${assignment.id})">📤 Submit</button>
+                    <button class="btn btn-secondary btn-small" onclick="syncAssignmentToGithub(${assignment.id})">🔄 Sync to GitHub</button>
                     <button class="btn btn-secondary btn-small" onclick="openEditAssignmentModal(${assignment.id})">✏️ Edit</button>
                     <button class="btn btn-secondary btn-small" onclick="openTeacherEvaluationModal(${assignment.id})">👨‍🏫 Evaluate</button>
                     <button class="btn btn-secondary btn-small" onclick="deleteAssignment(${assignment.id})">Delete</button>
@@ -973,6 +1045,15 @@ async function uploadToGithub(assignment) {
         );
         
         if (response.ok) {
+            // Update sync status in localStorage
+            const assignments = JSON.parse(localStorage.getItem('assignments') || '[]');
+            const updatedAssignment = assignments.find(a => a.id === assignment.id);
+            if (updatedAssignment) {
+                updatedAssignment.githubSynced = true;
+                updatedAssignment.githubSyncedAt = new Date().toISOString();
+                localStorage.setItem('assignments', JSON.stringify(assignments));
+            }
+            
             showNotification('✅ Synced to GitHub successfully!');
         } else {
             console.error('GitHub sync failed:', await response.text());

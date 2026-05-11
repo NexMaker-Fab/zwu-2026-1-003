@@ -541,6 +541,37 @@ body {
     margin-bottom: 8px;
 }
 
+/* GitHub Sync Status */
+.github-sync-status {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 12px;
+    padding: 8px 12px;
+    border-radius: var(--radius-sm);
+    font-size: 13px;
+}
+
+.github-sync-status.synced {
+    background: rgba(46, 213, 115, 0.1);
+    border-left: 3px solid #2ed573;
+}
+
+.github-sync-status.not-synced {
+    background: rgba(255, 165, 2, 0.1);
+    border-left: 3px solid #ffa502;
+}
+
+.sync-badge {
+    font-weight: 600;
+    white-space: nowrap;
+}
+
+.sync-time {
+    color: var(--text-secondary);
+    font-size: 12px;
+}
+
 /* Submitted Files Section */
 .submitted-files-section {
     margin-top: 16px;
