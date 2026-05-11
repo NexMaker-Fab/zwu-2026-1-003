@@ -1019,7 +1019,8 @@ async function uploadToGithub(assignment) {
     
     if (!config.username || !config.repo || !config.token) {
         console.log('GitHub not configured, skipping sync');
-        return;
+        showNotification('⚠️ GitHub not configured. Please configure in Settings.', 'error');
+        return false;
     }
     
     try {
@@ -1029,28 +1030,41 @@ async function uploadToGithub(assignment) {
             submitter: assignment.submitter,
             deadline: assignment.deadline,
             submissionLink: assignment.submissionLink,
-            submittedAt: assignment.submittedAt
+            submittedAt: assignment.submittedAt,
+            files: assignment.files ? assignment.files.map(f => ({ name: f.name, type: f.type, size: f.size })) : []
         };
         
-        const encodedContent = btoa(JSON.stringify(content, null, 2));
+        const encodedContent = btoa(unescape(encodeURIComponent(JSON.stringify(content, null, 2))));
         
-        const response = await fetch(
-            `https://api.github.com/repos/${config.username}/${config.repo}/contents/assignments/${assignment.id}.json`,
-            {
-                method: 'PUT',
-                headers: {
-                    'Authorization': `token ${config.token}`,
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({
-                    message: `Add assignment: ${assignment.title}`,
-                    content: encodedContent,
-                    branch: config.branch
-                })
-            }
-        );
+        const filePath = `assignments/${assignment.id}.json`;
+        const apiUrl = `https://api.github.com/repos/${config.username}/${config.repo}/contents/${filePath}`;
+        
+        console.log('📤 Uploading to GitHub:', {
+            url: apiUrl,
+            username: config.username,
+            repo: config.repo,
+            branch: config.branch || 'main',
+            assignmentId: assignment.id
+        });
+        
+        const response = await fetch(apiUrl, {
+            method: 'PUT',
+            headers: {
+                'Authorization': `token ${config.token}`,
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                message: `Add assignment: ${assignment.title}`,
+                content: encodedContent,
+                branch: config.branch || 'main'
+            })
+        });
+        
+        const responseData = await response.json();
         
         if (response.ok) {
+            console.log('✅ GitHub upload successful:', responseData);
+            
             // Update sync status in localStorage
             const assignments = JSON.parse(localStorage.getItem('assignments') || '[]');
             const updatedAssignment = assignments.find(a => a.id === assignment.id);
@@ -1061,11 +1075,25 @@ async function uploadToGithub(assignment) {
             }
             
             showNotification('✅ Synced to GitHub successfully!');
+            return true;
         } else {
-            console.error('GitHub sync failed:', await response.text());
+            console.error('❌ GitHub sync failed:', response.status, responseData);
+            
+            let errorMessage = 'GitHub sync failed: ';
+            if (responseData.message) {
+                errorMessage += responseData.message;
+            }
+            if (responseData.errors && responseData.errors.length > 0) {
+                errorMessage += ' - ' + responseData.errors[0].message;
+            }
+            
+            showNotification(errorMessage, 'error');
+            return false;
         }
     } catch (error) {
-        console.error('GitHub sync error:', error);
+        console.error('❌ GitHub sync error:', error);
+        showNotification('❌ Connection error: ' + error.message, 'error');
+        return false;
     }
 }
 
