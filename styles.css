@@ -560,12 +560,43 @@ body {
     border-radius: var(--radius-md);
     overflow: hidden;
     transition: var(--transition);
+    position: relative;
 }
 
 .submitted-file-item:hover {
     border-color: var(--primary-color);
     box-shadow: var(--shadow-sm);
     transform: translateY(-2px);
+}
+
+/* Delete file button */
+.delete-file-btn {
+    position: absolute;
+    top: 8px;
+    right: 8px;
+    background: rgba(255, 71, 87, 0.9);
+    color: white;
+    border: none;
+    border-radius: 50%;
+    width: 28px;
+    height: 28px;
+    font-size: 14px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    transition: var(--transition);
+    z-index: 10;
+}
+
+.submitted-file-item:hover .delete-file-btn {
+    opacity: 1;
+}
+
+.delete-file-btn:hover {
+    background: rgba(255, 71, 87, 1);
+    transform: scale(1.1);
 }
 
 .submitted-file-preview {

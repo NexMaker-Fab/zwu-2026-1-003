@@ -575,6 +575,7 @@ function renderSubmittedFiles(files, assignmentId) {
                     <div class="submitted-file-name" title="${file.name}">${file.name}</div>
                     <div class="submitted-file-size">${formatFileSize(file.size)}</div>
                 </div>
+                <button class="delete-file-btn" onclick="deleteSubmittedFile(${assignmentId}, ${index})" title="Delete this file">❌</button>
             </div>
         `;
     });
@@ -592,6 +593,31 @@ function openSubmittedFilePreview(assignmentId, fileIndex) {
     
     const file = assignment.files[fileIndex];
     openFilePreview(file.data, file.type, file.name);
+}
+
+// Delete submitted file
+function deleteSubmittedFile(assignmentId, fileIndex) {
+    if (!confirm('Are you sure you want to delete this file?')) return;
+    
+    const assignments = JSON.parse(localStorage.getItem('assignments') || '[]');
+    const assignment = assignments.find(a => a.id === assignmentId);
+    
+    if (!assignment || !assignment.files) return;
+    
+    // Remove the file at the specified index
+    assignment.files.splice(fileIndex, 1);
+    
+    // If no files left, optionally reset status
+    if (assignment.files.length === 0) {
+        assignment.status = 'pending';
+    }
+    
+    localStorage.setItem('assignments', JSON.stringify(assignments));
+    
+    showNotification('✅ File deleted successfully!');
+    
+    // Reload assignments to reflect changes
+    loadAssignments();
 }
 
 // Download file
@@ -754,7 +780,13 @@ async function handleSubmitAssignment(event) {
         assignment.status = 'submitted';
         assignment.submissionLink = submissionLink;
         assignment.notes = notes;
-        assignment.files = filesData;
+        
+        // Append new files to existing files instead of overwriting
+        if (!assignment.files) {
+            assignment.files = [];
+        }
+        assignment.files = [...assignment.files, ...filesData];
+        
         assignment.submittedAt = new Date().toISOString();
         
         localStorage.setItem('assignments', JSON.stringify(assignments));
