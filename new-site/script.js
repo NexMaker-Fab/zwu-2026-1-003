@@ -538,6 +538,72 @@ function renderMarkdown(text) {
     return html;
 }
 
+// Render submitted files in assignment card
+function renderSubmittedFiles(files, assignmentId) {
+    let html = '<div class="submitted-files-section">';
+    html += '<h4 style="margin: 16px 0 12px 0; color: var(--text-primary); font-size: 15px;">📎 Submitted Files:</h4>';
+    html += '<div class="submitted-files-grid">';
+    
+    files.forEach((file, index) => {
+        const isImage = file.type && file.type.startsWith('image/');
+        const isVideo = file.type && file.type.startsWith('video/');
+        const icon = getFileIcon(file.type || '');
+        
+        html += `
+            <div class="submitted-file-item">
+                ${isImage ? `
+                    <div class="submitted-file-preview" onclick="openSubmittedFilePreview(${assignmentId}, ${index})">
+                        <img src="${file.data}" alt="${file.name}">
+                        <div class="preview-overlay">
+                            <span class="preview-icon">🔍</span>
+                        </div>
+                    </div>
+                ` : isVideo ? `
+                    <div class="submitted-file-preview" onclick="openSubmittedFilePreview(${assignmentId}, ${index})">
+                        <video src="${file.data}"></video>
+                        <div class="preview-overlay">
+                            <span class="preview-icon">▶️</span>
+                        </div>
+                    </div>
+                ` : `
+                    <div class="submitted-file-icon" onclick="downloadFile('${file.data}', '${file.name}')">
+                        <span style="font-size: 48px;">${icon}</span>
+                        <span style="font-size: 12px; margin-top: 8px;">Click to download</span>
+                    </div>
+                `}
+                <div class="submitted-file-info">
+                    <div class="submitted-file-name" title="${file.name}">${file.name}</div>
+                    <div class="submitted-file-size">${formatFileSize(file.size)}</div>
+                </div>
+            </div>
+        `;
+    });
+    
+    html += '</div></div>';
+    return html;
+}
+
+// Open preview for submitted file
+function openSubmittedFilePreview(assignmentId, fileIndex) {
+    const assignments = JSON.parse(localStorage.getItem('assignments') || '[]');
+    const assignment = assignments.find(a => a.id === assignmentId);
+    
+    if (!assignment || !assignment.files || !assignment.files[fileIndex]) return;
+    
+    const file = assignment.files[fileIndex];
+    openFilePreview(file.data, file.type, file.name);
+}
+
+// Download file
+function downloadFile(dataUrl, filename) {
+    const link = document.createElement('a');
+    link.href = dataUrl;
+    link.download = filename;
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+}
+
 // Load and display assignments
 function loadAssignments() {
     const assignmentsList = document.getElementById('assignmentsList');
@@ -570,6 +636,11 @@ function loadAssignments() {
         const isEvaluated = assignment.isEvaluated || false;
         const evaluationStatus = isEvaluated ? '<span class="evaluation-badge evaluated">✅ Evaluated</span>' : '<span class="evaluation-badge pending">⏸️ Not Evaluated</span>';
         
+        // Render submitted files if any
+        const submittedFilesHtml = (assignment.files && assignment.files.length > 0) 
+            ? renderSubmittedFiles(assignment.files, assignment.id)
+            : '';
+        
         html += `
             <div class="assignment-card">
                 <div class="assignment-header">
@@ -582,6 +653,7 @@ function loadAssignments() {
                     <span class="assignment-status ${statusClass}">${statusText}</span>
                 </div>
                 ${assignment.description ? `<div class="assignment-description" style="white-space: pre-wrap; line-height: 1.8;">${renderMarkdown(assignment.description)}</div>` : ''}
+                ${submittedFilesHtml}
                 ${evaluationStatus}
                 ${assignment.teacherEvaluation ? `<div class="teacher-evaluation"><strong>Teacher's Comments:</strong><br>${renderMarkdown(assignment.teacherEvaluation)}</div>` : ''}
                 <div class="assignment-actions">
