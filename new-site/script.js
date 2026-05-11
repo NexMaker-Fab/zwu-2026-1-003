@@ -31,6 +31,10 @@ function updateDynamicLogo() {
 
 // Show notification
 function showNotification(message, type = 'success') {
+    // Remove existing notifications to prevent overlap
+    const existingNotifications = document.querySelectorAll('.notification');
+    existingNotifications.forEach(n => n.remove());
+    
     const notification = document.createElement('div');
     notification.className = `notification ${type}`;
     notification.textContent = message;
@@ -38,7 +42,7 @@ function showNotification(message, type = 'success') {
     
     setTimeout(() => {
         notification.remove();
-    }, 3000);
+    }, 4000);  // Increased to 4 seconds for better readability
 }
 
 // Open modal
@@ -670,17 +674,18 @@ async function syncAssignmentToGithub(assignmentId) {
     showNotification('🔄 Syncing to GitHub...');
     
     try {
-        await uploadToGithub(assignment);
+        const success = await uploadToGithub(assignment);
         
-        // Update sync status in localStorage
-        assignment.githubSynced = true;
-        assignment.githubSyncedAt = new Date().toISOString();
-        localStorage.setItem('assignments', JSON.stringify(assignments));
-        
-        showNotification('✅ Successfully synced to GitHub!');
-        
-        // Reload to update status badge
-        loadAssignments();
+        if (success) {
+            // Update sync status in localStorage
+            assignment.githubSynced = true;
+            assignment.githubSyncedAt = new Date().toISOString();
+            localStorage.setItem('assignments', JSON.stringify(assignments));
+            
+            // Reload to update status badge
+            loadAssignments();
+        }
+        // Note: uploadToGithub already shows success/error notification
     } catch (error) {
         console.error('Sync error:', error);
         showNotification('❌ Failed to sync to GitHub. Please check your configuration.', 'error');
