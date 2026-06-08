@@ -434,7 +434,6 @@ function openEditMemberModal(memberId) {
     document.getElementById('editMemberId').value = memberId;
     document.getElementById('editMemberName').value = member.name;
     document.getElementById('editMemberRole').value = member.role;
-    document.getElementById('editMemberGithub').value = member.github || '';
     document.getElementById('editMemberBio').value = member.bio || '';
     
     openModal('editMemberModal');
@@ -447,7 +446,6 @@ function saveEditedMember(event) {
     const memberId = document.getElementById('editMemberId').value;
     const name = document.getElementById('editMemberName').value.trim();
     const role = document.getElementById('editMemberRole').value.trim();
-    const github = document.getElementById('editMemberGithub').value.trim();
     const bio = document.getElementById('editMemberBio').value.trim();
     
     if (!name || !role) {
@@ -459,7 +457,6 @@ function saveEditedMember(event) {
     if (members[memberId]) {
         members[memberId].name = name;
         members[memberId].role = role;
-        members[memberId].github = github;
         members[memberId].bio = bio;
         
         localStorage.setItem('teamMembers', JSON.stringify(members));
@@ -1751,8 +1748,22 @@ function openFilePreview(url, type, name) {
                 Your browser does not support the video tag.
             </video>
         `;
+    } else if (name.toLowerCase().endsWith('.docx') || name.toLowerCase().endsWith('.doc')) {
+        // For Word documents, show embedded viewer or download option
+        container.innerHTML = `
+            <div class="doc-preview-container">
+                <iframe src="https://view.officeapps.live.com/op/embed.aspx?src=${encodeURIComponent(url)}" 
+                        width="100%" height="500px" frameborder="0">
+                </iframe>
+                <div style="text-align: center; margin-top: 10px;">
+                    <a href="${url}" download="${name}" class="btn btn-primary" style="display: inline-block; padding: 8px 16px; background: #0071e3; color: white; text-decoration: none; border-radius: 980px;">
+                        📥 Download Document
+                    </a>
+                </div>
+            </div>
+        `;
     } else {
-        container.innerHTML = '<p style="text-align: center; color: var(--text-secondary);">Preview not available for this file type.</p>';
+        container.innerHTML = '<p style="text-align: center; color: var(--text-secondary);">Preview not available for this file type. Please download to view.</p>';
     }
     
     openModal('filePreviewModal');
@@ -1833,4 +1844,100 @@ function updateHomepageStats() {
     if (statMembers) statMembers.textContent = Object.keys(members).length;
     if (statAssignments) statAssignments.textContent = assignments.length;
     if (statProjects) statProjects.textContent = projects.length;
+}
+
+// Quick add Exercise 1 with Project Management document
+async function quickAddExercise1() {
+    // Check if file input exists
+    const fileInput = document.createElement('input');
+    fileInput.type = 'file';
+    fileInput.accept = '.docx,.doc';
+    fileInput.style.display = 'none';
+    document.body.appendChild(fileInput);
+    
+    fileInput.onchange = async (e) => {
+        const file = e.target.files[0];
+        if (!file) return;
+        
+        try {
+            showNotification('📄 Processing Project Management document...');
+            
+            // Convert file to base64
+            const reader = new FileReader();
+            reader.onload = async (event) => {
+                const fileData = {
+                    name: file.name,
+                    type: file.type,
+                    size: file.size,
+                    data: event.target.result
+                };
+                
+                // Create assignment
+                const assignments = JSON.parse(localStorage.getItem('assignments') || '[]');
+                const exercise1 = {
+                    id: Date.now(),
+                    title: 'Exercise 1: Project Management',
+                    description: `We have created a webpage for storing daily and final assignments.
+
+**Website Development Guide**
+
+Prepare tool for website:
+- Github: Our website will be placed here.
+- GitHub Desktop: Used for cloning libraries and uploading local files.
+- AI agent (TONGYI Lingma): Used to write website code.
+
+**Step one:** Create a new repository on GitHub to host your website.
+
+Create a public repository where you can collaborate with your team to create web content.
+
+Name your repository, choose whether it's public or private. Add a README file to share your information, then click the "create repository" button.
+
+Set the page to be empty. Click on the settings of the repository and select "Pages" on the left. Choose "main" and "/root" and save. The link above allows you to view the page.
+
+Wait for Github to search and create pages, and once all projects are completed, the website will be initially established.
+
+**Step two:** Clone the repository to GitHub.
+
+Click on "Add", "Clone a resource", find the repository you want to clone. Finally, click "Clone".
+
+**Step three:** Design website with your team in AI agent
+
+Use AI agents to design the functions and layout of web pages.
+
+**Step four:** Upload them to Github.
+
+Upload directly to the corresponding GitHub account via Lingma.`,
+                    deadline: new Date().toISOString().split('T')[0],
+                    submitter: 'All Members',
+                    status: 'submitted',
+                    createdAt: new Date().toISOString(),
+                    submittedAt: new Date().toISOString(),
+                    files: [fileData]
+                };
+                
+                assignments.push(exercise1);
+                localStorage.setItem('assignments', JSON.stringify(assignments));
+                
+                showNotification('✅ Exercise 1 created successfully!');
+                
+                // Reload if on assignments page
+                if (window.location.pathname.includes('assignments.html')) {
+                    loadAssignments();
+                }
+                
+                // Try to sync to GitHub
+                uploadToGithub(exercise1);
+                
+                // Clean up
+                document.body.removeChild(fileInput);
+            };
+            reader.readAsDataURL(file);
+        } catch (error) {
+            console.error('Error:', error);
+            showNotification('❌ Failed to process file: ' + error.message, 'error');
+            document.body.removeChild(fileInput);
+        }
+    };
+    
+    fileInput.click();
 }
