@@ -1835,21 +1835,16 @@ function openFilePreview(url, type, name) {
             </video>
         `;
     } else if (name.toLowerCase().endsWith('.pdf')) {
-        // For PDF files, use PDF.js for better rendering and page-by-page viewing
-        const pdfId = 'pdf-viewer-' + Date.now();
+        // For PDF files, use browser's native embed for maximum compatibility
         container.innerHTML = `
             <div class="pdf-viewer-container" style="width: 100%; background: #f5f5f7; border-radius: 8px; padding: 20px;">
-                <!-- PDF.js Viewer -->
-                <div id="${pdfId}" style="background: white; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); min-height: 600px;">
-                    <div style="padding: 40px; text-align: center; color: #666;">
-                        <p style="font-size: 16px; margin-bottom: 10px;">📄 Loading PDF viewer...</p>
-                        <p style="font-size: 14px;">Please wait while we prepare the document</p>
-                    </div>
-                </div>
+                <!-- Native PDF Viewer -->
+                <embed src="${url}" type="application/pdf" width="100%" height="800px" 
+                       style="border: none; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); background: white;" />
                 
-                <!-- Download Options -->
+                <!-- Fallback and Download Options -->
                 <div style="text-align: center; margin-top: 15px; padding: 15px; background: white; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
-                    <p style="margin-bottom: 10px; color: #666; font-size: 14px;">💡 The PDF is displayed above. You can scroll through all pages, zoom in/out, and view images clearly.</p>
+                    <p style="margin-bottom: 10px; color: #666; font-size: 14px;">💡 If the PDF doesn't display above, use the options below:</p>
                     <a href="${url}" download="${name}" class="btn btn-primary" style="display: inline-block; padding: 10px 20px; background: #0071e3; color: white; text-decoration: none; border-radius: 980px; font-weight: 600; margin: 5px;">
                         📥 Download PDF
                     </a>
@@ -1859,11 +1854,6 @@ function openFilePreview(url, type, name) {
                 </div>
             </div>
         `;
-        
-        // Load PDF.js and render the PDF
-        setTimeout(() => {
-            loadPDFViewer('${url}', '${pdfId}');
-        }, 100);
     } else if (name.toLowerCase().endsWith('.docx') || name.toLowerCase().endsWith('.doc')) {
         // For Word documents, use Google Docs Viewer for better compatibility with images and formatting
         // Google Docs Viewer supports more features than Microsoft Office Online Viewer
