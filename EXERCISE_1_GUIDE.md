@@ -1,141 +1,206 @@
-# Exercise 1: Project Management - 使用说明
+# Exercise 1: Project Management - User Guide
 
-## 功能概述
+## Overview
 
-我们已经为您添加了一个快速上传 Exercise 1 的功能，可以方便地将 Project Management.docx 文档作为作业提交到 assignments 页面。
+Exercise 1: Project Management has been **automatically created** and added to the Assignments page. The assignment includes the complete content from the Project Management document.
 
-## 使用步骤
+## Automatic Creation
 
-### 方法一：使用快速添加按钮（推荐）
+### How It Works
 
-1. **打开 Assignments 页面**
-   - 访问 http://localhost:8080/assignments.html
-   - 或者点击导航栏中的 "Assignments"
+When you visit the **Assignments page**, the system automatically checks if "Exercise 1: Project Management" exists:
 
-2. **点击 " Add Exercise 1" 按钮**
-   - 在页面顶部的操作栏中，找到紫色渐变的 "Add Exercise 1" 按钮
-   - 位置：在 "⚙️ GitHub Config" 和 "+ New Assignment" 按钮之间
+- ✅ **If it doesn't exist**: The system automatically creates it with all content embedded
+- ✅ **If it already exists**: No duplicate is created (safe to reload page)
 
-3. **选择文件**
-   - 系统会弹出文件选择对话框
-   - 选择 `Project Management.docx` 文件
-   - 支持 `.docx` 和 `.doc` 格式
+### What's Included
 
-4. **自动创建作业**
-   - 系统会自动创建一个名为 "Exercise 1: Project Management" 的作业
-   - 包含完整的作业描述内容
-   - 文件会被附加到作业中
-   - 状态自动设置为 "Submitted"
+The auto-created assignment contains:
 
-5. **查看作业**
-   - 作业会立即显示在作业列表中
-   - 点击作业卡片可以查看完整内容和附件
-   - 可以点击文件进行预览或下载
+1. **Title**: Exercise 1: Project Management
+2. **Full Description**: Complete website development guide including:
+   - Preparation tools (GitHub, GitHub Desktop, TONGYI Lingma)
+   - Step-by-step instructions for creating a repository
+   - GitHub Pages configuration
+   - Repository cloning process
+   - AI-assisted website design
+   - Upload instructions
+3. **Attached File**: `Project_Management_Guide.txt` - Contains the full document content in text format
+4. **Status**: Automatically set to "Submitted"
+5. **Submitter**: All Members
+6. **Deadline**: Current date
 
-### 方法二：手动创建作业
+## Viewing the Assignment
 
-如果您想自定义作业内容，也可以使用传统方式：
+### Method 1: Automatic Display
 
-1. 点击 "+ New Assignment" 按钮
-2. 填写作业标题、描述等信息
-3. 在 "Upload Files" 区域上传 Project Management.docx 文件
-4. 点击 "Create Assignment" 保存
+Simply visit the Assignments page:
+- URL: http://localhost:8080/assignments.html
+- Exercise 1 will appear at the top of the assignment list
 
-## 文件预览功能
+### Method 2: Manual Creation (if needed)
 
-上传的 DOCX 文件支持以下功能：
+If for some reason the assignment wasn't auto-created:
 
-### 在线预览
-- 点击作业卡片中的文件名
-- 系统会使用 Microsoft Office Online Viewer 嵌入显示文档内容
-- 无需下载即可查看完整文档
+1. Click the "📄 Create Exercise 1" button
+   - Location: Top action bar, between "⚙️ GitHub Config" and "+ New Assignment"
+   - Style: Purple gradient background
+2. The assignment will be created immediately
 
-### 下载功能
-- 在预览界面下方有 "📥 Download Document" 按钮
-- 点击下载可将文件保存到本地
+## File Preview Features
 
-### 其他文件类型支持
-系统还支持预览以下文件类型：
-- 🖼️ 图片：JPG, PNG, GIF, WebP 等
-- 🎥 视频：MP4, WebM, MOV 等
-- 📄 PDF 文档
-- 📝 Word 文档（DOC, DOCX）
-- 📊 Excel 表格（XLS, XLSX）
-- 📽️ PowerPoint 演示文稿（PPT, PPTX）
--  压缩文件（ZIP, RAR, 7Z）
+### Text File Preview
 
-## GitHub 同步
+The attached `Project_Management_Guide.txt` file can be:
 
-如果已配置 GitHub，作业会自动同步到您的仓库：
+1. **Viewed Inline**: Click on the filename to see the content
+2. **Downloaded**: Use the download button to save locally
+3. **Copied**: Select and copy text directly from the preview
 
-1. 点击 "⚙️ GitHub Config" 配置 GitHub 信息
-2. 填写用户名、仓库名和 Personal Access Token
-3. 上传的文件和作业元数据会自动推送到 GitHub
-4. 文件存储在 `assignments/{作业ID}/{文件名}` 路径下
+### Other Supported File Types
 
-## 注意事项
+The system also supports previewing:
+- ️ Images: JPG, PNG, GIF, WebP (thumbnail + fullscreen view)
+-  Videos: MP4, WebM, MOV (with playback controls)
+- 📄 PDF documents
+- 📝 Word documents (DOC, DOCX) - via Microsoft Office Online Viewer
+- 📊 Excel spreadsheets (XLS, XLSX)
+- 📽️ PowerPoint presentations (PPT, PPTX)
+-  Archive files (ZIP, RAR, 7Z)
 
-1. **文件大小限制**：单个文件最大 50MB
-2. **多文件支持**：可以为一个作业上传多个文件
-3. **浏览器兼容性**：建议使用 Chrome、Firefox、Edge 等现代浏览器
-4. **本地存储**：所有数据默认保存在浏览器的 localStorage 中
-5. **清除缓存**：清除浏览器缓存会删除所有作业数据，请谨慎操作
+## Content Structure
 
-## 故障排除
+### Assignment Description
 
-### 问题：点击按钮后没有反应
-**解决**：检查浏览器是否阻止了弹窗，允许网站打开文件选择对话框
+The description includes formatted markdown with:
 
-### 问题：文件无法预览
-**解决**：
-- 确保网络连接正常（需要访问 Microsoft Office Online）
-- 尝试下载文件后用本地应用打开
+```
+We have created a webpage for storing daily and final assignments.
 
-### 问题：GitHub 同步失败
-**解决**：
-- 检查 GitHub 配置是否正确
-- 确认 Personal Access Token 有正确的权限（repo 范围）
-- 检查网络连接是否正常
+**Website Development Guide**
 
-## 技术细节
+Prepare tool for website:
+- Github: Our website will be placed here.
+- GitHub Desktop: Used for cloning libraries and uploading local files.
+- AI agent (TONGYI Lingma): Used to write website code.
 
-### 实现原理
-- 使用 FileReader API 将文件转换为 Base64 编码
-- 数据存储在 localStorage 中
-- DOCX 预览通过 iframe 嵌入 Microsoft Office Online Viewer
-- GitHub 同步使用 GitHub Contents API
+**Step one:** Create a new repository on GitHub...
+[Full step-by-step guide continues...]
+```
 
-### 数据结构
+### Attached File
+
+The `Project_Management_Guide.txt` contains the raw text version of the document, ensuring:
+- Easy copying and pasting
+- Quick reference without opening external applications
+- Full content preservation
+
+## GitHub Synchronization
+
+If GitHub is configured, the assignment will automatically sync:
+
+1. **Configuration**: Click "⚙️ GitHub Config" to set up
+   - Username
+   - Repository name
+   - Personal Access Token
+2. **Automatic Sync**: Occurs when assignment is created or updated
+3. **File Storage**: Files stored at `assignments/{assignmentId}/{filename}`
+4. **Metadata**: JSON file at `assignments/{assignmentId}.json`
+
+## Important Notes
+
+1. **One-Time Creation**: Exercise 1 is only created once per browser
+2. **Local Storage**: Data persists in browser's localStorage
+3. **No Internet Required**: For viewing (only needed for GitHub sync)
+4. **Browser Cache**: Clearing cache will remove the assignment
+5. **File Format**: Original .docx converted to .txt for web compatibility
+
+## Troubleshooting
+
+### Issue: Exercise 1 not appearing
+**Solution**: 
+- Refresh the page (F5 or Ctrl+R)
+- Check browser console for errors (F12)
+- Try clicking "📄 Create Exercise 1" button manually
+
+### Issue: Can't view attached file
+**Solution**:
+- Ensure JavaScript is enabled
+- Try a different browser
+- Download the file and open locally
+
+### Issue: GitHub sync failed
+**Solution**:
+- Verify GitHub configuration
+- Check Personal Access Token permissions (needs 'repo' scope)
+- Ensure internet connection is stable
+
+## Technical Details
+
+### Implementation
+
+```javascript
+// Auto-creation function
+function autoCreateExercise1() {
+    // Check if already exists
+    const existing = assignments.find(a => 
+        a.title === 'Exercise 1: Project Management'
+    );
+    
+    if (!existing) {
+        // Create assignment with embedded content
+        const exercise1 = {
+            id: Date.now(),
+            title: 'Exercise 1: Project Management',
+            description: '...', // Full guide content
+            files: [textFileData], // Embedded text file
+            status: 'submitted',
+            // ... other metadata
+        };
+        
+        assignments.push(exercise1);
+        localStorage.setItem('assignments', JSON.stringify(assignments));
+    }
+}
+```
+
+### Data Structure
+
 ```javascript
 {
-  id: 时间戳,
+  id: 1234567890,
   title: "Exercise 1: Project Management",
-  description: "作业描述内容...",
+  description: "Full markdown-formatted guide...",
   deadline: "2026-04-13",
   submitter: "All Members",
   status: "submitted",
-  createdAt: "ISO 日期时间",
-  submittedAt: "ISO 日期时间",
+  createdAt: "2026-04-13T10:30:00.000Z",
+  submittedAt: "2026-04-13T10:30:00.000Z",
   files: [
     {
-      name: "Project Management.docx",
-      type: "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
-      size: 文件大小,
-      data: "data:application/...;base64,..."
+      name: "Project_Management_Guide.txt",
+      type: "text/plain",
+      size: 1290,
+      data: "data:text/plain;base64,..."
     }
   ]
 }
 ```
 
-## 更新日志
+## Update History
+
+### v2.0 (2026-04-13)
+- ✅ **Auto-creation**: Exercise 1 now created automatically on page load
+- ✅ **Embedded content**: Full document content included in assignment
+- ✅ **Text file attachment**: Project_Management_Guide.txt attached
+- ✅ **Duplicate prevention**: Checks for existing assignment before creating
+- ✅ **Manual creation**: "Create Exercise 1" button available as fallback
 
 ### v1.0 (2026-04-13)
-- ✅ 添加 "Add Exercise 1" 快速按钮
-- ✅ 实现 DOCX 文件在线预览功能
-- ✅ 支持自动创建 Exercise 1 作业
-- ✅ 集成 GitHub 同步功能
-- ✅ 优化文件上传体验
+- Initial implementation with file upload button
+- DOCX preview support
+- GitHub synchronization
 
 ---
 
-如有任何问题或建议，欢迎反馈！
+**Note**: The original .docx file has been converted to .txt format for web compatibility. All content is preserved and easily accessible.
