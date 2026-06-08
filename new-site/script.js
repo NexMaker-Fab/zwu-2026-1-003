@@ -2067,7 +2067,7 @@ Upload directly to the corresponding GitHub account via Lingma.`,
 
 // Auto-create Exercise 1 assignment with embedded document
 function autoCreateExercise1() {
-    // Check if Exercise 1 already exists with the original file
+    // Check if Exercise 1 already exists
     const assignments = JSON.parse(localStorage.getItem('assignments') || '[]');
     const existingIndex = assignments.findIndex(a => a.title === 'Exercise 1: Project Management');
     
@@ -2083,6 +2083,12 @@ function autoCreateExercise1() {
             if (hasOriginalFile) {
                 console.log('✅ Exercise 1 already has original document, skipping');
                 return;
+            } else {
+                // Has old file (e.g., .txt), remove it and prompt for new upload
+                console.log('⚠️ Exercise 1 has old file format, removing and prompting for PDF upload');
+                assignments.splice(existingIndex, 1);
+                localStorage.setItem('assignments', JSON.stringify(assignments));
+                showNotification('📄 Old Exercise 1 data cleared. Please upload Project Management.pdf', 'info');
             }
         }
     }
