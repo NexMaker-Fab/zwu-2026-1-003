@@ -1749,15 +1749,19 @@ function openFilePreview(url, type, name) {
             </video>
         `;
     } else if (name.toLowerCase().endsWith('.docx') || name.toLowerCase().endsWith('.doc')) {
-        // For Word documents, show embedded viewer or download option
+        // For Word documents, use Google Docs Viewer for better compatibility with images and formatting
+        // Google Docs Viewer supports more features than Microsoft Office Online Viewer
+        const encodedUrl = encodeURIComponent(url);
         container.innerHTML = `
-            <div class="doc-preview-container">
-                <iframe src="https://view.officeapps.live.com/op/embed.aspx?src=${encodeURIComponent(url)}" 
-                        width="100%" height="500px" frameborder="0">
+            <div class="doc-preview-container" style="width: 100%; height: 600px;">
+                <iframe src="https://docs.google.com/gview?url=${encodedUrl}&embedded=true" 
+                        width="100%" height="100%" frameborder="0"
+                        style="border: none; border-radius: 8px;">
                 </iframe>
-                <div style="text-align: center; margin-top: 10px;">
-                    <a href="${url}" download="${name}" class="btn btn-primary" style="display: inline-block; padding: 8px 16px; background: #0071e3; color: white; text-decoration: none; border-radius: 980px;">
-                        📥 Download Document
+                <div style="text-align: center; margin-top: 15px; padding: 10px; background: #f5f5f7; border-radius: 8px;">
+                    <p style="margin-bottom: 10px; color: #666;">💡 Tip: If the preview doesn't load properly, you can download the file to view it locally with full formatting.</p>
+                    <a href="${url}" download="${name}" class="btn btn-primary" style="display: inline-block; padding: 10px 20px; background: #0071e3; color: white; text-decoration: none; border-radius: 980px; font-weight: 600;">
+                        📥 Download Original Document
                     </a>
                 </div>
             </div>
@@ -1947,65 +1951,49 @@ Upload directly to the corresponding GitHub account via Lingma.`,
 
 // Auto-create Exercise 1 assignment with embedded document
 function autoCreateExercise1() {
-    // Check if Exercise 1 already exists
-    const assignments = JSON.parse(localStorage.getItem('assignments') || '[]');
-    const existingExercise = assignments.find(a => a.title === 'Exercise 1: Project Management');
+    // Create file input to upload the actual .docx file
+    const fileInput = document.createElement('input');
+    fileInput.type = 'file';
+    fileInput.accept = '.docx,.doc';
+    fileInput.style.display = 'none';
+    document.body.appendChild(fileInput);
     
-    if (existingExercise) {
-        console.log('Exercise 1 already exists, skipping creation');
-        return;
-    }
-    
-    // Create a placeholder DOCX file (since we can't embed the actual file without user upload)
-    // In a real scenario, you would need to convert the actual .docx file to base64
-    const placeholderDocContent = `
-Exercise 1: Project Management
-
-We have created a webpage for storing daily and final assignments
-
-Website Development Guide
-
-Prepare tool for website：
-Github: Our website will be placed here.
-GitHub Desktop: Used for cloning libraries and uploading local files.
-AI agent (TONGYI Lingma): Used to write website code.
-
-Step one: Create a new repository on GitHub to host your website.
-
-Create a public repository where you can collaborate with your team to create web content.
-
-Name your repository, choose whether it's public or private. Add a README file to share your information, then click the "create repository" button.
-
-Set the page to be empty. Click on the settings of the repository and select "Pages" on the left. Choose "main" and "/root" and save. The link above allows you to view the page.
-
-Wait for Github to search and create pages, and once all projects are completed, the website will be initially established.
-
-Step two: Clone the repository to GitHub.
-
-Click on "Add", "Clone a resource", find the repository you want to clone. Finally, click "Clone".
-
-Step three: Design website with your team in AI agent
-
-Use AI agents to design the functions and layout of web pages.
-
-Step four: Upload them to Github.
-
-Upload directly to the corresponding GitHub account via Lingma.
-    `.trim();
-    
-    // Create a text file as a placeholder (since we can't directly embed .docx without conversion)
-    const textFileData = {
-        name: 'Project_Management_Guide.txt',
-        type: 'text/plain',
-        size: placeholderDocContent.length,
-        data: 'data:text/plain;base64,' + btoa(unescape(encodeURIComponent(placeholderDocContent)))
-    };
-    
-    // Create assignment
-    const exercise1 = {
-        id: Date.now(),
-        title: 'Exercise 1: Project Management',
-        description: `We have created a webpage for storing daily and final assignments.
+    fileInput.onchange = async (e) => {
+        const file = e.target.files[0];
+        if (!file) {
+            document.body.removeChild(fileInput);
+            return;
+        }
+        
+        try {
+            showNotification('📄 Processing Project Management document...');
+            
+            // Convert file to base64
+            const reader = new FileReader();
+            reader.onload = async (event) => {
+                const fileData = {
+                    name: file.name,
+                    type: file.type,
+                    size: file.size,
+                    data: event.target.result
+                };
+                
+                // Check if Exercise 1 already exists
+                const assignments = JSON.parse(localStorage.getItem('assignments') || '[]');
+                const existingIndex = assignments.findIndex(a => a.title === 'Exercise 1: Project Management');
+                
+                if (existingIndex !== -1) {
+                    // Update existing assignment with the uploaded file
+                    assignments[existingIndex].files = [fileData];
+                    assignments[existingIndex].submittedAt = new Date().toISOString();
+                    localStorage.setItem('assignments', JSON.stringify(assignments));
+                    showNotification('✅ Exercise 1 updated with original document!');
+                } else {
+                    // Create new assignment
+                    const exercise1 = {
+                        id: Date.now(),
+                        title: 'Exercise 1: Project Management',
+                        description: `We have created a webpage for storing daily and final assignments.
 
 **Website Development Guide**
 
@@ -2038,22 +2026,41 @@ Upload directly to the corresponding GitHub account via Lingma.
 
 ---
 
-**Attached File:** Project_Management_Guide.txt (Full content included in description)`,
-        deadline: new Date().toISOString().split('T')[0],
-        submitter: 'All Members',
-        status: 'submitted',
-        createdAt: new Date().toISOString(),
-        submittedAt: new Date().toISOString(),
-        files: [textFileData]
+**Attached File:** ${file.name} (Original document with full formatting, images, and highlights)`,
+                        deadline: new Date().toISOString().split('T')[0],
+                        submitter: 'All Members',
+                        status: 'submitted',
+                        createdAt: new Date().toISOString(),
+                        submittedAt: new Date().toISOString(),
+                        files: [fileData]
+                    };
+                    
+                    assignments.push(exercise1);
+                    localStorage.setItem('assignments', JSON.stringify(assignments));
+                    showNotification('✅ Exercise 1 created with original document!');
+                }
+                
+                // Reload if on assignments page
+                if (window.location.pathname.includes('assignments.html')) {
+                    loadAssignments();
+                }
+                
+                // Try to sync to GitHub
+                const assignment = assignments.find(a => a.title === 'Exercise 1: Project Management');
+                if (assignment) {
+                    uploadToGithub(assignment);
+                }
+                
+                // Clean up
+                document.body.removeChild(fileInput);
+            };
+            reader.readAsDataURL(file);
+        } catch (error) {
+            console.error('Error:', error);
+            showNotification('❌ Failed to process file: ' + error.message, 'error');
+            document.body.removeChild(fileInput);
+        }
     };
     
-    assignments.push(exercise1);
-    localStorage.setItem('assignments', JSON.stringify(assignments));
-    
-    console.log('✅ Exercise 1: Project Management created automatically');
-    
-    // Reload if on assignments page
-    if (window.location.pathname.includes('assignments.html')) {
-        loadAssignments();
-    }
+    fileInput.click();
 }
