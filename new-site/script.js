@@ -250,6 +250,11 @@ function loadMembers() {
             ? `<div class="member-skills">${member.skills.slice(0, 3).map(s => `<span class="mini-skill-tag">${s}</span>`).join('')}</div>`
             : '';
         
+        // GitHub button - show link if github field exists, otherwise show disabled icon
+        const githubButton = member.github 
+            ? `<button class="member-github-btn" onclick="event.stopPropagation(); window.open('https://github.com/${member.github}', '_blank')" title="Visit GitHub: ${member.github}"> GitHub</button>`
+            : `<button class="member-github-btn disabled" onclick="event.stopPropagation()" title="No GitHub account set">⚪ GitHub</button>`;
+        
         html += `
             <div class="member-card">
                 <button class="edit-member-btn" onclick="event.stopPropagation(); openEditMemberModal(${id})">✏️ Edit</button>
@@ -265,6 +270,7 @@ function loadMembers() {
                     ${skillsPreview}
                     <p class="member-bio">${member.bio || 'Click to view profile →'}</p>
                 </div>
+                ${githubButton}
             </div>
         `;
     });
@@ -428,6 +434,7 @@ function openEditMemberModal(memberId) {
     document.getElementById('editMemberId').value = memberId;
     document.getElementById('editMemberName').value = member.name;
     document.getElementById('editMemberRole').value = member.role;
+    document.getElementById('editMemberGithub').value = member.github || '';
     document.getElementById('editMemberBio').value = member.bio || '';
     
     openModal('editMemberModal');
@@ -440,6 +447,7 @@ function saveEditedMember(event) {
     const memberId = document.getElementById('editMemberId').value;
     const name = document.getElementById('editMemberName').value.trim();
     const role = document.getElementById('editMemberRole').value.trim();
+    const github = document.getElementById('editMemberGithub').value.trim();
     const bio = document.getElementById('editMemberBio').value.trim();
     
     if (!name || !role) {
@@ -451,6 +459,7 @@ function saveEditedMember(event) {
     if (members[memberId]) {
         members[memberId].name = name;
         members[memberId].role = role;
+        members[memberId].github = github;
         members[memberId].bio = bio;
         
         localStorage.setItem('teamMembers', JSON.stringify(members));

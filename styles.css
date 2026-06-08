@@ -418,6 +418,43 @@ body {
     background: var(--primary-color);
 }
 
+/* GitHub button */
+.member-github-btn {
+    position: absolute;
+    bottom: 12px;
+    right: 12px;
+    background: rgba(36, 41, 46, 0.9);
+    color: white;
+    border: none;
+    border-radius: 6px;
+    padding: 6px 12px;
+    font-size: 12px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: var(--transition);
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    z-index: 10;
+}
+
+.member-github-btn:hover {
+    background: rgba(36, 41, 46, 1);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.member-github-btn.disabled {
+    background: rgba(150, 150, 150, 0.5);
+    color: rgba(255, 255, 255, 0.5);
+    cursor: not-allowed;
+}
+
+.member-github-btn.disabled:hover {
+    transform: none;
+    box-shadow: none;
+}
+
 /* Assignments List */
 .assignments-list {
     display: flex;
