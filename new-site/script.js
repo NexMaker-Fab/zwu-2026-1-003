@@ -765,10 +765,9 @@ function loadAssignments() {
                 ${evaluationStatus}
                 ${assignment.teacherEvaluation ? `<div class="teacher-evaluation"><strong>Teacher's Comments:</strong><br>${renderMarkdown(assignment.teacherEvaluation)}</div>` : ''}
                 <div class="assignment-actions">
-                    <button class="btn btn-primary btn-small" onclick="openSubmitAssignmentModal(${assignment.id})">📤 Submit</button>
+                    <button class="btn btn-primary btn-small" onclick="openSubmitAssignmentModal(${assignment.id})"> Submit</button>
                     <button class="btn btn-secondary btn-small" onclick="syncAssignmentToGithub(${assignment.id})">🔄 Sync to GitHub</button>
-                    <button class="btn btn-secondary btn-small" onclick="openEditAssignmentModal(${assignment.id})">✏️ Edit</button>
-                    <button class="btn btn-secondary btn-small" onclick="openTeacherEvaluationModal(${assignment.id})">👨‍🏫 Evaluate</button>
+                    <button class="btn btn-secondary btn-small" onclick="openTeacherEvaluationModal(${assignment.id})">‍🏫 Evaluate</button>
                     <button class="btn btn-secondary btn-small" onclick="deleteAssignment(${assignment.id})">Delete</button>
                 </div>
             </div>
