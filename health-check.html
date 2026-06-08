@@ -1,0 +1,382 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Site Health Check - Team Space</title>
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: #f5f5f7;
+            color: #1d1d1f;
+            padding: 40px 20px;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        h1 {
+            font-size: 48px;
+            font-weight: 700;
+            margin-bottom: 10px;
+            text-align: center;
+        }
+        
+        .subtitle {
+            text-align: center;
+            color: #86868b;
+            margin-bottom: 40px;
+        }
+        
+        .test-section {
+            background: white;
+            border-radius: 16px;
+            padding: 30px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+        }
+        
+        .test-section h2 {
+            font-size: 24px;
+            margin-bottom: 20px;
+            color: #1d1d1f;
+        }
+        
+        .test-item {
+            display: flex;
+            align-items: center;
+            padding: 12px 0;
+            border-bottom: 1px solid #f0f0f0;
+        }
+        
+        .test-item:last-child {
+            border-bottom: none;
+        }
+        
+        .status-icon {
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            margin-right: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+        }
+        
+        .status-icon.success {
+            background: #34c759;
+            color: white;
+        }
+        
+        .status-icon.error {
+            background: #ff3b30;
+            color: white;
+        }
+        
+        .status-icon.warning {
+            background: #ff9500;
+            color: white;
+        }
+        
+        .test-name {
+            flex: 1;
+            font-weight: 500;
+        }
+        
+        .test-detail {
+            color: #86868b;
+            font-size: 14px;
+            margin-left: 12px;
+        }
+        
+        .summary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border-radius: 16px;
+            padding: 30px;
+            margin-bottom: 30px;
+            text-align: center;
+        }
+        
+        .summary h2 {
+            font-size: 32px;
+            margin-bottom: 10px;
+        }
+        
+        .summary-stats {
+            display: flex;
+            justify-content: center;
+            gap: 40px;
+            margin-top: 20px;
+        }
+        
+        .stat {
+            text-align: center;
+        }
+        
+        .stat-value {
+            font-size: 48px;
+            font-weight: 700;
+        }
+        
+        .stat-label {
+            font-size: 14px;
+            opacity: 0.9;
+        }
+        
+        .btn {
+            display: inline-block;
+            padding: 12px 24px;
+            background: #0071e3;
+            color: white;
+            border: none;
+            border-radius: 980px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            text-decoration: none;
+            margin: 10px 5px;
+            transition: all 0.3s;
+        }
+        
+        .btn:hover {
+            background: #0077ed;
+            transform: translateY(-2px);
+        }
+        
+        .btn-secondary {
+            background: #86868b;
+        }
+        
+        .btn-secondary:hover {
+            background: #6e6e73;
+        }
+        
+        .actions {
+            text-align: center;
+            margin-top: 30px;
+        }
+    </style>
+    <script src="script.js"></script>
+</head>
+<body>
+    <div class="container">
+        <h1>🔍 Site Health Check</h1>
+        <p class="subtitle">Comprehensive website functionality test</p>
+        
+        <div class="summary" id="summary">
+            <h2>Running Tests...</h2>
+            <p>Please wait while we check all website features</p>
+        </div>
+        
+        <div id="testResults"></div>
+        
+        <div class="actions">
+            <a href="index.html" class="btn">🏠 Home Page</a>
+            <a href="team.html" class="btn"> Team Page</a>
+            <a href="assignments.html" class="btn">📝 Assignments</a>
+            <a href="final-project.html" class="btn">🚀 Projects</a>
+            <button class="btn btn-secondary" onclick="location.reload()">🔄 Re-run Tests</button>
+        </div>
+    </div>
+    
+    <script>
+        const tests = [];
+        let passed = 0;
+        let failed = 0;
+        let warnings = 0;
+        
+        function addTest(name, result, detail = '') {
+            tests.push({ name, result, detail });
+            if (result === 'success') passed++;
+            else if (result === 'error') failed++;
+            else if (result === 'warning') warnings++;
+        }
+        
+        // Test 1: Check if script.js loads
+        try {
+            if (typeof loadMembers === 'function') {
+                addTest('JavaScript Core', 'success', 'script.js loaded successfully');
+            } else {
+                addTest('JavaScript Core', 'error', 'script.js not loaded');
+            }
+        } catch (e) {
+            addTest('JavaScript Core', 'error', e.message);
+        }
+        
+        // Test 2: Check localStorage availability
+        try {
+            localStorage.setItem('test', 'test');
+            localStorage.removeItem('test');
+            addTest('LocalStorage', 'success', 'Available and working');
+        } catch (e) {
+            addTest('LocalStorage', 'error', e.message);
+        }
+        
+        // Test 3: Check team members initialization
+        try {
+            const members = JSON.parse(localStorage.getItem('teamMembers') || '{}');
+            const memberCount = Object.keys(members).length;
+            if (memberCount > 0) {
+                addTest('Team Members Data', 'success', `${memberCount} members found`);
+            } else {
+                addTest('Team Members Data', 'warning', 'No members initialized yet');
+            }
+        } catch (e) {
+            addTest('Team Members Data', 'error', e.message);
+        }
+        
+        // Test 4: Check assignments data
+        try {
+            const assignments = JSON.parse(localStorage.getItem('assignments') || '[]');
+            if (assignments.length > 0) {
+                addTest('Assignments Data', 'success', `${assignments.length} assignments found`);
+            } else {
+                addTest('Assignments Data', 'warning', 'No assignments created yet');
+            }
+        } catch (e) {
+            addTest('Assignments Data', 'error', e.message);
+        }
+        
+        // Test 5: Check projects data
+        try {
+            const projects = JSON.parse(localStorage.getItem('projects') || '[]');
+            if (projects.length > 0) {
+                addTest('Projects Data', 'success', `${projects.length} projects found`);
+            } else {
+                addTest('Projects Data', 'warning', 'No projects created yet');
+            }
+        } catch (e) {
+            addTest('Projects Data', 'error', e.message);
+        }
+        
+        // Test 6: Check key functions exist
+        const requiredFunctions = [
+            'loadMembers',
+            'loadAssignments',
+            'loadProjects',
+            'openAddMemberModal',
+            'openAddAssignmentModal',
+            'openAddProjectModal',
+            'saveNewMember',
+            'saveNewAssignment',
+            'saveNewProject',
+            'showNotification',
+            'uploadToGithub',
+            'syncAssignmentToGithub'
+        ];
+        
+        const missingFunctions = requiredFunctions.filter(fn => typeof window[fn] !== 'function');
+        if (missingFunctions.length === 0) {
+            addTest('Core Functions', 'success', `All ${requiredFunctions.length} functions available`);
+        } else {
+            addTest('Core Functions', 'error', `Missing: ${missingFunctions.join(', ')}`);
+        }
+        
+        // Test 7: Check GitHub configuration
+        try {
+            const githubConfig = JSON.parse(localStorage.getItem('githubConfig') || '{}');
+            if (githubConfig.username && githubConfig.repo && githubConfig.token) {
+                addTest('GitHub Configuration', 'success', 'Configured and ready');
+            } else {
+                addTest('GitHub Configuration', 'warning', 'Not configured yet');
+            }
+        } catch (e) {
+            addTest('GitHub Configuration', 'error', e.message);
+        }
+        
+        // Test 8: Check CSS styles
+        try {
+            const stylesheets = document.styleSheets;
+            if (stylesheets.length > 0) {
+                addTest('CSS Styles', 'success', `${stylesheets.length} stylesheet(s) loaded`);
+            } else {
+                addTest('CSS Styles', 'warning', 'No stylesheets found');
+            }
+        } catch (e) {
+            addTest('CSS Styles', 'error', e.message);
+        }
+        
+        // Test 9: Check HTML structure
+        try {
+            const pages = ['index.html', 'team.html', 'assignments.html', 'final-project.html', 'member.html'];
+            const currentPage = window.location.pathname.split('/').pop();
+            addTest('Current Page', 'success', `Viewing: ${currentPage || 'root'}`);
+        } catch (e) {
+            addTest('Current Page', 'error', e.message);
+        }
+        
+        // Test 10: Check file upload functions
+        try {
+            if (typeof handleAssignmentFiles === 'function' && 
+                typeof handleProjectFiles === 'function') {
+                addTest('File Upload Functions', 'success', 'Available');
+            } else {
+                addTest('File Upload Functions', 'warning', 'May not be fully implemented');
+            }
+        } catch (e) {
+            addTest('File Upload Functions', 'error', e.message);
+        }
+        
+        // Display results
+        function displayResults() {
+            const summaryEl = document.getElementById('summary');
+            const total = tests.length;
+            const status = failed === 0 ? (warnings === 0 ? '✅ All Tests Passed!' : '⚠️ Tests Completed with Warnings') : '❌ Tests Failed';
+            
+            summaryEl.innerHTML = `
+                <h2>${status}</h2>
+                <p>${passed} passed, ${warnings} warnings, ${failed} failed</p>
+                <div class="summary-stats">
+                    <div class="stat">
+                        <div class="stat-value">${passed}</div>
+                        <div class="stat-label">Passed</div>
+                    </div>
+                    <div class="stat">
+                        <div class="stat-value">${warnings}</div>
+                        <div class="stat-label">Warnings</div>
+                    </div>
+                    <div class="stat">
+                        <div class="stat-value">${failed}</div>
+                        <div class="stat-label">Failed</div>
+                    </div>
+                </div>
+            `;
+            
+            const resultsEl = document.getElementById('testResults');
+            let html = '<div class="test-section"><h2>Detailed Test Results</h2>';
+            
+            tests.forEach(test => {
+                const iconClass = test.result === 'success' ? 'success' : 
+                                 test.result === 'error' ? 'error' : 'warning';
+                const icon = test.result === 'success' ? '✓' : 
+                            test.result === 'error' ? '✗' : '!';
+                
+                html += `
+                    <div class="test-item">
+                        <div class="status-icon ${iconClass}">${icon}</div>
+                        <div class="test-name">${test.name}</div>
+                        ${test.detail ? `<div class="test-detail">${test.detail}</div>` : ''}
+                    </div>
+                `;
+            });
+            
+            html += '</div>';
+            resultsEl.innerHTML = html;
+        }
+        
+        // Run tests after page load
+        window.addEventListener('DOMContentLoaded', displayResults);
+    </script>
+</body>
+</html>
