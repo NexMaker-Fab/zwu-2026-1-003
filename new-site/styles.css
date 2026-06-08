@@ -699,6 +699,19 @@ body {
     background: rgba(108, 92, 231, 0.1);
 }
 
+/* PDF preview in assignment card */
+.submitted-file-pdf-preview {
+    width: 100%;
+    padding: 12px;
+    background: white;
+    border-radius: var(--radius-md);
+}
+
+.submitted-file-pdf-preview embed {
+    display: block;
+    margin-bottom: 10px;
+}
+
 .submitted-file-info {
     padding: 10px;
 }

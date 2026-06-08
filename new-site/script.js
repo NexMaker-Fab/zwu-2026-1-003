@@ -580,6 +580,7 @@ function renderSubmittedFiles(files, assignmentId) {
     files.forEach((file, index) => {
         const isImage = file.type && file.type.startsWith('image/');
         const isVideo = file.type && file.type.startsWith('video/');
+        const isPDF = file.name.toLowerCase().endsWith('.pdf');
         const icon = getFileIcon(file.type || '');
         
         html += `
@@ -596,6 +597,15 @@ function renderSubmittedFiles(files, assignmentId) {
                         <video src="${file.data}"></video>
                         <div class="preview-overlay">
                             <span class="preview-icon">▶️</span>
+                        </div>
+                    </div>
+                ` : isPDF ? `
+                    <div class="submitted-file-pdf-preview">
+                        <embed src="${file.data}" type="application/pdf" width="100%" height="400px" 
+                               style="border: none; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.1);" />
+                        <div style="margin-top: 10px; display: flex; gap: 8px; justify-content: center;">
+                            <button onclick="downloadFile('${file.data}', '${file.name}')" class="btn btn-small btn-secondary" style="padding: 6px 12px; font-size: 13px;">📥 Download</button>
+                            <button onclick="window.open('${file.data}', '_blank')" class="btn btn-small btn-primary" style="padding: 6px 12px; font-size: 13px;">🔗 Open Fullscreen</button>
                         </div>
                     </div>
                 ` : `
