@@ -548,6 +548,9 @@ function renderMarkdown(text) {
     // Convert **bold** to <strong>
     let html = text.replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>');
     
+    // Convert [link](url) to <a>
+    html = html.replace(/\[([^\]]+)\]\(([^)]+)\)/g, '<a href="$2" target="_blank" style="color: #0071e3; text-decoration: none;">$1</a>');
+    
     // Convert newlines to <br>
     html = html.replace(/\n/g, '<br>');
     
@@ -1951,12 +1954,34 @@ Upload directly to the corresponding GitHub account via Lingma.`,
 
 // Auto-create Exercise 1 assignment with embedded document
 function autoCreateExercise1() {
+    // Check if Exercise 1 already exists with the original file
+    const assignments = JSON.parse(localStorage.getItem('assignments') || '[]');
+    const existingIndex = assignments.findIndex(a => a.title === 'Exercise 1: Project Management');
+    
+    if (existingIndex !== -1) {
+        const existing = assignments[existingIndex];
+        // Check if it has the original .docx file
+        if (existing.files && existing.files.length > 0) {
+            const hasDocx = existing.files.some(f => 
+                f.name.toLowerCase().endsWith('.docx') || 
+                f.name.toLowerCase().endsWith('.doc')
+            );
+            if (hasDocx) {
+                console.log('✅ Exercise 1 already has original document, skipping');
+                return;
+            }
+        }
+    }
+    
     // Create file input to upload the actual .docx file
     const fileInput = document.createElement('input');
     fileInput.type = 'file';
     fileInput.accept = '.docx,.doc';
     fileInput.style.display = 'none';
     document.body.appendChild(fileInput);
+    
+    // Show notification prompting user to upload
+    showNotification('📄 Please select Project Management.docx to embed it in the webpage', 'info');
     
     fileInput.onchange = async (e) => {
         const file = e.target.files[0];
@@ -1978,7 +2003,6 @@ function autoCreateExercise1() {
                     data: event.target.result
                 };
                 
-                // Check if Exercise 1 already exists
                 const assignments = JSON.parse(localStorage.getItem('assignments') || '[]');
                 const existingIndex = assignments.findIndex(a => a.title === 'Exercise 1: Project Management');
                 
@@ -2026,7 +2050,14 @@ Upload directly to the corresponding GitHub account via Lingma.
 
 ---
 
-**Attached File:** ${file.name} (Original document with full formatting, images, and highlights)`,
+**Attached File:** ${file.name} (Original document with full formatting, images, and highlights)
+
+**View Full Document:** [📄 View Complete Document with All Formatting](exercise1-document.html)
+
+**Viewing Instructions:**
+1. Click "View Complete Document" above to see the full formatted version
+2. Or click on the filename to preview in Google Docs Viewer
+3. Use the download button to save and open in Microsoft Word for best experience`,
                         deadline: new Date().toISOString().split('T')[0],
                         submitter: 'All Members',
                         status: 'submitted',

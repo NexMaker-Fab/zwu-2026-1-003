@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Exercise 1: Project Management - Full Document</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Calibri', 'Segoe UI', Arial, sans-serif;
+            background: #f5f5f7;
+            color: #333;
+            line-height: 1.6;
+            padding: 40px 20px;
+        }
+        
+        .document-container {
+            max-width: 900px;
+            margin: 0 auto;
+            background: white;
+            padding: 60px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            border-radius: 8px;
+        }
+        
+        h1 {
+            font-size: 28px;
+            font-weight: bold;
+            color: #2c3e50;
+            margin-bottom: 30px;
+            border-bottom: 3px solid #3498db;
+            padding-bottom: 15px;
+        }
+        
+        h2 {
+            font-size: 22px;
+            font-weight: bold;
+            color: #2980b9;
+            margin-top: 30px;
+            margin-bottom: 15px;
+        }
+        
+        h3 {
+            font-size: 18px;
+            font-weight: bold;
+            color: #16a085;
+            margin-top: 20px;
+            margin-bottom: 10px;
+        }
+        
+        p {
+            margin-bottom: 15px;
+            text-align: justify;
+        }
+        
+        ul, ol {
+            margin-left: 30px;
+            margin-bottom: 15px;
+        }
+        
+        li {
+            margin-bottom: 8px;
+        }
+        
+        .highlight {
+            background-color: #fff3cd;
+            padding: 2px 4px;
+            border-radius: 3px;
+        }
+        
+        .important {
+            background-color: #d1ecf1;
+            border-left: 4px solid #17a2b8;
+            padding: 15px 20px;
+            margin: 20px 0;
+            border-radius: 4px;
+        }
+        
+        .step-box {
+            background: #f8f9fa;
+            border: 2px solid #dee2e6;
+            border-radius: 8px;
+            padding: 20px;
+            margin: 20px 0;
+        }
+        
+        .step-number {
+            display: inline-block;
+            background: #3498db;
+            color: white;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            text-align: center;
+            line-height: 30px;
+            font-weight: bold;
+            margin-right: 10px;
+        }
+        
+        .note {
+            background: #fff9e6;
+            border-left: 4px solid #ffc107;
+            padding: 15px 20px;
+            margin: 20px 0;
+            font-style: italic;
+        }
+        
+        code {
+            background: #f5f5f5;
+            padding: 2px 6px;
+            border-radius: 3px;
+            font-family: 'Courier New', monospace;
+            font-size: 14px;
+        }
+        
+        .back-button {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            background: #0071e3;
+            color: white;
+            padding: 12px 24px;
+            border-radius: 980px;
+            text-decoration: none;
+            font-weight: 600;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+            transition: all 0.3s;
+        }
+        
+        .back-button:hover {
+            background: #0077ed;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+        }
+        
+        @media print {
+            body {
+                background: white;
+                padding: 0;
+            }
+            
+            .document-container {
+                box-shadow: none;
+                padding: 40px;
+            }
+            
+            .back-button {
+                display: none;
+            }
+        }
+    </style>
+</head>
+<body>
+    <a href="assignments.html" class="back-button">← Back to Assignments</a>
+    
+    <div class="document-container">
+        <h1>Exercise 1: Project Management</h1>
+        
+        <p>We have created a webpage for storing daily and final assignments.</p>
+        
+        <h2>Website Development Guide</h2>
+        
+        <div class="important">
+            <strong>Prepare tools for website:</strong>
+            <ul>
+                <li><strong>Github:</strong> Our website will be placed here.</li>
+                <li><strong>GitHub Desktop:</strong> Used for cloning libraries and uploading local files.</li>
+                <li><strong>AI agent (TONGYI Lingma):</strong> Used to write website code.</li>
+            </ul>
+        </div>
+        
+        <div class="step-box">
+            <h3><span class="step-number">1</span>Step one: Create a new repository on GitHub to host your website</h3>
+            <p>Create a public repository where you can collaborate with your team to create web content.</p>
+            <p>Name your repository, choose whether it's public or private. Add a README file to share your information, then click the <span class="highlight">"create repository"</span> button.</p>
+        </div>
+        
+        <div class="step-box">
+            <h3><span class="step-number">2</span>Set the page to be empty</h3>
+            <p>Click on the settings of the repository and select <span class="highlight">"Pages"</span> on the left.</p>
+            <p>Choose <span class="highlight">"main"</span> and <span class="highlight">"/root"</span> and save.</p>
+            <p>The link above allows you to view the page.</p>
+        </div>
+        
+        <div class="step-box">
+            <h3><span class="step-number">3</span>Wait for Github to search and create pages</h3>
+            <p>Once all projects are completed, the website will be initially established.</p>
+        </div>
+        
+        <div class="step-box">
+            <h3><span class="step-number">4</span>Step two: Clone the repository to GitHub</h3>
+            <p>Click on <span class="highlight">"Add"</span>, <span class="highlight">"Clone a resource"</span>, find the repository you want to clone.</p>
+            <p>Finally, click <span class="highlight">"Clone"</span>.</p>
+        </div>
+        
+        <div class="step-box">
+            <h3><span class="step-number">5</span>Step three: Design website with your team in AI agent</h3>
+            <p>Use AI agents to design the functions and layout of web pages.</p>
+            <div class="note">
+                 <em>(Only one picture is provided for reference.)</em>
+            </div>
+        </div>
+        
+        <div class="step-box">
+            <h3><span class="step-number">6</span>Step four: Upload them to Github</h3>
+            <p>Upload directly to the corresponding GitHub account via Lingma.</p>
+        </div>
+        
+        <div class="important" style="margin-top: 40px;">
+            <h3>📝 Summary</h3>
+            <p>This exercise covers the complete workflow from creating a GitHub repository to deploying a collaborative team website using AI assistance.</p>
+            <ul>
+                <li>✅ Repository creation and configuration</li>
+                <li>✅ GitHub Pages setup</li>
+                <li>✅ Local repository cloning</li>
+                <li>✅ AI-assisted website development</li>
+                <li>✅ File upload and synchronization</li>
+            </ul>
+        </div>
+        
+        <div class="note" style="margin-top: 30px;">
+            <strong>Note:</strong> This is an HTML representation of the original Word document. For the original .docx file with exact formatting, please download it from the Assignments page.
+        </div>
+    </div>
+</body>
+</html>
