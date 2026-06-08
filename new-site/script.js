@@ -638,6 +638,21 @@ function openSubmittedFilePreview(assignmentId, fileIndex) {
     openFilePreview(file.data, file.type, file.name);
 }
 
+// Open PDF in new tab for Exercise 1
+function openPDFInNewTab(assignmentId) {
+    const assignments = JSON.parse(localStorage.getItem('assignments') || '[]');
+    const assignment = assignments.find(a => a.id === assignmentId);
+    
+    if (!assignment || !assignment.files) return;
+    
+    // Find the PDF file
+    const pdfFile = assignment.files.find(f => f.name.toLowerCase().endsWith('.pdf'));
+    if (!pdfFile) return;
+    
+    // Open PDF in new tab
+    window.open(pdfFile.data, '_blank');
+}
+
 // Delete submitted file
 function deleteSubmittedFile(assignmentId, fileIndex) {
     if (!confirm('Are you sure you want to delete this file?')) return;
@@ -767,11 +782,20 @@ function loadAssignments() {
             ? renderSubmittedFiles(assignment.files, assignment.id)
             : '';
         
+        // Check if this is Exercise 1 with PDF - make title clickable
+        const isExercise1WithPDF = assignment.title === 'Exercise 1: Project Management' && 
+                                   assignment.files && 
+                                   assignment.files.some(f => f.name.toLowerCase().endsWith('.pdf'));
+        
+        const titleHtml = isExercise1WithPDF 
+            ? `<h3 class="assignment-title" onclick="openPDFInNewTab(${assignment.id})" style="cursor: pointer; color: #0071e3; text-decoration: underline;">${assignment.title} 🔗</h3>`
+            : `<h3 class="assignment-title">${assignment.title}</h3>`;
+        
         html += `
             <div class="assignment-card">
                 <div class="assignment-header">
                     <div>
-                        <h3 class="assignment-title">${assignment.title}</h3>
+                        ${titleHtml}
                         <div class="assignment-meta">
                             👤 ${assignment.submitter} | 📅 Deadline: ${assignment.deadline}
                         </div>
@@ -779,8 +803,8 @@ function loadAssignments() {
                     <span class="assignment-status ${statusClass}">${statusText}</span>
                 </div>
                 ${githubSyncStatus}
-                ${assignment.description ? `<div class="assignment-description" style="white-space: pre-wrap; line-height: 1.8;">${renderMarkdown(assignment.description)}</div>` : ''}
-                ${submittedFilesHtml}
+                ${isExercise1WithPDF ? '' : (assignment.description ? `<div class="assignment-description" style="white-space: pre-wrap; line-height: 1.8;">${renderMarkdown(assignment.description)}</div>` : '')}
+                ${isExercise1WithPDF ? '<p style="color: #86868b; font-size: 14px; margin: 12px 0;">💡 Click the title above to view the PDF document</p>' : submittedFilesHtml}
                 ${evaluationStatus}
                 ${assignment.teacherEvaluation ? `<div class="teacher-evaluation"><strong>Teacher's Comments:</strong><br>${renderMarkdown(assignment.teacherEvaluation)}</div>` : ''}
                 <div class="assignment-actions">
