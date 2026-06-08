@@ -1816,6 +1816,9 @@ document.addEventListener('DOMContentLoaded', function() {
     if (window.location.pathname.includes('assignments.html') || window.location.pathname.endsWith('assignments.html')) {
         loadAssignments();
         populateSubmitterOptions();
+        
+        // Auto-create Exercise 1 assignment
+        autoCreateExercise1();
     }
     
     // Load projects on final-project page
@@ -1940,4 +1943,117 @@ Upload directly to the corresponding GitHub account via Lingma.`,
     };
     
     fileInput.click();
+}
+
+// Auto-create Exercise 1 assignment with embedded document
+function autoCreateExercise1() {
+    // Check if Exercise 1 already exists
+    const assignments = JSON.parse(localStorage.getItem('assignments') || '[]');
+    const existingExercise = assignments.find(a => a.title === 'Exercise 1: Project Management');
+    
+    if (existingExercise) {
+        console.log('Exercise 1 already exists, skipping creation');
+        return;
+    }
+    
+    // Create a placeholder DOCX file (since we can't embed the actual file without user upload)
+    // In a real scenario, you would need to convert the actual .docx file to base64
+    const placeholderDocContent = `
+Exercise 1: Project Management
+
+We have created a webpage for storing daily and final assignments
+
+Website Development Guide
+
+Prepare tool for website：
+Github: Our website will be placed here.
+GitHub Desktop: Used for cloning libraries and uploading local files.
+AI agent (TONGYI Lingma): Used to write website code.
+
+Step one: Create a new repository on GitHub to host your website.
+
+Create a public repository where you can collaborate with your team to create web content.
+
+Name your repository, choose whether it's public or private. Add a README file to share your information, then click the "create repository" button.
+
+Set the page to be empty. Click on the settings of the repository and select "Pages" on the left. Choose "main" and "/root" and save. The link above allows you to view the page.
+
+Wait for Github to search and create pages, and once all projects are completed, the website will be initially established.
+
+Step two: Clone the repository to GitHub.
+
+Click on "Add", "Clone a resource", find the repository you want to clone. Finally, click "Clone".
+
+Step three: Design website with your team in AI agent
+
+Use AI agents to design the functions and layout of web pages.
+
+Step four: Upload them to Github.
+
+Upload directly to the corresponding GitHub account via Lingma.
+    `.trim();
+    
+    // Create a text file as a placeholder (since we can't directly embed .docx without conversion)
+    const textFileData = {
+        name: 'Project_Management_Guide.txt',
+        type: 'text/plain',
+        size: placeholderDocContent.length,
+        data: 'data:text/plain;base64,' + btoa(unescape(encodeURIComponent(placeholderDocContent)))
+    };
+    
+    // Create assignment
+    const exercise1 = {
+        id: Date.now(),
+        title: 'Exercise 1: Project Management',
+        description: `We have created a webpage for storing daily and final assignments.
+
+**Website Development Guide**
+
+Prepare tool for website:
+- Github: Our website will be placed here.
+- GitHub Desktop: Used for cloning libraries and uploading local files.
+- AI agent (TONGYI Lingma): Used to write website code.
+
+**Step one:** Create a new repository on GitHub to host your website.
+
+Create a public repository where you can collaborate with your team to create web content.
+
+Name your repository, choose whether it's public or private. Add a README file to share your information, then click the "create repository" button.
+
+Set the page to be empty. Click on the settings of the repository and select "Pages" on the left. Choose "main" and "/root" and save. The link above allows you to view the page.
+
+Wait for Github to search and create pages, and once all projects are completed, the website will be initially established.
+
+**Step two:** Clone the repository to GitHub.
+
+Click on "Add", "Clone a resource", find the repository you want to clone. Finally, click "Clone".
+
+**Step three:** Design website with your team in AI agent
+
+Use AI agents to design the functions and layout of web pages.
+
+**Step four:** Upload them to Github.
+
+Upload directly to the corresponding GitHub account via Lingma.
+
+---
+
+**Attached File:** Project_Management_Guide.txt (Full content included in description)`,
+        deadline: new Date().toISOString().split('T')[0],
+        submitter: 'All Members',
+        status: 'submitted',
+        createdAt: new Date().toISOString(),
+        submittedAt: new Date().toISOString(),
+        files: [textFileData]
+    };
+    
+    assignments.push(exercise1);
+    localStorage.setItem('assignments', JSON.stringify(assignments));
+    
+    console.log('✅ Exercise 1: Project Management created automatically');
+    
+    // Reload if on assignments page
+    if (window.location.pathname.includes('assignments.html')) {
+        loadAssignments();
+    }
 }
