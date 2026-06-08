@@ -1738,6 +1738,89 @@ function removeFile(containerId, index) {
     }
 }
 
+// Load and render PDF using PDF.js
+function loadPDFViewer(pdfUrl, containerId) {
+    const container = document.getElementById(containerId);
+    if (!container) return;
+    
+    // Load PDF.js from CDN
+    if (typeof pdfjsLib === 'undefined') {
+        const script = document.createElement('script');
+        script.src = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js';
+        script.onload = () => {
+            // Set worker source
+            pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+            renderPDF(pdfUrl, container);
+        };
+        document.head.appendChild(script);
+    } else {
+        renderPDF(pdfUrl, container);
+    }
+}
+
+// Render PDF pages
+async function renderPDF(pdfUrl, container) {
+    try {
+        // Show loading message
+        container.innerHTML = '<div style="padding: 40px; text-align: center; color: #666;"><p>📄 Loading PDF...</p></div>';
+        
+        // Load the PDF
+        const loadingTask = pdfjsLib.getDocument(pdfUrl);
+        const pdf = await loadingTask.promise;
+        
+        // Clear container
+        container.innerHTML = '';
+        
+        // Render all pages
+        for (let pageNum = 1; pageNum <= pdf.numPages; pageNum++) {
+            const page = await pdf.getPage(pageNum);
+            
+            // Create canvas for this page
+            const canvas = document.createElement('canvas');
+            canvas.style.width = '100%';
+            canvas.style.maxWidth = '900px';
+            canvas.style.margin = '20px auto';
+            canvas.style.display = 'block';
+            canvas.style.boxShadow = '0 2px 8px rgba(0,0,0,0.1)';
+            canvas.style.borderRadius = '4px';
+            
+            container.appendChild(canvas);
+            
+            // Set scale for good quality
+            const viewport = page.getViewport({ scale: 2.0 });
+            canvas.height = viewport.height;
+            canvas.width = viewport.width;
+            
+            // Render page
+            const renderContext = {
+                canvasContext: canvas.getContext('2d'),
+                viewport: viewport
+            };
+            await page.render(renderContext).promise;
+            
+            // Add page number
+            const pageNumDiv = document.createElement('div');
+            pageNumDiv.textContent = `Page ${pageNum} of ${pdf.numPages}`;
+            pageNumDiv.style.textAlign = 'center';
+            pageNumDiv.style.color = '#666';
+            pageNumDiv.style.fontSize = '14px';
+            pageNumDiv.style.marginBottom = '20px';
+            container.appendChild(pageNumDiv);
+        }
+        
+        console.log(`✅ PDF loaded successfully: ${pdf.numPages} pages`);
+    } catch (error) {
+        console.error('Error loading PDF:', error);
+        container.innerHTML = `
+            <div style="padding: 40px; text-align: center; color: #dc3545;">
+                <p style="font-size: 16px; margin-bottom: 10px;">❌ Failed to load PDF</p>
+                <p style="font-size: 14px;">${error.message}</p>
+                <p style="font-size: 14px; margin-top: 15px;">Please download the file to view it locally.</p>
+            </div>
+        `;
+    }
+}
+
 // Open file preview modal
 function openFilePreview(url, type, name) {
     document.getElementById('previewFileName').textContent = name;
@@ -1751,6 +1834,36 @@ function openFilePreview(url, type, name) {
                 Your browser does not support the video tag.
             </video>
         `;
+    } else if (name.toLowerCase().endsWith('.pdf')) {
+        // For PDF files, use PDF.js for better rendering and page-by-page viewing
+        const pdfId = 'pdf-viewer-' + Date.now();
+        container.innerHTML = `
+            <div class="pdf-viewer-container" style="width: 100%; background: #f5f5f7; border-radius: 8px; padding: 20px;">
+                <!-- PDF.js Viewer -->
+                <div id="${pdfId}" style="background: white; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); min-height: 600px;">
+                    <div style="padding: 40px; text-align: center; color: #666;">
+                        <p style="font-size: 16px; margin-bottom: 10px;">📄 Loading PDF viewer...</p>
+                        <p style="font-size: 14px;">Please wait while we prepare the document</p>
+                    </div>
+                </div>
+                
+                <!-- Download Options -->
+                <div style="text-align: center; margin-top: 15px; padding: 15px; background: white; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
+                    <p style="margin-bottom: 10px; color: #666; font-size: 14px;">💡 The PDF is displayed above. You can scroll through all pages, zoom in/out, and view images clearly.</p>
+                    <a href="${url}" download="${name}" class="btn btn-primary" style="display: inline-block; padding: 10px 20px; background: #0071e3; color: white; text-decoration: none; border-radius: 980px; font-weight: 600; margin: 5px;">
+                        📥 Download PDF
+                    </a>
+                    <button onclick="window.open('${url}', '_blank')" class="btn btn-secondary" style="display: inline-block; padding: 10px 20px; background: #86868b; color: white; border: none; border-radius: 980px; font-weight: 600; margin: 5px; cursor: pointer;">
+                        🔗 Open in New Tab
+                    </button>
+                </div>
+            </div>
+        `;
+        
+        // Load PDF.js and render the PDF
+        setTimeout(() => {
+            loadPDFViewer('${url}', '${pdfId}');
+        }, 100);
     } else if (name.toLowerCase().endsWith('.docx') || name.toLowerCase().endsWith('.doc')) {
         // For Word documents, use Google Docs Viewer for better compatibility with images and formatting
         // Google Docs Viewer supports more features than Microsoft Office Online Viewer
@@ -1960,28 +2073,29 @@ function autoCreateExercise1() {
     
     if (existingIndex !== -1) {
         const existing = assignments[existingIndex];
-        // Check if it has the original .docx file
+        // Check if it has the original PDF or DOCX file
         if (existing.files && existing.files.length > 0) {
-            const hasDocx = existing.files.some(f => 
+            const hasOriginalFile = existing.files.some(f => 
+                f.name.toLowerCase().endsWith('.pdf') ||
                 f.name.toLowerCase().endsWith('.docx') || 
                 f.name.toLowerCase().endsWith('.doc')
             );
-            if (hasDocx) {
+            if (hasOriginalFile) {
                 console.log('✅ Exercise 1 already has original document, skipping');
                 return;
             }
         }
     }
     
-    // Create file input to upload the actual .docx file
+    // Create file input to upload the actual document (PDF recommended)
     const fileInput = document.createElement('input');
     fileInput.type = 'file';
-    fileInput.accept = '.docx,.doc';
+    fileInput.accept = '.pdf,.docx,.doc';
     fileInput.style.display = 'none';
     document.body.appendChild(fileInput);
     
     // Show notification prompting user to upload
-    showNotification('📄 Please select Project Management.docx to embed it in the webpage', 'info');
+    showNotification('📄 Please select Project Management.pdf (recommended) or .docx to embed it in the webpage', 'info');
     
     fileInput.onchange = async (e) => {
         const file = e.target.files[0];
