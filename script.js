@@ -649,8 +649,100 @@ function openPDFInNewTab(assignmentId) {
     const pdfFile = assignment.files.find(f => f.name.toLowerCase().endsWith('.pdf'));
     if (!pdfFile) return;
     
-    // Open PDF in new tab
-    window.open(pdfFile.data, '_blank');
+    // Create a new window with embed tag for better compatibility
+    const newWindow = window.open('', '_blank');
+    if (!newWindow) {
+        // If popup blocked, fallback to direct open
+        window.open(pdfFile.data, '_blank');
+        return;
+    }
+    
+    // Write HTML content with embed tag
+    newWindow.document.write(`
+        <!DOCTYPE html>
+        <html lang="en">
+        <head>
+            <meta charset="UTF-8">
+            <meta name="viewport" content="width=device-width, initial-scale=1.0">
+            <title>${pdfFile.name} - PDF Viewer</title>
+            <style>
+                * {
+                    margin: 0;
+                    padding: 0;
+                    box-sizing: border-box;
+                }
+                body {
+                    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+                    background: #f5f5f7;
+                    height: 100vh;
+                    display: flex;
+                    flex-direction: column;
+                }
+                .header {
+                    background: white;
+                    padding: 15px 20px;
+                    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+                    display: flex;
+                    justify-content: space-between;
+                    align-items: center;
+                }
+                .header h1 {
+                    font-size: 16px;
+                    color: #1d1d1f;
+                    font-weight: 600;
+                }
+                .header-actions {
+                    display: flex;
+                    gap: 10px;
+                }
+                .btn {
+                    padding: 8px 16px;
+                    border: none;
+                    border-radius: 980px;
+                    font-size: 14px;
+                    font-weight: 600;
+                    cursor: pointer;
+                    text-decoration: none;
+                    display: inline-block;
+                }
+                .btn-primary {
+                    background: #0071e3;
+                    color: white;
+                }
+                .btn-secondary {
+                    background: #86868b;
+                    color: white;
+                }
+                .pdf-container {
+                    flex: 1;
+                    padding: 20px;
+                    overflow: auto;
+                }
+                embed {
+                    width: 100%;
+                    height: 100%;
+                    border: none;
+                    border-radius: 8px;
+                    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+                }
+            </style>
+        </head>
+        <body>
+            <div class="header">
+                <h1>📄 ${pdfFile.name}</h1>
+                <div class="header-actions">
+                    <a href="${pdfFile.data}" download="${pdfFile.name}" class="btn btn-primary">📥 Download</a>
+                    <button onclick="window.close()" class="btn btn-secondary">✕ Close</button>
+                </div>
+            </div>
+            <div class="pdf-container">
+                <embed src="${pdfFile.data}" type="application/pdf" />
+            </div>
+        </body>
+        </html>
+    `);
+    
+    newWindow.document.close();
 }
 
 // Delete submitted file
