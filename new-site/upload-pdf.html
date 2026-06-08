@@ -1,0 +1,358 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Upload Project Management PDF</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+        
+        .upload-container {
+            background: white;
+            border-radius: 20px;
+            padding: 60px 40px;
+            max-width: 600px;
+            width: 100%;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            text-align: center;
+        }
+        
+        h1 {
+            color: #1d1d1f;
+            font-size: 32px;
+            margin-bottom: 10px;
+            font-weight: 700;
+        }
+        
+        .subtitle {
+            color: #86868b;
+            font-size: 16px;
+            margin-bottom: 40px;
+        }
+        
+        .drop-zone {
+            border: 3px dashed #0071e3;
+            border-radius: 16px;
+            padding: 60px 40px;
+            background: #f5f5f7;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            margin-bottom: 30px;
+        }
+        
+        .drop-zone:hover {
+            background: #e8e8ed;
+            border-color: #0077ed;
+        }
+        
+        .drop-zone.dragover {
+            background: #d1d1d6;
+            border-color: #0077ed;
+            transform: scale(1.02);
+        }
+        
+        .drop-icon {
+            font-size: 64px;
+            margin-bottom: 20px;
+        }
+        
+        .drop-text {
+            font-size: 18px;
+            color: #1d1d1f;
+            margin-bottom: 10px;
+            font-weight: 600;
+        }
+        
+        .drop-hint {
+            font-size: 14px;
+            color: #86868b;
+        }
+        
+        #fileInput {
+            display: none;
+        }
+        
+        .btn {
+            display: inline-block;
+            padding: 14px 32px;
+            background: #0071e3;
+            color: white;
+            border: none;
+            border-radius: 980px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            margin: 10px;
+        }
+        
+        .btn:hover {
+            background: #0077ed;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0,113,227,0.3);
+        }
+        
+        .btn-secondary {
+            background: #86868b;
+        }
+        
+        .btn-secondary:hover {
+            background: #6e6e73;
+        }
+        
+        .status {
+            margin-top: 30px;
+            padding: 20px;
+            border-radius: 12px;
+            font-size: 16px;
+            display: none;
+        }
+        
+        .status.success {
+            background: #d4edda;
+            color: #155724;
+            border: 2px solid #c3e6cb;
+            display: block;
+        }
+        
+        .status.error {
+            background: #f8d7da;
+            color: #721c24;
+            border: 2px solid #f5c6cb;
+            display: block;
+        }
+        
+        .status.info {
+            background: #d1ecf1;
+            color: #0c5460;
+            border: 2px solid #bee5eb;
+            display: block;
+        }
+        
+        .instructions {
+            margin-top: 30px;
+            padding: 20px;
+            background: #f5f5f7;
+            border-radius: 12px;
+            text-align: left;
+        }
+        
+        .instructions h3 {
+            color: #1d1d1f;
+            margin-bottom: 15px;
+            font-size: 18px;
+        }
+        
+        .instructions ol {
+            margin-left: 20px;
+            color: #424245;
+        }
+        
+        .instructions li {
+            margin-bottom: 10px;
+            line-height: 1.6;
+        }
+        
+        .instructions code {
+            background: #e8e8ed;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-family: 'Courier New', monospace;
+            font-size: 14px;
+        }
+    </style>
+</head>
+<body>
+    <div class="upload-container">
+        <h1>📄 Upload Project Management PDF</h1>
+        <p class="subtitle">Add the PDF file to Exercise 1 assignment</p>
+        
+        <div class="drop-zone" id="dropZone">
+            <div class="drop-icon">📁</div>
+            <div class="drop-text">Drag & Drop PDF here</div>
+            <div class="drop-hint">or click to browse files</div>
+        </div>
+        
+        <input type="file" id="fileInput" accept=".pdf">
+        
+        <div>
+            <button class="btn" onclick="document.getElementById('fileInput').click()">
+                📂 Select PDF File
+            </button>
+            <a href="assignments.html" class="btn btn-secondary">
+                ← Back to Assignments
+            </a>
+        </div>
+        
+        <div id="status" class="status"></div>
+        
+        <div class="instructions">
+            <h3>📋 Instructions:</h3>
+            <ol>
+                <li>Click "Select PDF File" or drag your <code>Project Management.pdf</code> file into the drop zone above</li>
+                <li>The PDF will be automatically uploaded and embedded in Exercise 1</li>
+                <li>You'll see a success message when complete</li>
+                <li>Click "Back to Assignments" to view the PDF in the assignment list</li>
+                <li>Click on the PDF filename to preview it with the PDF.js viewer</li>
+            </ol>
+        </div>
+    </div>
+    
+    <script>
+        const dropZone = document.getElementById('dropZone');
+        const fileInput = document.getElementById('fileInput');
+        const status = document.getElementById('status');
+        
+        // Handle drag and drop
+        dropZone.addEventListener('dragover', (e) => {
+            e.preventDefault();
+            dropZone.classList.add('dragover');
+        });
+        
+        dropZone.addEventListener('dragleave', () => {
+            dropZone.classList.remove('dragover');
+        });
+        
+        dropZone.addEventListener('drop', (e) => {
+            e.preventDefault();
+            dropZone.classList.remove('dragover');
+            
+            const files = e.dataTransfer.files;
+            if (files.length > 0) {
+                handleFile(files[0]);
+            }
+        });
+        
+        // Handle file selection
+        fileInput.addEventListener('change', (e) => {
+            if (e.target.files.length > 0) {
+                handleFile(e.target.files[0]);
+            }
+        });
+        
+        // Handle file upload
+        async function handleFile(file) {
+            // Validate file type
+            if (!file.name.toLowerCase().endsWith('.pdf')) {
+                showStatus('❌ Please select a PDF file', 'error');
+                return;
+            }
+            
+            showStatus('📄 Processing PDF file...', 'info');
+            
+            try {
+                // Convert file to base64
+                const reader = new FileReader();
+                reader.onload = async (event) => {
+                    const fileData = {
+                        name: file.name,
+                        type: file.type,
+                        size: file.size,
+                        data: event.target.result
+                    };
+                    
+                    // Get existing assignments
+                    const assignments = JSON.parse(localStorage.getItem('assignments') || '[]');
+                    
+                    // Find or create Exercise 1
+                    let exerciseIndex = assignments.findIndex(a => a.title === 'Exercise 1: Project Management');
+                    
+                    if (exerciseIndex !== -1) {
+                        // Update existing assignment
+                        assignments[exerciseIndex].files = [fileData];
+                        assignments[exerciseIndex].submittedAt = new Date().toISOString();
+                        showStatus('✅ Exercise 1 updated successfully!', 'success');
+                    } else {
+                        // Create new assignment
+                        const exercise1 = {
+                            id: Date.now(),
+                            title: 'Exercise 1: Project Management',
+                            description: `We have created a webpage for storing daily and final assignments.
+
+**Website Development Guide**
+
+Prepare tool for website:
+- Github: Our website will be placed here.
+- GitHub Desktop: Used for cloning libraries and uploading local files.
+- AI agent (TONGYI Lingma): Used to write website code.
+
+**Step one:** Create a new repository on GitHub to host your website.
+
+Create a public repository where you can collaborate with your team to create web content.
+
+Name your repository, choose whether it's public or private. Add a README file to share your information, then click the "create repository" button.
+
+Set the page to be empty. Click on the settings of the repository and select "Pages" on the left. Choose "main" and "/root" and save. The link above allows you to view the page.
+
+Wait for Github to search and create pages, and once all projects are completed, the website will be initially established.
+
+**Step two:** Clone the repository to GitHub.
+
+Click on "Add", "Clone a resource", find the repository you want to clone. Finally, click "Clone".
+
+**Step three:** Design website with your team in AI agent
+
+Use AI agents to design the functions and layout of web pages.
+
+**Step four:** Upload them to Github.
+
+Upload directly to the corresponding GitHub account via Lingma.
+
+---
+
+**Attached File:** ${file.name} (Original PDF with full formatting, images, and highlights)
+
+**Viewing Instructions:**
+1. Click on the filename below to preview the PDF with all pages
+2. Use the PDF viewer to scroll through all pages
+3. Download button available for offline viewing`,
+                            deadline: new Date().toISOString().split('T')[0],
+                            submitter: 'All Members',
+                            status: 'submitted',
+                            createdAt: new Date().toISOString(),
+                            submittedAt: new Date().toISOString(),
+                            files: [fileData]
+                        };
+                        
+                        assignments.push(exercise1);
+                        showStatus('✅ Exercise 1 created successfully!', 'success');
+                    }
+                    
+                    // Save to localStorage
+                    localStorage.setItem('assignments', JSON.stringify(assignments));
+                    
+                    // Show success message with link
+                    setTimeout(() => {
+                        status.innerHTML += '<br><br><a href="assignments.html" class="btn">View Assignments →</a>';
+                    }, 1000);
+                };
+                
+                reader.readAsDataURL(file);
+            } catch (error) {
+                console.error('Error:', error);
+                showStatus('❌ Failed to process file: ' + error.message, 'error');
+            }
+        }
+        
+        function showStatus(message, type) {
+            status.textContent = message;
+            status.className = 'status ' + type;
+        }
+    </script>
+</body>
+</html>
