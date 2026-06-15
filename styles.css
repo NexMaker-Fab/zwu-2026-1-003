@@ -1622,3 +1622,50 @@ body {
     color: #ff0000;
     transform: scale(1.2);
 }
+
+/* Exercise Card Styles */
+.exercise-card {
+    background: linear-gradient(135deg, rgba(108, 92, 231, 0.1), rgba(162, 155, 254, 0.1));
+    border: 2px solid var(--primary-color);
+    position: relative;
+    overflow: hidden;
+}
+
+.exercise-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background: linear-gradient(90deg, var(--primary-color), var(--secondary-color));
+}
+
+.exercise-card:hover {
+    border-color: var(--secondary-color);
+    box-shadow: 0 8px 24px rgba(108, 92, 231, 0.3);
+    transform: translateY(-4px);
+}
+
+/* Edit Form Container */
+.edit-form-container {
+    background: var(--background-secondary);
+    border-radius: var(--radius-md);
+    padding: 40px;
+    border: 1px solid var(--border-color);
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+.form-actions {
+    display: flex;
+    gap: 12px;
+    justify-content: flex-end;
+    margin-top: 30px;
+    padding-top: 20px;
+    border-top: 1px solid var(--border-color);
+}
+
+.form-actions .btn {
+    min-width: 150px;
+}
