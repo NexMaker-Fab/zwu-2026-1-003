@@ -49,7 +49,6 @@
         <div class="container">
             <div class="section-header">
                 <h2 class="section-title">Project Showcase</h2>
-                <button class="btn btn-primary" onclick="openAddProjectModal()">+ New Project</button>
             </div>
 
             <div class="projects-grid" id="projectsGrid">
@@ -59,52 +58,6 @@
     </section>
 
     </main>
-
-    <!-- Add Project Modal -->
-    <div class="modal" id="addProjectModal">
-        <div class="modal-content modal-large">
-            <div class="modal-header">
-                <h3 class="modal-title">New Project</h3>
-                <button class="modal-close" onclick="closeModal('addProjectModal')">&times;</button>
-            </div>
-            <form onsubmit="saveNewProject(event)">
-                <div class="form-group">
-                    <label class="form-label">Project Name</label>
-                    <input type="text" class="form-input" id="projectName" required placeholder="Enter project name">
-                </div>
-                <div class="form-group">
-                    <label class="form-label">Description</label>
-                    <textarea class="form-textarea" id="projectDescription" rows="4" placeholder="Project description"></textarea>
-                </div>
-                <div class="form-group">
-                    <label class="form-label">Tags (comma-separated)</label>
-                    <input type="text" class="form-input" id="projectTags" placeholder="e.g., React, Node.js, MongoDB">
-                </div>
-                <div class="form-group">
-                    <label class="form-label">Demo Link (Optional)</label>
-                    <input type="url" class="form-input" id="projectDemoLink" placeholder="https://...">
-                </div>
-                <div class="form-group">
-                    <label class="form-label">GitHub Link (Optional)</label>
-                    <input type="url" class="form-input" id="projectGithubLink" placeholder="https://github.com/...">
-                </div>
-                <div class="form-group">
-                    <label class="form-label">Upload Project Files</label>
-                    <div class="file-upload-area" id="projectFileUploadArea" onclick="document.getElementById('projectFiles').click()">
-                        <div class="file-upload-icon">📁</div>
-                        <p>Click to upload or drag and drop</p>
-                        <small>Images, Videos, Documents, Archives (Max 50MB per file)</small>
-                    </div>
-                    <input type="file" id="projectFiles" multiple accept="image/*,video/*,.pdf,.doc,.docx,.xls,.xlsx,.ppt,.pptx,.zip,.rar,.7z" style="display: none;" onchange="handleProjectFileSelect(event)">
-                    <div id="selectedProjectFilesList" class="selected-files-list"></div>
-                </div>
-                <div class="modal-actions">
-                    <button type="button" class="btn btn-secondary" onclick="closeModal('addProjectModal')">Cancel</button>
-                    <button type="submit" class="btn btn-primary">Create Project</button>
-                </div>
-            </form>
-        </div>
-    </div>
 
     <script src="script.js"></script>
 </body>

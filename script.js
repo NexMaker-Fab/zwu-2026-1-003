@@ -497,50 +497,6 @@ function populateSubmitterOptions() {
     }
 }
 
-// Open add assignment modal
-function openAddAssignmentModal() {
-    populateSubmitterOptions();
-    openModal('addAssignmentModal');
-}
-
-// Save new assignment
-function saveNewAssignment(event) {
-    event.preventDefault();
-    
-    const title = document.getElementById('assignmentTitle').value.trim();
-    const description = document.getElementById('assignmentDescription').value.trim();
-    const deadline = document.getElementById('assignmentDeadline').value;
-    const submitter = document.getElementById('assignmentSubmitter').value;
-    
-    if (!title || !deadline || !submitter) {
-        showNotification('❌ Please fill in all required fields!', 'error');
-        return;
-    }
-    
-    const assignments = JSON.parse(localStorage.getItem('assignments') || '[]');
-    const newAssignment = {
-        id: Date.now(),
-        title: title,
-        description: description,
-        deadline: deadline,
-        submitter: submitter,
-        status: 'pending',
-        createdAt: new Date().toISOString()
-    };
-    
-    assignments.push(newAssignment);
-    localStorage.setItem('assignments', JSON.stringify(assignments));
-    
-    showNotification('✅ Assignment created successfully!');
-    closeModal('addAssignmentModal');
-    
-    // Reset form
-    event.target.reset();
-    
-    // Reload assignments
-    loadAssignments();
-}
-
 // Simple Markdown renderer for assignment descriptions
 function renderMarkdown(text) {
     if (!text) return '';
@@ -846,7 +802,7 @@ function loadAssignments() {
             <div style="text-align: center; padding: 60px 20px; color: var(--text-secondary);">
                 <div style="font-size: 64px; margin-bottom: 20px;">📝</div>
                 <h3 style="font-size: 20px; font-weight: 600; margin-bottom: 8px; color: var(--text-primary);">No assignments yet</h3>
-                <p style="font-size: 15px;">Click "New Assignment" button to create your first assignment</p>
+                <p style="font-size: 15px;">Assignments will appear here when added</p>
             </div>
         `;
         return;
@@ -1351,55 +1307,6 @@ async function uploadToGithub(assignment) {
 // ==================== Project Management ====================
 
 // Open add project modal
-function openAddProjectModal() {
-    openModal('addProjectModal');
-}
-
-// Save new project
-async function saveNewProject(event) {
-    event.preventDefault();
-    
-    const name = document.getElementById('projectName').value.trim();
-    const description = document.getElementById('projectDescription').value.trim();
-    const tags = document.getElementById('projectTags').value.split(',').map(t => t.trim()).filter(t => t);
-    const demoLink = document.getElementById('projectDemoLink').value.trim();
-    const githubLink = document.getElementById('projectGithubLink').value.trim();
-    
-    if (!name) {
-        showNotification('❌ Please enter a project name!', 'error');
-        return;
-    }
-    
-    // Convert files to base64
-    const filesData = await convertFilesToBase64(selectedProjectFiles);
-    
-    const projects = JSON.parse(localStorage.getItem('projects') || '[]');
-    const newProject = {
-        id: Date.now(),
-        name: name,
-        description: description,
-        tags: tags,
-        demoLink: demoLink,
-        githubLink: githubLink,
-        files: filesData,
-        createdAt: new Date().toISOString()
-    };
-    
-    projects.push(newProject);
-    localStorage.setItem('projects', JSON.stringify(projects));
-    
-    showNotification('✅ Project created successfully!');
-    closeModal('addProjectModal');
-    
-    // Reset form
-    event.target.reset();
-    selectedProjectFiles = [];
-    document.getElementById('selectedProjectFilesList').innerHTML = '';
-    
-    // Reload projects
-    loadProjects();
-}
-
 // Load and display projects
 function loadProjects() {
     const projectsGrid = document.getElementById('projectsGrid');
@@ -1412,7 +1319,7 @@ function loadProjects() {
             <div style="text-align: center; padding: 60px 20px; color: var(--text-secondary); grid-column: 1/-1;">
                 <div style="font-size: 64px; margin-bottom: 20px;">🚀</div>
                 <h3 style="font-size: 20px; font-weight: 600; margin-bottom: 8px; color: var(--text-primary);">No projects yet</h3>
-                <p style="font-size: 15px;">Click "New Project" button to create your first project</p>
+                <p style="font-size: 15px;">Projects will appear here when added</p>
             </div>
         `;
         return;

@@ -49,9 +49,6 @@
         <div class="container">
             <div class="section-header">
                 <h2 class="section-title">Assignment List</h2>
-                <div class="header-actions">
-                    <button class="btn btn-primary" onclick="openAddAssignmentModal()">+ New Assignment</button>
-                </div>
             </div>
 
             <div class="assignments-list" id="assignmentsList">
@@ -61,40 +58,6 @@
     </section>
 
     </main>
-
-    <!-- Add Assignment Modal -->
-    <div class="modal" id="addAssignmentModal">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h3 class="modal-title">New Assignment</h3>
-                <button class="modal-close" onclick="closeModal('addAssignmentModal')">&times;</button>
-            </div>
-            <form onsubmit="saveNewAssignment(event)">
-                <div class="form-group">
-                    <label class="form-label">Title</label>
-                    <input type="text" class="form-input" id="assignmentTitle" required placeholder="Assignment title">
-                </div>
-                <div class="form-group">
-                    <label class="form-label">Description</label>
-                    <textarea class="form-textarea" id="assignmentDescription" rows="4" placeholder="Assignment description"></textarea>
-                </div>
-                <div class="form-group">
-                    <label class="form-label">Deadline</label>
-                    <input type="date" class="form-input" id="assignmentDeadline" required>
-                </div>
-                <div class="form-group">
-                    <label class="form-label">Submitter</label>
-                    <select class="form-select" id="assignmentSubmitter" required>
-                        <option value="">Select a member</option>
-                    </select>
-                </div>
-                <div class="modal-actions">
-                    <button type="button" class="btn btn-secondary" onclick="closeModal('addAssignmentModal')">Cancel</button>
-                    <button type="submit" class="btn btn-primary">Create Assignment</button>
-                </div>
-            </form>
-        </div>
-    </div>
 
     <!-- Edit Assignment Modal -->
     <div class="modal" id="editAssignmentModal">
