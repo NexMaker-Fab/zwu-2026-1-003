@@ -43,109 +43,14 @@
             </div>
         </section>
 
-        <!-- Edit Section -->
+        <!-- Content Section -->
         <section class="content-section">
             <div class="container">
-                <div class="edit-form-container">
-                    <form id="exercise1Form" onsubmit="saveExercise1(event)">
-                        <div class="form-group">
-                            <label class="form-label">Assignment Title</label>
-                            <input type="text" class="form-input" id="ex1Title" value="Exercise 1: Project Management" readonly>
-                        </div>
-
-                        <div class="form-group">
-                            <label class="form-label">Description</label>
-                            <textarea class="form-textarea" id="ex1Description" rows="6" placeholder="Enter your assignment description here..."></textarea>
-                            <small class="form-hint">💡 Tip: You can use **bold** for bold text</small>
-                        </div>
-
-                        <div class="form-group">
-                            <label class="form-label">Submission Link (Optional)</label>
-                            <input type="url" class="form-input" id="ex1SubmissionLink" placeholder="https://github.com/...">
-                        </div>
-
-                        <div class="form-group">
-                            <label class="form-label">Notes (Optional)</label>
-                            <textarea class="form-textarea" id="ex1Notes" rows="4" placeholder="Add any additional notes or comments..."></textarea>
-                        </div>
-
-                        <div class="form-actions">
-                            <button type="button" class="btn btn-secondary" onclick="window.location.href='assignments.html'">← Back to Assignments</button>
-                            <button type="submit" class="btn btn-primary">💾 Save Changes</button>
-                        </div>
-                    </form>
-                </div>
+                <!-- Add your content here -->
             </div>
         </section>
     </main>
 
     <script src="script.js"></script>
-    <script>
-        // Load existing data when page loads
-        document.addEventListener('DOMContentLoaded', function() {
-            loadExercise1Data();
-        });
-
-        function loadExercise1Data() {
-            // Try to get data from localStorage
-            const assignments = JSON.parse(localStorage.getItem('assignments') || '[]');
-            const exercise1 = assignments.find(a => a.title === 'Exercise 1: Project Management');
-            
-            if (exercise1) {
-                document.getElementById('ex1Description').value = exercise1.description || '';
-                document.getElementById('ex1SubmissionLink').value = exercise1.submissionLink || '';
-                document.getElementById('ex1Notes').value = exercise1.notes || '';
-            }
-        }
-
-        function saveExercise1(event) {
-            event.preventDefault();
-            
-            const description = document.getElementById('ex1Description').value.trim();
-            const submissionLink = document.getElementById('ex1SubmissionLink').value.trim();
-            const notes = document.getElementById('ex1Notes').value.trim();
-            
-            // Get existing assignments
-            const assignments = JSON.parse(localStorage.getItem('assignments') || '[]');
-            
-            // Find or create Exercise 1
-            let exercise1 = assignments.find(a => a.title === 'Exercise 1: Project Management');
-            
-            if (!exercise1) {
-                // Create new exercise if it doesn't exist
-                exercise1 = {
-                    id: Date.now(),
-                    title: 'Exercise 1: Project Management',
-                    description: description,
-                    deadline: '2026-12-31',
-                    submitter: 'All Members',
-                    status: 'submitted',
-                    submissionLink: submissionLink,
-                    notes: notes,
-                    createdAt: new Date().toISOString(),
-                    submittedAt: new Date().toISOString()
-                };
-                assignments.push(exercise1);
-            } else {
-                // Update existing exercise
-                exercise1.description = description;
-                exercise1.submissionLink = submissionLink;
-                exercise1.notes = notes;
-                exercise1.updatedAt = new Date().toISOString();
-            }
-            
-            // Save to localStorage
-            localStorage.setItem('assignments', JSON.stringify(assignments));
-            
-            showNotification('✅ Exercise 1 saved successfully!');
-            
-            // Optional: redirect back to assignments page after a delay
-            setTimeout(() => {
-                if (confirm('Save successful! Return to Assignments page?')) {
-                    window.location.href = 'assignments.html';
-                }
-            }, 500);
-        }
-    </script>
 </body>
 </html>
