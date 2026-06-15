@@ -41,11 +41,6 @@
         <div class="container">
             <h1 class="page-title">Assignments</h1>
             <p class="page-subtitle">Manage and track assignment submissions</p>
-            <div style="margin-top: 20px; padding: 15px; background: rgba(255,255,255,0.1); border-radius: 12px; backdrop-filter: blur(10px);">
-                <p style="color: white; font-size: 14px; margin: 0;">
-                    💡 <strong>Tip:</strong> To upload Project Management.pdf, click the "Submit" button on the Exercise 1 card, or visit <a href="upload-pdf.html" style="color: #0071e3; text-decoration: underline;">Upload PDF Page</a>
-                </p>
-            </div>
         </div>
     </section>
 
@@ -55,7 +50,6 @@
             <div class="section-header">
                 <h2 class="section-title">Assignment List</h2>
                 <div class="header-actions">
-                    <button class="btn btn-secondary" onclick="openGithubConfigModal()">️ GitHub Config</button>
                     <button class="btn btn-primary" onclick="openAddAssignmentModal()">+ New Assignment</button>
                 </div>
             </div>
@@ -137,43 +131,9 @@
         </div>
     </div>
 
-    <!-- GitHub Config Modal -->
-    <div class="modal" id="githubConfigModal">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h3 class="modal-title">GitHub Configuration</h3>
-                <button class="modal-close" onclick="closeModal('githubConfigModal')">&times;</button>
-            </div>
-            <form onsubmit="saveGithubConfig(event)">
-                <div class="form-group">
-                    <label class="form-label">GitHub Username</label>
-                    <input type="text" class="form-input" id="githubUsername" required placeholder="Your GitHub username">
-                </div>
-                <div class="form-group">
-                    <label class="form-label">Repository Name</label>
-                    <input type="text" class="form-input" id="githubRepo" required placeholder="e.g., team-assignments">
-                </div>
-                <div class="form-group">
-                    <label class="form-label">Personal Access Token</label>
-                    <input type="password" class="form-input" id="githubToken" placeholder="ghp_xxxxxxxxxxxx">
-                    <small class="form-hint">Generate at: Settings → Developer settings → Personal access tokens</small>
-                </div>
-                <div class="form-group">
-                    <label class="form-label">Branch</label>
-                    <input type="text" class="form-input" id="githubBranch" value="main" placeholder="main">
-                </div>
-                <div class="modal-actions">
-                    <button type="button" class="btn btn-secondary" onclick="closeModal('githubConfigModal')">Cancel</button>
-                    <button type="button" class="btn btn-secondary" onclick="testGithubConnection()">Test Connection</button>
-                    <button type="submit" class="btn btn-primary">Save Configuration</button>
-                </div>
-            </form>
-        </div>
-    </div>
-
     <!-- Submit Assignment Modal -->
     <div class="modal" id="submitAssignmentModal">
-        <div class="modal-content modal-large">
+        <div class="modal-content">
             <div class="modal-header">
                 <h3 class="modal-title">Submit Assignment</h3>
                 <button class="modal-close" onclick="closeModal('submitAssignmentModal')">&times;</button>
@@ -185,23 +145,12 @@
                     <input type="url" class="form-input" id="submissionLink" placeholder="https://github.com/...">
                 </div>
                 <div class="form-group">
-                    <label class="form-label">Upload Files</label>
-                    <div class="file-upload-area" id="fileUploadArea" onclick="document.getElementById('assignmentFiles').click()">
-                        <div class="file-upload-icon">📁</div>
-                        <p>Click to upload or drag and drop</p>
-                        <small>💡 Tip: You can select multiple files at once, or click multiple times to add more files</small>
-                        <small>Images, Videos, Documents, Archives (Max 50MB per file)</small>
-                    </div>
-                    <input type="file" id="assignmentFiles" multiple accept="image/*,video/*,.pdf,.doc,.docx,.xls,.xlsx,.ppt,.pptx,.zip,.rar,.7z" style="display: none;" onchange="handleFileSelect(event)">
-                    <div id="selectedFilesList" class="selected-files-list"></div>
-                </div>
-                <div class="form-group">
                     <label class="form-label">Notes (Optional)</label>
-                    <textarea class="form-textarea" id="submissionNotes" rows="3" placeholder="Additional notes"></textarea>
+                    <textarea class="form-textarea" id="submissionNotes" rows="3" placeholder="Additional notes about your submission"></textarea>
                 </div>
                 <div class="modal-actions">
                     <button type="button" class="btn btn-secondary" onclick="closeModal('submitAssignmentModal')">Cancel</button>
-                    <button type="submit" class="btn btn-primary">Submit & Sync to GitHub</button>
+                    <button type="submit" class="btn btn-primary">Submit Assignment</button>
                 </div>
             </form>
         </div>

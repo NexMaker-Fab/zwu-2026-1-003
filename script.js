@@ -866,9 +866,6 @@ function loadAssignments() {
         const isEvaluated = assignment.isEvaluated || false;
         const evaluationStatus = isEvaluated ? '<span class="evaluation-badge evaluated">✅ Evaluated</span>' : '<span class="evaluation-badge pending">⏸️ Not Evaluated</span>';
         
-        // Check GitHub sync status
-        const githubSyncStatus = renderGithubSyncStatus(assignment);
-        
         // Render submitted files if any
         const submittedFilesHtml = (assignment.files && assignment.files.length > 0) 
             ? renderSubmittedFiles(assignment.files, assignment.id)
@@ -894,14 +891,12 @@ function loadAssignments() {
                     </div>
                     <span class="assignment-status ${statusClass}">${statusText}</span>
                 </div>
-                ${githubSyncStatus}
                 ${isExercise1WithPDF ? '' : (assignment.description ? `<div class="assignment-description" style="white-space: pre-wrap; line-height: 1.8;">${renderMarkdown(assignment.description)}</div>` : '')}
                 ${isExercise1WithPDF ? '<p style="color: #86868b; font-size: 14px; margin: 12px 0;">💡 Click the title above to view the PDF document</p>' : submittedFilesHtml}
                 ${evaluationStatus}
                 ${assignment.teacherEvaluation ? `<div class="teacher-evaluation"><strong>Teacher's Comments:</strong><br>${renderMarkdown(assignment.teacherEvaluation)}</div>` : ''}
                 <div class="assignment-actions">
                     <button class="btn btn-primary btn-small" onclick="event.stopPropagation(); openSubmitAssignmentModal(${assignment.id})"> Submit</button>
-                    <button class="btn btn-secondary btn-small" onclick="event.stopPropagation(); syncAssignmentToGithub(${assignment.id})">🔄 Sync to GitHub</button>
                     <button class="btn btn-secondary btn-small" onclick="event.stopPropagation(); openTeacherEvaluationModal(${assignment.id})">👨‍🏫 Evaluate</button>
                     <button class="btn btn-secondary btn-small" onclick="event.stopPropagation(); deleteAssignment(${assignment.id})">Delete</button>
                 </div>
@@ -946,10 +941,6 @@ function navigateToAssignment(assignmentId) {
 // Open submit assignment modal
 function openSubmitAssignmentModal(assignmentId) {
     document.getElementById('submitAssignmentId').value = assignmentId;
-    // Reset file selection when opening modal
-    selectedAssignmentFiles = [];
-    document.getElementById('selectedFilesList').innerHTML = '';
-    document.getElementById('assignmentFiles').value = '';
     openModal('submitAssignmentModal');
 }
 
@@ -1017,9 +1008,6 @@ async function handleSubmitAssignment(event) {
     const submissionLink = document.getElementById('submissionLink').value.trim();
     const notes = document.getElementById('submissionNotes').value.trim();
     
-    // Convert files to base64
-    const filesData = await convertFilesToBase64(selectedAssignmentFiles);
-    
     // Update assignment status
     const assignments = JSON.parse(localStorage.getItem('assignments') || '[]');
     const assignment = assignments.find(a => a.id === assignmentId);
@@ -1028,13 +1016,6 @@ async function handleSubmitAssignment(event) {
         assignment.status = 'submitted';
         assignment.submissionLink = submissionLink;
         assignment.notes = notes;
-        
-        // Append new files to existing files instead of overwriting
-        if (!assignment.files) {
-            assignment.files = [];
-        }
-        assignment.files = [...assignment.files, ...filesData];
-        
         assignment.submittedAt = new Date().toISOString();
         
         localStorage.setItem('assignments', JSON.stringify(assignments));
@@ -1044,14 +1025,9 @@ async function handleSubmitAssignment(event) {
         
         // Reset form
         event.target.reset();
-        selectedAssignmentFiles = [];
-        document.getElementById('selectedFilesList').innerHTML = '';
         
         // Reload assignments
         loadAssignments();
-        
-        // Try to sync to GitHub
-        uploadToGithub(assignment);
     }
 }
 
@@ -1797,103 +1773,7 @@ function confirmProfileAvatarChange() {
 
 // ==================== File Upload Functions ====================
 
-let selectedAssignmentFiles = [];
-let selectedProjectFiles = [];
 
-// Handle file selection for assignments
-function handleFileSelect(event) {
-    const files = Array.from(event.target.files);
-    // Append new files to existing ones
-    selectedAssignmentFiles = [...selectedAssignmentFiles, ...files];
-    displaySelectedFiles('selectedFilesList', selectedAssignmentFiles);
-    // Clear the input so the same file can be selected again
-    event.target.value = '';
-}
-
-// Handle file selection for projects
-function handleProjectFileSelect(event) {
-    const files = Array.from(event.target.files);
-    selectedProjectFiles = files;
-    displaySelectedFiles('selectedProjectFilesList', files);
-}
-
-// Display selected files
-function displaySelectedFiles(containerId, files) {
-    const container = document.getElementById(containerId);
-    if (!container) return;
-    
-    if (files.length === 0) {
-        container.innerHTML = '';
-        return;
-    }
-    
-    let html = '<div class="selected-files-container">';
-    files.forEach((file, index) => {
-        const fileSize = formatFileSize(file.size);
-        const icon = getFileIcon(file.type);
-        const isImage = file.type.startsWith('image/');
-        const isVideo = file.type.startsWith('video/');
-        
-        // Create preview URL for images and videos
-        const previewUrl = (isImage || isVideo) ? URL.createObjectURL(file) : null;
-        
-        html += `
-            <div class="file-item">
-                ${previewUrl ? `
-                    <div class="file-preview" onclick="openFilePreview('${previewUrl}', '${file.type}', '${file.name}')">
-                        ${isImage ? `<img src="${previewUrl}" alt="${file.name}">` : ''}
-                        ${isVideo ? `<video src="${previewUrl}"></video>` : ''}
-                        <div class="preview-overlay">
-                            <span class="preview-icon">🔍</span>
-                        </div>
-                    </div>
-                ` : `
-                    <div class="file-icon-large">${icon}</div>
-                `}
-                <div class="file-info">
-                    <span class="file-name">${file.name}</span>
-                    <span class="file-size">${fileSize}</span>
-                </div>
-                <button type="button" class="file-remove" onclick="removeFile('${containerId}', ${index})">&times;</button>
-            </div>
-        `;
-    });
-    html += '</div>';
-    
-    container.innerHTML = html;
-}
-
-// Format file size
-function formatFileSize(bytes) {
-    if (bytes === 0) return '0 Bytes';
-    const k = 1024;
-    const sizes = ['Bytes', 'KB', 'MB', 'GB'];
-    const i = Math.floor(Math.log(bytes) / Math.log(k));
-    return Math.round(bytes / Math.pow(k, i) * 100) / 100 + ' ' + sizes[i];
-}
-
-// Get file icon based on type
-function getFileIcon(mimeType) {
-    if (mimeType.startsWith('image/')) return '🖼️';
-    if (mimeType.startsWith('video/')) return '🎥';
-    if (mimeType.includes('pdf')) return '📄';
-    if (mimeType.includes('word') || mimeType.includes('document')) return '📝';
-    if (mimeType.includes('excel') || mimeType.includes('spreadsheet')) return '📊';
-    if (mimeType.includes('powerpoint') || mimeType.includes('presentation')) return '📽️';
-    if (mimeType.includes('zip') || mimeType.includes('rar') || mimeType.includes('archive')) return '📦';
-    return '📄';
-}
-
-// Remove file from selection
-function removeFile(containerId, index) {
-    if (containerId === 'selectedFilesList') {
-        selectedAssignmentFiles.splice(index, 1);
-        displaySelectedFiles('selectedFilesList', selectedAssignmentFiles);
-    } else if (containerId === 'selectedProjectFilesList') {
-        selectedProjectFiles.splice(index, 1);
-        displaySelectedFiles('selectedProjectFilesList', selectedProjectFiles);
-    }
-}
 
 // Load and render PDF using PDF.js
 function loadPDFViewer(pdfUrl, containerId) {
