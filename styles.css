@@ -468,11 +468,13 @@ body {
     padding: 24px;
     transition: var(--transition);
     border: 1px solid var(--border-color);
+    cursor: pointer;
 }
 
 .assignment-card:hover {
     border-color: var(--primary-color);
     box-shadow: var(--shadow-sm);
+    transform: translateY(-2px);
 }
 
 .assignment-header {

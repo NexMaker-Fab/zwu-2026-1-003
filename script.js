@@ -884,7 +884,7 @@ function loadAssignments() {
             : `<h3 class="assignment-title">${assignment.title}</h3>`;
         
         html += `
-            <div class="assignment-card">
+            <div class="assignment-card" onclick="navigateToAssignment(${assignment.id})" style="cursor: pointer;">
                 <div class="assignment-header">
                     <div>
                         ${titleHtml}
@@ -900,16 +900,47 @@ function loadAssignments() {
                 ${evaluationStatus}
                 ${assignment.teacherEvaluation ? `<div class="teacher-evaluation"><strong>Teacher's Comments:</strong><br>${renderMarkdown(assignment.teacherEvaluation)}</div>` : ''}
                 <div class="assignment-actions">
-                    <button class="btn btn-primary btn-small" onclick="openSubmitAssignmentModal(${assignment.id})"> Submit</button>
-                    <button class="btn btn-secondary btn-small" onclick="syncAssignmentToGithub(${assignment.id})">🔄 Sync to GitHub</button>
-                    <button class="btn btn-secondary btn-small" onclick="openTeacherEvaluationModal(${assignment.id})">👨‍🏫 Evaluate</button>
-                    <button class="btn btn-secondary btn-small" onclick="deleteAssignment(${assignment.id})">Delete</button>
+                    <button class="btn btn-primary btn-small" onclick="event.stopPropagation(); openSubmitAssignmentModal(${assignment.id})"> Submit</button>
+                    <button class="btn btn-secondary btn-small" onclick="event.stopPropagation(); syncAssignmentToGithub(${assignment.id})">🔄 Sync to GitHub</button>
+                    <button class="btn btn-secondary btn-small" onclick="event.stopPropagation(); openTeacherEvaluationModal(${assignment.id})">👨‍🏫 Evaluate</button>
+                    <button class="btn btn-secondary btn-small" onclick="event.stopPropagation(); deleteAssignment(${assignment.id})">Delete</button>
                 </div>
             </div>
         `;
     });
     
     assignmentsList.innerHTML = html;
+}
+
+// Navigate to assignment detail page
+function navigateToAssignment(assignmentId) {
+    // Get assignment details
+    const assignments = JSON.parse(localStorage.getItem('assignments') || '[]');
+    const assignment = assignments.find(a => a.id === assignmentId);
+    
+    if (!assignment) {
+        alert('Assignment not found!');
+        return;
+    }
+    
+    // Create a temporary form to submit data to the detail page
+    const form = document.createElement('form');
+    form.method = 'POST';
+    form.action = 'assignment-detail.html';
+    form.target = '_blank';
+    
+    // Add assignment ID as hidden input
+    const idInput = document.createElement('input');
+    idInput.type = 'hidden';
+    idInput.name = 'assignmentId';
+    idInput.value = assignmentId;
+    form.appendChild(idInput);
+    
+    // Store assignment data in sessionStorage for the detail page
+    sessionStorage.setItem('currentAssignment', JSON.stringify(assignment));
+    
+    // Open the detail page in a new tab
+    window.open('assignment-detail.html?assignmentId=' + assignmentId, '_blank');
 }
 
 // Open submit assignment modal
