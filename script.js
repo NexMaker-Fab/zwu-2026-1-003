@@ -2034,8 +2034,6 @@ function autoCreateExercise1() {
     fileInput.style.display = 'none';
     document.body.appendChild(fileInput);
     
-    // Show notification prompting user to upload
-    showNotification('📄 Please select Project Management.pdf (recommended) or .docx to embed it in the webpage', 'info');
     
     fileInput.onchange = async (e) => {
         const file = e.target.files[0];
