@@ -2022,7 +2022,6 @@ function autoCreateExercise1() {
                 console.log('⚠️ Exercise 1 has old file format, removing and prompting for PDF upload');
                 assignments.splice(existingIndex, 1);
                 localStorage.setItem('assignments', JSON.stringify(assignments));
-                showNotification('📄 Old Exercise 1 data cleared. Please upload Project Management.pdf', 'info');
             }
         }
     }
