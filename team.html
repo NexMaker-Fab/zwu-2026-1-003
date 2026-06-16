@@ -48,7 +48,6 @@
             <div class="container">
                 <div class="section-header">
                     <h2 class="section-title">Team Members</h2>
-                    <button class="btn btn-primary" onclick="openAddMemberModal()">+ Add New Member</button>
                 </div>
 
                 <div class="members-grid" id="membersGrid">
@@ -58,44 +57,7 @@
         </section>
     </main>
 
-    <!-- Add Member Modal -->
-    <div class="modal" id="addMemberModal">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h3 class="modal-title">Add New Member</h3>
-                <button class="modal-close" onclick="closeModal('addMemberModal')">&times;</button>
-            </div>
-            <form onsubmit="saveNewMember(event)">
-                <div class="form-group">
-                    <label class="form-label">Name</label>
-                    <input type="text" class="form-input" id="memberName" required placeholder="Enter member name">
-                </div>
-                <div class="form-group">
-                    <label class="form-label">Role</label>
-                    <input type="text" class="form-input" id="memberRole" required placeholder="e.g., Developer, Designer">
-                </div>
-                <div class="form-group">
-                    <label class="form-label">Bio</label>
-                    <textarea class="form-textarea" id="memberBio" rows="4" placeholder="Brief introduction"></textarea>
-                </div>
-                <div class="form-group">
-                    <label class="form-label">Avatar Emoji</label>
-                    <select class="form-select" id="memberAvatar">
-                        <option value="👨‍💻">👨‍💻 Developer</option>
-                        <option value="👩‍💻">👩‍💻 Developer</option>
-                        <option value="🎨">🎨 Designer</option>
-                        <option value="📊">📊 Analyst</option>
-                        <option value="🚀">🚀 Leader</option>
-                        <option value="⭐">⭐ Star</option>
-                    </select>
-                </div>
-                <div class="modal-actions">
-                    <button type="button" class="btn btn-secondary" onclick="closeModal('addMemberModal')">Cancel</button>
-                    <button type="submit" class="btn btn-primary">Add Member</button>
-                </div>
-            </form>
-        </div>
-    </div>
+
 
     <!-- Edit Member Modal -->
     <div class="modal" id="editMemberModal">
