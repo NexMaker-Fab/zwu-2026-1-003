@@ -76,16 +76,9 @@ document.addEventListener('click', function(e) {
 function initializeDefaultMembers() {
     console.log('🔧 Initializing default members...');
     
-    const existingMembers = JSON.parse(localStorage.getItem('teamMembers') || '{}');
-    
-    // Always ensure we have the 8 team members
-    const requiredMembers = ['1', '2', '3', '4', '5', '6', '7', '8'];
-    const needsInit = requiredMembers.some(id => !existingMembers[id]);
-    
-    if (!needsInit && Object.keys(existingMembers).length > 0) {
-        console.log('✅ Member data already exists, skip initialization');
-        return;
-    }
+    // FORCE RESET: Always clear existing data and reload defaults
+    console.log('🔄 Force resetting all member data to defaults...');
+    localStorage.removeItem('teamMembers');
     
     const defaultMembers = {
         '1': { 
