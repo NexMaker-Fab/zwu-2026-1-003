@@ -42,76 +42,7 @@
                 <p class="page-subtitle">Meet the talented members of our team</p>
             </div>
         </section>
-
-        <!-- Team Members Section -->
-        <section class="content-section">
-            <div class="container">
-                <div class="section-header">
-                    <h2 class="section-title">Team Members</h2>
-                </div>
-
-                <div class="members-grid" id="membersGrid">
-                    <!-- Members will be loaded dynamically -->
-                </div>
-            </div>
-        </section>
     </main>
-
-
-
-    <!-- Edit Member Modal -->
-    <div class="modal" id="editMemberModal">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h3 class="modal-title">Edit Member</h3>
-                <button class="modal-close" onclick="closeModal('editMemberModal')">&times;</button>
-            </div>
-            <form onsubmit="saveEditedMember(event)">
-                <input type="hidden" id="editMemberId">
-                <div class="form-group">
-                    <label class="form-label">Name</label>
-                    <input type="text" class="form-input" id="editMemberName" required>
-                </div>
-                <div class="form-group">
-                    <label class="form-label">Role</label>
-                    <input type="text" class="form-input" id="editMemberRole" required>
-                </div>
-                <div class="form-group">
-                    <label class="form-label">GitHub Username</label>
-                    <input type="text" class="form-input" id="editMemberGithub" placeholder="e.g., username (optional)">
-                </div>
-                <div class="form-group">
-                    <label class="form-label">Bio</label>
-                    <textarea class="form-textarea" id="editMemberBio" rows="4"></textarea>
-                </div>
-                <div class="modal-actions">
-                    <button type="button" class="btn btn-secondary" onclick="closeModal('editMemberModal')">Cancel</button>
-                    <button type="submit" class="btn btn-primary">Save Changes</button>
-                </div>
-            </form>
-        </div>
-    </div>
-
-    <!-- Avatar Upload Modal -->
-    <div class="modal" id="avatarUploadModal">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h3 class="modal-title">Upload Avatar</h3>
-                <button class="modal-close" onclick="closeModal('avatarUploadModal')">&times;</button>
-            </div>
-            <div class="form-group">
-                <label class="form-label">Select Image (JPG, PNG, GIF)</label>
-                <input type="file" id="avatarFileInput" accept="image/jpeg,image/png,image/gif" onchange="handleTeamAvatarUpload(event)">
-            </div>
-            <div id="avatarPreviewContainer" style="display: none; margin: 20px 0; text-align: center;">
-                <img id="avatarPreview" style="width: 150px; height: 150px; border-radius: 50%; object-fit: cover; border: 3px solid var(--accent-color);">
-            </div>
-            <div class="modal-actions">
-                <button type="button" class="btn btn-secondary" onclick="closeModal('avatarUploadModal')">Cancel</button>
-                <button type="button" class="btn btn-primary" id="confirmAvatarBtn" onclick="confirmTeamAvatarUpload()" disabled>Confirm</button>
-            </div>
-        </div>
-    </div>
 
     <script src="script.js"></script>
 </body>
