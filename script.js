@@ -84,97 +84,18 @@ function initializeDefaultMembers() {
         '1': { 
             name: 'Wang Chengle', 
             role: 'Team Member', 
-            avatar: 'images/christmas-cat.jpg', avatarType: 'image',
+            avatar: 'images/christmas-cat.jpg', 
+            avatarType: 'image',
             bio: '',
             hobbies: [],
             email: '',
-            github: '',
-            skills: []
-        },
-        '2': { 
-            name: 'Wu Changhong', 
-            role: 'Team Member', 
-            avatar: '👨\u200d💻', 
-            avatarType: 'emoji',
-            bio: '',
-            hobbies: [],
-            email: '',
-            github: '',
-            skills: []
-        },
-        '3': { 
-            name: 'Liu Xiehan', 
-            role: 'Team Member', 
-            avatar: '👨\u200d💻', 
-            avatarType: 'emoji',
-            bio: '',
-            hobbies: [],
-            email: '',
-            github: '',
-            skills: []
-        },
-        '4': { 
-            name: 'Chen Kangwen', 
-            role: 'Team Member', 
-            avatar: '👨\u200d💻', 
-            avatarType: 'emoji',
-            bio: '',
-            hobbies: [],
-            email: '',
-            github: '',
-            skills: []
-        },
-        '5': { 
-            name: 'Ge Chenfei', 
-            role: 'Team Member', 
-            avatar: '👩\u200d💻', 
-            avatarType: 'emoji',
-            bio: '',
-            hobbies: [],
-            email: '',
-            github: '',
-            skills: []
-        },
-        '6': { 
-            name: 'Xu Ke', 
-            role: 'Team Member', 
-            avatar: '👨\u200d💻', 
-            avatarType: 'emoji',
-            bio: '',
-            hobbies: [],
-            email: '',
-            github: '',
-            skills: []
-        },
-        '7': { 
-            name: 'Zhu Yihong', 
-            role: 'Team Member', 
-            avatar: '👨\u200d💻', 
-            avatarType: 'emoji',
-            bio: '',
-            hobbies: [],
-            email: '',
-            github: '',
-            skills: []
-        },
-        '8': { 
-            name: 'Chen Yuzhe', 
-            role: 'Team Member', 
-            avatar: '👨\u200d💻', 
-            avatarType: 'emoji',
-            bio: '',
-            hobbies: [],
-            email: '',
-            github: '',
+            github: '19550265177',
             skills: []
         }
     };
     
-    // Merge with existing members (preserve any custom data)
-    const mergedMembers = { ...defaultMembers, ...existingMembers };
-    
-    localStorage.setItem('teamMembers', JSON.stringify(mergedMembers));
-    console.log('✅ Successfully initialized/updated 8 team members');
+    localStorage.setItem('teamMembers', JSON.stringify(defaultMembers));
+    console.log('✅ Successfully initialized 1 team member: Wang Chengle');
 }
 
 // Load and display members
