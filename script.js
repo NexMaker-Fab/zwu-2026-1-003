@@ -139,7 +139,7 @@ function loadMembers() {
                 <div class="member-avatar">
                     ${avatarDisplay}
                 </div>
-                <div class="member-info" onclick="window.location.href='member.html?id=${id}'">
+                <div class="member-info" onclick="window.location.href='wang-chengle.html'">
                     <h3 class="member-name">${member.name}</h3>
                     <p class="member-role">${member.role}</p>
                     ${skillsPreview}
