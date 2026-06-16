@@ -136,11 +136,8 @@ function loadMembers() {
         html += `
             <div class="member-card">
                 <button class="edit-member-btn" onclick="event.stopPropagation(); openEditMemberModal(${id})">✏️ Edit</button>
-                <div class="member-avatar" onclick="openTeamAvatarModal(${id})">
+                <div class="member-avatar">
                     ${avatarDisplay}
-                    <div class="avatar-upload-overlay">
-                        <span>📷</span>
-                    </div>
                 </div>
                 <div class="member-info" onclick="window.location.href='member.html?id=${id}'">
                     <h3 class="member-name">${member.name}</h3>
