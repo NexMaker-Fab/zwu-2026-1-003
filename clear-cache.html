@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Clear Cache & Update Avatar</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            padding: 40px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        .container {
+            max-width: 600px;
+            background: white;
+            padding: 40px;
+            border-radius: 16px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+            text-align: center;
+        }
+        h1 {
+            color: #1d1d1f;
+            margin-bottom: 10px;
+            font-size: 28px;
+        }
+        .subtitle {
+            color: #86868b;
+            margin-bottom: 30px;
+            font-size: 16px;
+        }
+        .preview-box {
+            background: #f5f5f7;
+            padding: 30px;
+            border-radius: 12px;
+            margin: 30px 0;
+        }
+        .avatar-preview {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 4px solid #0071e3;
+            margin: 0 auto 20px;
+            display: block;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+        }
+        .info-text {
+            color: #1d1d1f;
+            font-weight: 600;
+            font-size: 18px;
+            margin-bottom: 10px;
+        }
+        .status-text {
+            color: #86868b;
+            font-size: 14px;
+        }
+        button {
+            background: #0071e3;
+            color: white;
+            border: none;
+            padding: 16px 32px;
+            border-radius: 980px;
+            font-size: 18px;
+            font-weight: 600;
+            cursor: pointer;
+            margin: 10px;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 12px rgba(0,113,227,0.3);
+        }
+        button:hover {
+            background: #0077ed;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(0,113,227,0.4);
+        }
+        button.secondary {
+            background: #86868b;
+            box-shadow: 0 4px 12px rgba(134,134,139,0.3);
+        }
+        button.secondary:hover {
+            background: #a1a1a6;
+            box-shadow: 0 6px 16px rgba(134,134,139,0.4);
+        }
+        .result {
+            margin-top: 20px;
+            padding: 15px;
+            border-radius: 8px;
+            font-weight: 600;
+            display: none;
+        }
+        .success {
+            background: #d1fae5;
+            color: #065f46;
+            border: 2px solid #34d399;
+        }
+        .error {
+            background: #fee2e2;
+            color: #dc2626;
+            border: 2px solid #f87171;
+        }
+        .steps {
+            text-align: left;
+            background: #fafafa;
+            padding: 20px;
+            border-radius: 8px;
+            margin: 20px 0;
+            font-size: 14px;
+            line-height: 1.8;
+        }
+        .steps ol {
+            margin-left: 20px;
+        }
+        .steps li {
+            margin-bottom: 8px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🎄 Update Wang Chengle's Avatar</h1>
+        <p class="subtitle">Clear cache and load the new Christmas cat image</p>
+        
+        <div class="preview-box">
+            <img id="avatarPreview" class="avatar-preview" src="" alt="Avatar Preview">
+            <div class="info-text">Wang Chengle</div>
+            <div class="status-text" id="currentStatus">Loading...</div>
+        </div>
+        
+        <div class="steps">
+            <strong>What this will do:</strong>
+            <ol>
+                <li>Clear old member data from browser storage</li>
+                <li>Load fresh data with the new Christmas cat avatar</li>
+                <li>Redirect you to the team page</li>
+            </ol>
+        </div>
+        
+        <button onclick="updateAndRedirect()">🔄 Clear Cache & Update</button>
+        <button class="secondary" onclick="window.location.href='team.html'"> Go to Team Page</button>
+        
+        <div id="result" class="result"></div>
+    </div>
+
+    <script>
+        // Check current status on load
+        window.onload = function() {
+            checkCurrentStatus();
+        };
+
+        function checkCurrentStatus() {
+            const members = JSON.parse(localStorage.getItem('teamMembers') || '{}');
+            const wangChengle = members['1'];
+            const preview = document.getElementById('avatarPreview');
+            const status = document.getElementById('currentStatus');
+            
+            if (wangChengle && wangChengle.avatar) {
+                preview.src = wangChengle.avatar;
+                
+                if (wangChengle.avatar === 'images/christmas-cat.jpg') {
+                    status.textContent = '✅ Using new Christmas cat avatar';
+                    status.style.color = '#34d399';
+                } else if (wangChengle.avatar.startsWith('data:image')) {
+                    status.textContent = '️ Using old base64 avatar';
+                    status.style.color = '#fbbf24';
+                } else {
+                    status.textContent = `⚠️ Using: ${wangChengle.avatar}`;
+                    status.style.color = '#fbbf24';
+                }
+            } else {
+                preview.src = 'data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><circle cx="50" cy="50" r="45" fill="%23e5e7eb"/><text x="50" y="70" font-size="60" text-anchor="middle">👤</text></svg>';
+                status.textContent = '❌ No avatar found - needs update';
+                status.style.color = '#ef4444';
+            }
+        }
+
+        function showResult(message, type) {
+            const resultDiv = document.getElementById('result');
+            resultDiv.className = `result ${type}`;
+            resultDiv.textContent = message;
+            resultDiv.style.display = 'block';
+        }
+
+        async function updateAndRedirect() {
+            try {
+                showResult('⏳ Clearing old data...', 'success');
+                
+                // Step 1: Clear localStorage
+                localStorage.removeItem('teamMembers');
+                
+                showResult('✅ Cache cleared! Loading new data...', 'success');
+                
+                // Step 2: Wait a moment then redirect
+                setTimeout(() => {
+                    showResult('🎉 Redirecting to team page...', 'success');
+                    
+                    setTimeout(() => {
+                        window.location.href = 'team.html';
+                    }, 1000);
+                }, 500);
+                
+            } catch (error) {
+                console.error('Error:', error);
+                showResult('❌ Error: ' + error.message, 'error');
+            }
+        }
+    </script>
+</body>
+</html>
