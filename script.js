@@ -1756,6 +1756,8 @@ document.addEventListener('DOMContentLoaded', function() {
     
     // Update stats on homepage
     if (window.location.pathname.includes('index.html') || window.location.pathname.endsWith('index.html') || window.location.pathname === '/') {
+        // Pre-load assignments data before updating stats
+        autoCreateExercise1();
         updateHomepageStats();
     }
     
@@ -1768,12 +1770,15 @@ function updateHomepageStats() {
     const assignments = JSON.parse(localStorage.getItem('assignments') || '[]');
     const projects = JSON.parse(localStorage.getItem('projects') || '[]');
     
+    // Count active assignments (not completed)
+    const activeAssignments = assignments.filter(a => a.status !== 'completed').length;
+    
     const statMembers = document.getElementById('statMembers');
     const statAssignments = document.getElementById('statAssignments');
     const statProjects = document.getElementById('statProjects');
     
     if (statMembers) statMembers.textContent = Object.keys(members).length;
-    if (statAssignments) statAssignments.textContent = assignments.length;
+    if (statAssignments) statAssignments.textContent = activeAssignments;
     if (statProjects) statProjects.textContent = projects.length;
 }
 
