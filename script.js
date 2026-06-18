@@ -672,14 +672,9 @@ function loadAssignments() {
     
     const assignments = JSON.parse(localStorage.getItem('assignments') || '[]');
     
+    // If no assignments, show empty container (no message)
     if (assignments.length === 0) {
-        assignmentsList.innerHTML = `
-            <div style="text-align: center; padding: 60px 20px; color: var(--text-secondary);">
-                <div style="font-size: 64px; margin-bottom: 20px;">📝</div>
-                <h3 style="font-size: 20px; font-weight: 600; margin-bottom: 8px; color: var(--text-primary);">No assignments yet</h3>
-                <p style="font-size: 15px;">Assignments will appear here when added</p>
-            </div>
-        `;
+        assignmentsList.innerHTML = '';
         return;
     }
     
