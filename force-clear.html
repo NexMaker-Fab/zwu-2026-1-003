@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Delete Other Assignments (Keep Exercise 1)</title>
+    <title>Force Clear All Data</title>
     <link rel="stylesheet" href="styles.css?v=15">
     <style>
         body {
@@ -112,34 +112,39 @@
         .info-list li:last-child {
             border-bottom: none;
         }
+        
+        .debug-info {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 6px;
+            margin-bottom: 20px;
+            font-family: monospace;
+            font-size: 12px;
+            max-height: 200px;
+            overflow-y: auto;
+        }
     </style>
 </head>
 <body>
     <div class="container">
-        <h1>🗑️ Delete Other Assignments (Keep Exercise 1)</h1>
-                
-        <div class="warning-box">
-            <strong>⚠️ Warning:</strong><br>
-            This action will delete all assignments EXCEPT Exercise 1. Exercise 1 will be kept for active assignment count.
-        </div>
-                
-        <p class="description">
-            The following data will be deleted:
-        </p>
-                
-        <ul class="info-list">
-            <li>✅ All assignments except Exercise 1: Project Management</li>
-            <li>✅ Assignment detail pages data (assignmentId=1781752911413, 1781753754406, etc.)</li>
-            <li>✅ Any other custom assignments</li>
-        </ul>
+        <h1>🔧 Force Clear All Data</h1>
         
-        <p class="description" style="margin-top: 20px; color: #28a745; font-weight: bold;">
-            ✅ Exercise 1: Project Management will be KEPT (for active assignment count = 1)
+        <div class="warning-box">
+            <strong>️ Warning:</strong><br>
+            This will completely clear ALL localStorage data and force reload the latest version from GitHub!
+        </div>
+        
+        <p class="description">
+            Use this if you're seeing old data or multiple assignments in incognito mode.
         </p>
+        
+        <div id="debugInfo" class="debug-info">
+            Loading current data...
+        </div>
         
         <div style="text-align: center;">
-            <button class="btn btn-danger" onclick="deleteAllExercises()">
-                🗑️ Delete ALL Exercise Data
+            <button class="btn btn-danger" onclick="forceClearAll()">
+                🔧 Force Clear & Reload Latest Version
             </button>
             <a href="index.html" class="btn btn-secondary">
                 ← Back to Home
@@ -156,43 +161,57 @@
             statusDiv.className = `status ${type}`;
         }
         
-        function deleteAllExercises() {
+        function updateDebugInfo() {
+            const debugDiv = document.getElementById('debugInfo');
+            
             try {
-                // Get current assignments
-                let assignments = JSON.parse(localStorage.getItem('assignments') || '[]');
+                const members = JSON.parse(localStorage.getItem('teamMembers') || '{}');
+                const assignments = JSON.parse(localStorage.getItem('assignments') || '[]');
+                const projects = JSON.parse(localStorage.getItem('projects') || '[]');
                 
-                if (assignments.length === 0) {
-                    showStatus('ℹ️ No assignments found. Nothing to delete.', 'error');
-                    return;
+                let info = '<strong>Current localStorage Data:</strong><br><br>';
+                info += `<strong>Team Members:</strong> ${Object.keys(members).length}<br>`;
+                if (Object.keys(members).length > 0) {
+                    Object.keys(members).forEach(id => {
+                        info += `  - ID ${id}: ${members[id].name}<br>`;
+                    });
                 }
                 
-                const originalCount = assignments.length;
-                
-                // Keep only Exercise 1, delete all others
-                const exercise1 = assignments.find(a => a.title === 'Exercise 1: Project Management');
-                assignments = exercise1 ? [exercise1] : [];
-                
-                const deletedCount = originalCount - assignments.length;
-                
-                // Save back to localStorage
-                localStorage.setItem('assignments', JSON.stringify(assignments));
-                
-                if (deletedCount > 0) {
-                    showStatus(`✅ Successfully deleted ${deletedCount} assignment(s)! Only Exercise 1 remains.`, 'success');
-                    
-                    // Reload after 2 seconds
-                    setTimeout(() => {
-                        window.location.href = 'assignments.html';
-                    }, 2000);
-                } else {
-                    showStatus('ℹ️ No other assignments found. Only Exercise 1 exists.', 'error');
+                info += `<br><strong>Assignments:</strong> ${assignments.length}<br>`;
+                if (assignments.length > 0) {
+                    assignments.forEach((a, i) => {
+                        info += `  ${i + 1}. ${a.title} (ID: ${a.id})<br>`;
+                    });
                 }
+                
+                info += `<br><strong>Projects:</strong> ${projects.length}<br>`;
+                
+                debugDiv.innerHTML = info;
+            } catch (error) {
+                debugDiv.innerHTML = 'Error reading localStorage: ' + error.message;
+            }
+        }
+        
+        function forceClearAll() {
+            try {
+                // Clear ALL localStorage
+                localStorage.clear();
+                
+                showStatus('✅ All data cleared! Reloading page...', 'success');
+                
+                // Force reload with cache busting
+                setTimeout(() => {
+                    window.location.href = 'index.html?v=' + Date.now();
+                }, 1000);
                 
             } catch (error) {
                 console.error('Error:', error);
                 showStatus('❌ Error: ' + error.message, 'error');
             }
         }
+        
+        // Show current data on load
+        updateDebugInfo();
     </script>
 </body>
 </html>
