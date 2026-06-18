@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Force Clear All Data</title>
-    <link rel="stylesheet" href="styles.css?v=15">
+    <link rel="stylesheet" href="styles.css?v=16">
     <style>
         body {
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
@@ -142,6 +142,12 @@
             Loading current data...
         </div>
         
+        <div style="text-align: center; margin-bottom: 20px;">
+            <button class="btn btn-primary" onclick="keepOnlyExercise1()" style="margin-right: 10px; background: linear-gradient(135deg, #10b981 0%, #059669 100%);">
+                ✅ Keep Only Exercise 1 (Delete Others)
+            </button>
+        </div>
+        
         <div style="text-align: center;">
             <button class="btn btn-danger" onclick="forceClearAll()">
                 🔧 Force Clear & Reload Latest Version
@@ -203,6 +209,66 @@
                 setTimeout(() => {
                     window.location.href = 'index.html?v=' + Date.now();
                 }, 1000);
+                
+            } catch (error) {
+                console.error('Error:', error);
+                showStatus('❌ Error: ' + error.message, 'error');
+            }
+        }
+        
+        function keepOnlyExercise1() {
+            try {
+                // Get current assignments
+                let assignments = JSON.parse(localStorage.getItem('assignments') || '[]');
+                
+                if (assignments.length === 0) {
+                    showStatus('️ No assignments found. Creating Exercise 1...', 'error');
+                    // Create Exercise 1
+                    const exercise1 = {
+                        id: Date.now(),
+                        title: 'Exercise 1: Project Management',
+                        description: 'View the complete guide at: exercise1-edit.html',
+                        deadline: new Date().toISOString().split('T')[0],
+                        submitter: 'All Members',
+                        status: 'submitted',
+                        createdAt: new Date().toISOString(),
+                        submittedAt: new Date().toISOString()
+                    };
+                    localStorage.setItem('assignments', JSON.stringify([exercise1]));
+                    showStatus('✅ Exercise 1 created! Reloading...', 'success');
+                    setTimeout(() => {
+                        window.location.href = 'assignments.html?v=' + Date.now();
+                    }, 1000);
+                    return;
+                }
+                
+                // Keep only Exercise 1
+                const exercise1 = assignments.find(a => a.title === 'Exercise 1: Project Management');
+                
+                if (!exercise1) {
+                    // Create Exercise 1 if it doesn't exist
+                    const newExercise1 = {
+                        id: Date.now(),
+                        title: 'Exercise 1: Project Management',
+                        description: 'View the complete guide at: exercise1-edit.html',
+                        deadline: new Date().toISOString().split('T')[0],
+                        submitter: 'All Members',
+                        status: 'submitted',
+                        createdAt: new Date().toISOString(),
+                        submittedAt: new Date().toISOString()
+                    };
+                    localStorage.setItem('assignments', JSON.stringify([newExercise1]));
+                    showStatus('✅ Exercise 1 created! All other data deleted.', 'success');
+                } else {
+                    // Delete all except Exercise 1
+                    localStorage.setItem('assignments', JSON.stringify([exercise1]));
+                    showStatus('✅ Kept Exercise 1, deleted all other assignments!', 'success');
+                }
+                
+                // Reload after 2 seconds
+                setTimeout(() => {
+                    window.location.href = 'assignments.html?v=' + Date.now();
+                }, 2000);
                 
             } catch (error) {
                 console.error('Error:', error);
