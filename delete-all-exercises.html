@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Delete All Exercise Data</title>
+    <link rel="stylesheet" href="styles.css?v=12">
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+        
+        .container {
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            max-width: 600px;
+            width: 100%;
+            padding: 40px;
+        }
+        
+        h1 {
+            color: #333;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        
+        .description {
+            color: #666;
+            margin-bottom: 30px;
+            line-height: 1.6;
+        }
+        
+        .btn {
+            display: inline-block;
+            padding: 12px 24px;
+            border: none;
+            border-radius: 6px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            margin: 5px;
+        }
+        
+        .btn-danger {
+            background: linear-gradient(135deg, #ff6b6b 0%, #ee5a6f 100%);
+            color: white;
+        }
+        
+        .btn-danger:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(255, 107, 107, 0.4);
+        }
+        
+        .btn-secondary {
+            background: #f0f0f0;
+            color: #333;
+        }
+        
+        .btn-secondary:hover {
+            background: #e0e0e0;
+        }
+        
+        .status {
+            margin-top: 20px;
+            padding: 15px;
+            border-radius: 6px;
+            display: none;
+        }
+        
+        .status.success {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+            display: block;
+        }
+        
+        .status.error {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+            display: block;
+        }
+        
+        .warning-box {
+            background: #fff3cd;
+            border-left: 4px solid #ffc107;
+            padding: 15px;
+            margin-bottom: 20px;
+            border-radius: 4px;
+        }
+        
+        .info-list {
+            list-style: none;
+            padding: 0;
+            margin: 20px 0;
+        }
+        
+        .info-list li {
+            padding: 8px 0;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .info-list li:last-child {
+            border-bottom: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🗑️ Delete All Exercise Data</h1>
+        
+        <div class="warning-box">
+            <strong>⚠️ Warning:</strong><br>
+            This action will permanently delete ALL exercise data from your browser. This cannot be undone!
+        </div>
+        
+        <p class="description">
+            The following data will be deleted:
+        </p>
+        
+        <ul class="info-list">
+            <li>✅ Exercise 1: Project Management (all data)</li>
+            <li>✅ Exercise 2: Project Management (all data)</li>
+            <li>✅ Any other assignments with "submitted" status</li>
+        </ul>
+        
+        <div style="text-align: center;">
+            <button class="btn btn-danger" onclick="deleteAllExercises()">
+                🗑️ Delete ALL Exercise Data
+            </button>
+            <a href="index.html" class="btn btn-secondary">
+                ← Back to Home
+            </a>
+        </div>
+        
+        <div id="status" class="status"></div>
+    </div>
+
+    <script>
+        function showStatus(message, type) {
+            const statusDiv = document.getElementById('status');
+            statusDiv.textContent = message;
+            statusDiv.className = `status ${type}`;
+        }
+        
+        function deleteAllExercises() {
+            try {
+                // Get current assignments
+                let assignments = JSON.parse(localStorage.getItem('assignments') || '[]');
+                
+                if (assignments.length === 0) {
+                    showStatus('ℹ️ No assignments found. Nothing to delete.', 'error');
+                    return;
+                }
+                
+                const originalCount = assignments.length;
+                
+                // Filter out Exercise 1 and Exercise 2
+                assignments = assignments.filter(a => 
+                    a.title !== 'Exercise 1: Project Management' && 
+                    a.title !== 'Exercise 2: Project Management'
+                );
+                
+                const deletedCount = originalCount - assignments.length;
+                
+                // Save back to localStorage
+                localStorage.setItem('assignments', JSON.stringify(assignments));
+                
+                if (deletedCount > 0) {
+                    showStatus(`✅ Successfully deleted ${deletedCount} exercise(s)!`, 'success');
+                    
+                    // Reload after 2 seconds
+                    setTimeout(() => {
+                        window.location.href = 'assignments.html';
+                    }, 2000);
+                } else {
+                    showStatus('ℹ️ No Exercise 1 or Exercise 2 found. Nothing was deleted.', 'error');
+                }
+                
+            } catch (error) {
+                console.error('Error:', error);
+                showStatus('❌ Error: ' + error.message, 'error');
+            }
+        }
+    </script>
+</body>
+</html>

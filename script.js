@@ -1785,63 +1785,9 @@ function updateHomepageStats() {
 
 
 // Auto-create Exercise 2 assignment with embedded document
+// DISABLED: This function no longer auto-creates exercises
 function autoCreateExercise1() {
-    // Check if Exercise 2 already exists
-    const assignments = JSON.parse(localStorage.getItem('assignments') || '[]');
-    const existingIndex = assignments.findIndex(a => a.title === 'Exercise 2: Project Management');
-    
-    if (existingIndex !== -1) {
-        console.log('✅ Exercise 2 already exists, skipping creation');
-        return;
-    }
-    
-    // Create Exercise 2 assignment automatically without requiring file upload
-    const exercise2 = {
-        id: Date.now(),
-        title: 'Exercise 2: Project Management',
-        description: `We have created a webpage for storing daily and final assignments.
-
-**Website Development Guide**
-
-Prepare tool for website:
-- Github: Our website will be placed here.
-- GitHub Desktop: Used for cloning libraries and uploading local files.
-- AI agent (TONGYI Lingma): Used to write website code.
-
-**Step one:** Create a new repository on GitHub to host your website.
-
-Create a public repository where you can collaborate with your team to create web content.
-
-Name your repository, choose whether it's public or private. Add a README file to share your information, then click the "create repository" button.
-
-Set the page to be empty. Click on the settings of the repository and select "Pages" on the left. Choose "main" and "/root" and save. The link above allows you to view the page.
-
-Wait for Github to search and create pages, and once all projects are completed, the website will be initially established.
-
-**Step two:** Clone the repository to GitHub.
-
-Click on "Add", "Clone a resource", find the repository you want to clone. Finally, click "Clone".
-
-**Step three:** Design website with your team in AI agent
-
-Use AI agents to design the functions and layout of web pages.
-
-**Step four:** Upload them to Github.
-
-Upload directly to the corresponding GitHub account via Lingma.`,
-        deadline: new Date().toISOString().split('T')[0],
-        submitter: 'All Members',
-        status: 'submitted',
-        createdAt: new Date().toISOString(),
-        submittedAt: new Date().toISOString()
-    };
-    
-    assignments.push(exercise2);
-    localStorage.setItem('assignments', JSON.stringify(assignments));
-    console.log('✅ Exercise 2 created successfully');
-    
-    // Reload if on assignments page
-    if (window.location.pathname.includes('assignments.html')) {
-        loadAssignments();
-    }
+    // Function disabled - exercises will not be auto-created
+    console.log('️ Auto-create exercise function is disabled');
+    return;
 }
