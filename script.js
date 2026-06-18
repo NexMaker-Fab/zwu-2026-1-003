@@ -1786,31 +1786,50 @@ function updateHomepageStats() {
 
 // Auto-create Exercise 1 assignment (for active assignment count)
 // This creates a minimal Exercise 1 entry to show active assignment = 1
+// Also cleans up any old/extra assignments data
 function autoCreateExercise1() {
-    // Check if Exercise 1 already exists
-    const assignments = JSON.parse(localStorage.getItem('assignments') || '[]');
-    const existingIndex = assignments.findIndex(a => a.title === 'Exercise 1: Project Management');
+    // Get current assignments
+    let assignments = JSON.parse(localStorage.getItem('assignments') || '[]');
     
-    if (existingIndex !== -1) {
-        console.log('✅ Exercise 1 already exists, skipping creation');
-        return;
+    // Check if there are extra assignments that need to be cleaned up
+    const exercise1Index = assignments.findIndex(a => a.title === 'Exercise 1: Project Management');
+    
+    if (assignments.length > 1 || (assignments.length === 1 && exercise1Index === -1)) {
+        // There are extra assignments or wrong data - clean up
+        console.log('🧹 Found', assignments.length, 'assignments. Cleaning up...');
+        
+        // Keep only Exercise 1 if it exists, otherwise create new one
+        if (exercise1Index !== -1) {
+            // Keep existing Exercise 1, remove others
+            const exercise1 = assignments[exercise1Index];
+            assignments = [exercise1];
+            console.log('✅ Kept existing Exercise 1, removed', assignments.length - 1, 'extra assignments');
+        } else {
+            // No Exercise 1 found, create new one
+            assignments = [];
+        }
     }
     
-    // Create a minimal Exercise 1 assignment (just for counting)
-    const exercise1 = {
-        id: Date.now(),
-        title: 'Exercise 1: Project Management',
-        description: 'View the complete guide at: exercise1-edit.html',
-        deadline: new Date().toISOString().split('T')[0],
-        submitter: 'All Members',
-        status: 'submitted',
-        createdAt: new Date().toISOString(),
-        submittedAt: new Date().toISOString()
-    };
+    // If no Exercise 1 exists, create it
+    if (exercise1Index === -1) {
+        // Create a minimal Exercise 1 assignment (just for counting)
+        const exercise1 = {
+            id: Date.now(),
+            title: 'Exercise 1: Project Management',
+            description: 'View the complete guide at: exercise1-edit.html',
+            deadline: new Date().toISOString().split('T')[0],
+            submitter: 'All Members',
+            status: 'submitted',
+            createdAt: new Date().toISOString(),
+            submittedAt: new Date().toISOString()
+        };
+        
+        assignments.push(exercise1);
+        console.log('✅ Exercise 1 created successfully');
+    }
     
-    assignments.push(exercise1);
+    // Save cleaned data back to localStorage
     localStorage.setItem('assignments', JSON.stringify(assignments));
-    console.log('✅ Exercise 1 created successfully');
     
     // Reload if on assignments page
     if (window.location.pathname.includes('assignments.html')) {
