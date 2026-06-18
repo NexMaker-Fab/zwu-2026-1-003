@@ -1885,69 +1885,15 @@ function autoCreateExercise1() {
     const existingIndex = assignments.findIndex(a => a.title === 'Exercise 1: Project Management');
     
     if (existingIndex !== -1) {
-        const existing = assignments[existingIndex];
-        // Check if it has the original PDF or DOCX file
-        if (existing.files && existing.files.length > 0) {
-            const hasOriginalFile = existing.files.some(f => 
-                f.name.toLowerCase().endsWith('.pdf') ||
-                f.name.toLowerCase().endsWith('.docx') || 
-                f.name.toLowerCase().endsWith('.doc')
-            );
-            if (hasOriginalFile) {
-                console.log('✅ Exercise 1 already has original document, skipping');
-                return;
-            } else {
-                // Has old file (e.g., .txt), remove it and prompt for new upload
-                console.log('⚠️ Exercise 1 has old file format, removing and prompting for PDF upload');
-                assignments.splice(existingIndex, 1);
-                localStorage.setItem('assignments', JSON.stringify(assignments));
-            }
-        }
+        console.log('✅ Exercise 1 already exists, skipping creation');
+        return;
     }
     
-    // Create file input to upload the actual document (PDF recommended)
-    const fileInput = document.createElement('input');
-    fileInput.type = 'file';
-    fileInput.accept = '.pdf,.docx,.doc';
-    fileInput.style.display = 'none';
-    document.body.appendChild(fileInput);
-    
-    
-    fileInput.onchange = async (e) => {
-        const file = e.target.files[0];
-        if (!file) {
-            document.body.removeChild(fileInput);
-            return;
-        }
-        
-        try {
-            showNotification('📄 Processing Project Management document...');
-            
-            // Convert file to base64
-            const reader = new FileReader();
-            reader.onload = async (event) => {
-                const fileData = {
-                    name: file.name,
-                    type: file.type,
-                    size: file.size,
-                    data: event.target.result
-                };
-                
-                const assignments = JSON.parse(localStorage.getItem('assignments') || '[]');
-                const existingIndex = assignments.findIndex(a => a.title === 'Exercise 1: Project Management');
-                
-                if (existingIndex !== -1) {
-                    // Update existing assignment with the uploaded file
-                    assignments[existingIndex].files = [fileData];
-                    assignments[existingIndex].submittedAt = new Date().toISOString();
-                    localStorage.setItem('assignments', JSON.stringify(assignments));
-                    showNotification('✅ Exercise 1 updated with original document!');
-                } else {
-                    // Create new assignment
-                    const exercise1 = {
-                        id: Date.now(),
-                        title: 'Exercise 1: Project Management',
-                        description: `We have created a webpage for storing daily and final assignments.
+    // Create Exercise 1 assignment automatically without requiring file upload
+    const exercise1 = {
+        id: Date.now(),
+        title: 'Exercise 1: Project Management',
+        description: `We have created a webpage for storing daily and final assignments.
 
 **Website Development Guide**
 
@@ -1980,48 +1926,25 @@ Upload directly to the corresponding GitHub account via Lingma.
 
 ---
 
-**Attached File:** ${file.name} (Original document with full formatting, images, and highlights)
-
 **View Full Document:** [📄 View Complete Document with All Formatting](exercise1-document.html)
 
 **Viewing Instructions:**
 1. Click "View Complete Document" above to see the full formatted version
-2. Or click on the filename to preview in Google Docs Viewer
-3. Use the download button to save and open in Microsoft Word for best experience`,
-                        deadline: new Date().toISOString().split('T')[0],
-                        submitter: 'All Members',
-                        status: 'submitted',
-                        createdAt: new Date().toISOString(),
-                        submittedAt: new Date().toISOString(),
-                        files: [fileData]
-                    };
-                    
-                    assignments.push(exercise1);
-                    localStorage.setItem('assignments', JSON.stringify(assignments));
-                    showNotification('✅ Exercise 1 created with original document!');
-                }
-                
-                // Reload if on assignments page
-                if (window.location.pathname.includes('assignments.html')) {
-                    loadAssignments();
-                }
-                
-                // Try to sync to GitHub
-                const assignment = assignments.find(a => a.title === 'Exercise 1: Project Management');
-                if (assignment) {
-                    uploadToGithub(assignment);
-                }
-                
-                // Clean up
-                document.body.removeChild(fileInput);
-            };
-            reader.readAsDataURL(file);
-        } catch (error) {
-            console.error('Error:', error);
-            showNotification('❌ Failed to process file: ' + error.message, 'error');
-            document.body.removeChild(fileInput);
-        }
+2. Use the download button to save and open in Microsoft Word for best experience`,
+        deadline: new Date().toISOString().split('T')[0],
+        submitter: 'All Members',
+        status: 'submitted',
+        createdAt: new Date().toISOString(),
+        submittedAt: new Date().toISOString(),
+        files: []
     };
     
-    fileInput.click();
+    assignments.push(exercise1);
+    localStorage.setItem('assignments', JSON.stringify(assignments));
+    console.log('✅ Exercise 1 created successfully');
+    
+    // Reload if on assignments page
+    if (window.location.pathname.includes('assignments.html')) {
+        loadAssignments();
+    }
 }
