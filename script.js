@@ -1785,55 +1785,10 @@ function updateHomepageStats() {
 
 
 
-// Auto-create Exercise 1 assignment (for active assignment count)
-// This creates a minimal Exercise 1 entry to show active assignment = 1
-// Also cleans up any old/extra assignments data
+// Auto-create Exercise 1 assignment (DISABLED - no longer creates any assignments)
+// This function is disabled to prevent creating any assignments in localStorage
 function autoCreateExercise1() {
-    // Get current assignments
-    let assignments = JSON.parse(localStorage.getItem('assignments') || '[]');
-    
-    // Check if there are extra assignments that need to be cleaned up
-    const exercise1Index = assignments.findIndex(a => a.title === 'Exercise 1: Project Management');
-    
-    if (assignments.length > 1 || (assignments.length === 1 && exercise1Index === -1)) {
-        // There are extra assignments or wrong data - clean up
-        console.log('🧹 Found', assignments.length, 'assignments. Cleaning up...');
-        
-        // Keep only Exercise 1 if it exists, otherwise create new one
-        if (exercise1Index !== -1) {
-            // Keep existing Exercise 1, remove others
-            const exercise1 = assignments[exercise1Index];
-            assignments = [exercise1];
-            console.log('✅ Kept existing Exercise 1, removed', assignments.length - 1, 'extra assignments');
-        } else {
-            // No Exercise 1 found, create new one
-            assignments = [];
-        }
-    }
-    
-    // If no Exercise 1 exists, create it
-    if (exercise1Index === -1) {
-        // Create a minimal Exercise 1 assignment (just for counting)
-        const exercise1 = {
-            id: Date.now(),
-            title: 'Exercise 1: Project Management',
-            description: 'View the complete guide at: exercise1-edit.html',
-            deadline: new Date().toISOString().split('T')[0],
-            submitter: 'All Members',
-            status: 'submitted',
-            createdAt: new Date().toISOString(),
-            submittedAt: new Date().toISOString()
-        };
-        
-        assignments.push(exercise1);
-        console.log('✅ Exercise 1 created successfully');
-    }
-    
-    // Save cleaned data back to localStorage
-    localStorage.setItem('assignments', JSON.stringify(assignments));
-    
-    // Reload if on assignments page
-    if (window.location.pathname.includes('assignments.html')) {
-        loadAssignments();
-    }
+    // Function disabled - do not create any assignments
+    console.log('️ autoCreateExercise1 is disabled - no assignments will be created');
+    return;
 }
