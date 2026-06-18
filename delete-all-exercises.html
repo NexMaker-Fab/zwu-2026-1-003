@@ -3,8 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Delete All Assignments Data</title>
-    <link rel="stylesheet" href="styles.css?v=13">
+    <title>Delete Other Assignments (Keep Exercise 1)</title>
+    <link rel="stylesheet" href="styles.css?v=14">
     <style>
         body {
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
@@ -116,11 +116,11 @@
 </head>
 <body>
     <div class="container">
-        <h1>️ Delete ALL Assignments Data</h1>
+        <h1>🗑️ Delete Other Assignments (Keep Exercise 1)</h1>
                 
         <div class="warning-box">
-            <strong>️ Warning:</strong><br>
-            This action will permanently delete ALL assignments data from your browser. This cannot be undone!
+            <strong>⚠️ Warning:</strong><br>
+            This action will delete all assignments EXCEPT Exercise 1. Exercise 1 will be kept for active assignment count.
         </div>
                 
         <p class="description">
@@ -128,10 +128,14 @@
         </p>
                 
         <ul class="info-list">
-            <li>✅ ALL assignments (including Exercise 1, Exercise 2, and any others)</li>
-            <li>✅ All assignment details and submitted files</li>
-            <li>✅ All assignment statuses and metadata</li>
+            <li>✅ All assignments except Exercise 1: Project Management</li>
+            <li>✅ Assignment detail pages data (assignmentId=1781752911413, 1781753754406, etc.)</li>
+            <li>✅ Any other custom assignments</li>
         </ul>
+        
+        <p class="description" style="margin-top: 20px; color: #28a745; font-weight: bold;">
+            ✅ Exercise 1: Project Management will be KEPT (for active assignment count = 1)
+        </p>
         
         <div style="text-align: center;">
             <button class="btn btn-danger" onclick="deleteAllExercises()">
@@ -164,23 +168,24 @@
                 
                 const originalCount = assignments.length;
                 
-                // Delete ALL assignments (not just Exercise 1 and 2)
-                assignments = [];
+                // Keep only Exercise 1, delete all others
+                const exercise1 = assignments.find(a => a.title === 'Exercise 1: Project Management');
+                assignments = exercise1 ? [exercise1] : [];
                 
-                const deletedCount = originalCount;
+                const deletedCount = originalCount - assignments.length;
                 
                 // Save back to localStorage
                 localStorage.setItem('assignments', JSON.stringify(assignments));
                 
                 if (deletedCount > 0) {
-                    showStatus(`✅ Successfully deleted ${deletedCount} assignment(s)! All data has been removed.`, 'success');
+                    showStatus(`✅ Successfully deleted ${deletedCount} assignment(s)! Only Exercise 1 remains.`, 'success');
                     
                     // Reload after 2 seconds
                     setTimeout(() => {
                         window.location.href = 'assignments.html';
                     }, 2000);
                 } else {
-                    showStatus('ℹ️ No assignments found. Nothing was deleted.', 'error');
+                    showStatus('ℹ️ No other assignments found. Only Exercise 1 exists.', 'error');
                 }
                 
             } catch (error) {

@@ -1784,10 +1784,36 @@ function updateHomepageStats() {
 
 
 
-// Auto-create Exercise 2 assignment with embedded document
-// DISABLED: This function no longer auto-creates exercises
+// Auto-create Exercise 1 assignment (for active assignment count)
+// This creates a minimal Exercise 1 entry to show active assignment = 1
 function autoCreateExercise1() {
-    // Function disabled - exercises will not be auto-created
-    console.log('️ Auto-create exercise function is disabled');
-    return;
+    // Check if Exercise 1 already exists
+    const assignments = JSON.parse(localStorage.getItem('assignments') || '[]');
+    const existingIndex = assignments.findIndex(a => a.title === 'Exercise 1: Project Management');
+    
+    if (existingIndex !== -1) {
+        console.log('✅ Exercise 1 already exists, skipping creation');
+        return;
+    }
+    
+    // Create a minimal Exercise 1 assignment (just for counting)
+    const exercise1 = {
+        id: Date.now(),
+        title: 'Exercise 1: Project Management',
+        description: 'View the complete guide at: exercise1-edit.html',
+        deadline: new Date().toISOString().split('T')[0],
+        submitter: 'All Members',
+        status: 'submitted',
+        createdAt: new Date().toISOString(),
+        submittedAt: new Date().toISOString()
+    };
+    
+    assignments.push(exercise1);
+    localStorage.setItem('assignments', JSON.stringify(assignments));
+    console.log('✅ Exercise 1 created successfully');
+    
+    // Reload if on assignments page
+    if (window.location.pathname.includes('assignments.html')) {
+        loadAssignments();
+    }
 }
