@@ -1784,21 +1784,21 @@ function updateHomepageStats() {
 
 
 
-// Auto-create Exercise 1 assignment with embedded document
+// Auto-create Exercise 2 assignment with embedded document
 function autoCreateExercise1() {
-    // Check if Exercise 1 already exists
+    // Check if Exercise 2 already exists
     const assignments = JSON.parse(localStorage.getItem('assignments') || '[]');
-    const existingIndex = assignments.findIndex(a => a.title === 'Exercise 1: Project Management');
+    const existingIndex = assignments.findIndex(a => a.title === 'Exercise 2: Project Management');
     
     if (existingIndex !== -1) {
-        console.log('✅ Exercise 1 already exists, skipping creation');
+        console.log('✅ Exercise 2 already exists, skipping creation');
         return;
     }
     
-    // Create Exercise 1 assignment automatically without requiring file upload
-    const exercise1 = {
+    // Create Exercise 2 assignment automatically without requiring file upload
+    const exercise2 = {
         id: Date.now(),
-        title: 'Exercise 1: Project Management',
+        title: 'Exercise 2: Project Management',
         description: `We have created a webpage for storing daily and final assignments.
 
 **Website Development Guide**
@@ -1836,9 +1836,9 @@ Upload directly to the corresponding GitHub account via Lingma.`,
         submittedAt: new Date().toISOString()
     };
     
-    assignments.push(exercise1);
+    assignments.push(exercise2);
     localStorage.setItem('assignments', JSON.stringify(assignments));
-    console.log('✅ Exercise 1 created successfully');
+    console.log('✅ Exercise 2 created successfully');
     
     // Reload if on assignments page
     if (window.location.pathname.includes('assignments.html')) {
