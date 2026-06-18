@@ -1828,21 +1828,12 @@ Use AI agents to design the functions and layout of web pages.
 
 **Step four:** Upload them to Github.
 
-Upload directly to the corresponding GitHub account via Lingma.
-
----
-
-**View Full Document:** [📄 View Complete Document with All Formatting](exercise1-document.html)
-
-**Viewing Instructions:**
-1. Click "View Complete Document" above to see the full formatted version
-2. Use the download button to save and open in Microsoft Word for best experience`,
+Upload directly to the corresponding GitHub account via Lingma.`,
         deadline: new Date().toISOString().split('T')[0],
         submitter: 'All Members',
         status: 'submitted',
         createdAt: new Date().toISOString(),
-        submittedAt: new Date().toISOString(),
-        files: []
+        submittedAt: new Date().toISOString()
     };
     
     assignments.push(exercise1);
