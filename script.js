@@ -1742,11 +1742,12 @@ document.addEventListener('DOMContentLoaded', function() {
     
     // Load assignments on assignments page
     if (window.location.pathname.includes('assignments.html') || window.location.pathname.endsWith('assignments.html')) {
+        // Auto-create Exercise 1 assignment FIRST (to clean up old data)
+        autoCreateExercise1();
+        
+        // Then load and display assignments
         loadAssignments();
         populateSubmitterOptions();
-        
-        // Auto-create Exercise 1 assignment
-        autoCreateExercise1();
     }
     
     // Load projects on final-project page
