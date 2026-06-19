@@ -90,8 +90,15 @@ function initializeDefaultMembers() {
                 console.log('✅ Updated Chen Kangwen profile page to external URL');
             }
             
+            // Add profile page for Wang Chengle if not exists
+            if (members['1'] && !members['1'].profilePage) {
+                members['1'].profilePage = 'wang-chengle.html';
+                console.log('✅ Added Wang Chengle profile page');
+            }
+            
             // Save updated members back to localStorage
             localStorage.setItem('teamMembers', JSON.stringify(members));
+            console.log('✅ Saved updated member data to localStorage');
         } catch (e) {
             console.error('❌ Error updating members:', e);
         }
