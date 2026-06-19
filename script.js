@@ -173,12 +173,12 @@ function loadMembers() {
             : `<button class="member-github-btn disabled" onclick="event.stopPropagation()" title="No GitHub account set">⚪ GitHub</button>`;
         
         html += `
-            <div class="member-card">
+            <div class="member-card"${member.profilePage ? ` onclick="window.location.href='${member.profilePage}'" style="cursor: pointer;"` : ''}>
                 <button class="edit-member-btn" onclick="event.stopPropagation(); openEditMemberModal(${id})">️ Edit</button>
                 <div class="member-avatar">
                     ${avatarDisplay}
                 </div>
-                <div class="member-info"${member.profilePage ? ` onclick="window.location.href='${member.profilePage}'"` : ''}>
+                <div class="member-info">
                     <h3 class="member-name">${member.name}</h3>
                     <p class="member-role">${member.role}</p>
                     ${skillsPreview}
