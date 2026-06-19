@@ -107,7 +107,7 @@ function initializeDefaultMembers() {
             email: '',
             github: 'Kevinslayer0131',
             skills: [],
-            profilePage: 'chen-kangwen.html'
+            profilePage: 'https://kevinslayer0131.github.io/111111/'
         }
     };
     
