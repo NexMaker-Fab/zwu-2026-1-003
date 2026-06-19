@@ -106,7 +106,7 @@ function initializeDefaultMembers() {
             hobbies: [],
             email: '',
             github: 'Kevinslayer0131',
-            skills: []
+            skills: [],
             profilePage: 'chen-kangwen.html'
         }
     };
