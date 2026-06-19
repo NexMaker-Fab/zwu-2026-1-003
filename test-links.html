@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test Member Links</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 40px;
+            max-width: 800px;
+            margin: 0 auto;
+            background: #f5f5f5;
+        }
+        .container {
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        h1 {
+            color: #333;
+        }
+        .status {
+            padding: 15px;
+            margin: 10px 0;
+            border-radius: 5px;
+            background: #e8f5e9;
+            border-left: 4px solid #4caf50;
+        }
+        .error {
+            background: #ffebee;
+            border-left-color: #f44336;
+        }
+        button {
+            padding: 12px 24px;
+            margin: 10px 5px;
+            cursor: pointer;
+            background: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+        }
+        button:hover {
+            background: #45a049;
+        }
+        button.danger {
+            background: #f44336;
+        }
+        button.danger:hover {
+            background: #da190b;
+        }
+        pre {
+            background: #263238;
+            color: #aed581;
+            padding: 15px;
+            border-radius: 5px;
+            overflow-x: auto;
+            font-size: 14px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🔍 Test Member Profile Links</h1>
+        
+        <div id="status"></div>
+        
+        <h2>Actions:</h2>
+        <button onclick="checkData()">Check Current Data</button>
+        <button onclick="forceUpdate()" class="danger">Force Update & Reload</button>
+        <button onclick="goToTeam()">Go to Team Page</button>
+        
+        <h2>Console Output:</h2>
+        <pre id="output">Click "Check Current Data" to begin...</pre>
+    </div>
+    
+    <script src="script.js?v=7"></script>
+    <script>
+        function log(message) {
+            const output = document.getElementById('output');
+            const timestamp = new Date().toLocaleTimeString();
+            output.textContent += `[${timestamp}] ${message}\n`;
+            console.log(message);
+        }
+        
+        function checkData() {
+            log('=== Checking localStorage ===');
+            const data = localStorage.getItem('teamMembers');
+            
+            if (!data) {
+                log('❌ No teamMembers data found');
+                showStatus('No data in localStorage', 'error');
+                return;
+            }
+            
+            try {
+                const members = JSON.parse(data);
+                log(`✅ Found ${Object.keys(members).length} members`);
+                
+                Object.entries(members).forEach(([id, member]) => {
+                    log(`\nMember ${id}:`);
+                    log(`  Name: ${member.name}`);
+                    log(`  profilePage: ${member.profilePage || 'NOT SET'}`);
+                    log(`  github: ${member.github || 'NOT SET'}`);
+                });
+                
+                showStatus(`Found ${Object.keys(members).length} members with profile pages`, 'success');
+            } catch (e) {
+                log(`❌ Error parsing data: ${e.message}`);
+                showStatus('Invalid JSON data', 'error');
+            }
+        }
+        
+        function forceUpdate() {
+            log('=== Force Updating ===');
+            localStorage.removeItem('teamMembers');
+            log('✅ Cleared localStorage');
+            
+            // Re-initialize
+            initializeDefaultMembers();
+            log('✅ Called initializeDefaultMembers()');
+            
+            // Check result
+            checkData();
+            
+            showStatus('Data updated! Click "Go to Team Page" to test', 'success');
+        }
+        
+        function goToTeam() {
+            log('Navigating to team.html...');
+            window.location.href = 'team.html';
+        }
+        
+        function showStatus(message, type) {
+            const status = document.getElementById('status');
+            status.innerHTML = `<div class="status ${type}">${message}</div>`;
+        }
+        
+        // Auto-check on load
+        window.addEventListener('load', () => {
+            log('Page loaded');
+            checkData();
+        });
+    </script>
+</body>
+</html>

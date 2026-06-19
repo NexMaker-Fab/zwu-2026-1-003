@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fix All Issues</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 40px;
+            max-width: 900px;
+            margin: 0 auto;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+        .container {
+            background: white;
+            padding: 40px;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+        h1 { color: #333; }
+        .alert {
+            padding: 15px;
+            margin: 15px 0;
+            border-radius: 8px;
+            background: #fff3cd;
+            border-left: 4px solid #ffc107;
+        }
+        .success {
+            background: #d4edda;
+            border-left-color: #28a745;
+        }
+        button {
+            padding: 15px 30px;
+            margin: 10px 5px;
+            cursor: pointer;
+            background: #667eea;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: bold;
+        }
+        button:hover { background: #5568d3; }
+        button.danger { background: #dc3545; }
+        button.danger:hover { background: #c82333; }
+        pre {
+            background: #263238;
+            color: #aed581;
+            padding: 15px;
+            border-radius: 5px;
+            overflow-x: auto;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🔧 Fix All Issues</h1>
+        
+        <div class="alert">
+            <strong>Problem 1:</strong> Only one member shows in normal browser<br>
+            <strong>Problem 2:</strong> No favicon in incognito mode
+        </div>
+        
+        <h2>Step 1: Fix Member Data</h2>
+        <button onclick="fixMembers()">Clear & Reinitialize Members</button>
+        
+        <h2>Step 2: Test Chen Kangwen Page</h2>
+        <button onclick="testChenKangwen()">Open Chen Kangwen (with cache bypass)</button>
+        
+        <h2>Step 3: Verify Favicon</h2>
+        <button onclick="checkFavicon()">Check Favicon Status</button>
+        
+        <div id="status"></div>
+        
+        <h2>Console Output:</h2>
+        <pre id="output">Ready...</pre>
+    </div>
+    
+    <script src="script.js?v=8"></script>
+    <script>
+        function log(msg) {
+            const output = document.getElementById('output');
+            output.textContent += `[${new Date().toLocaleTimeString()}] ${msg}\n`;
+            console.log(msg);
+        }
+        
+        function fixMembers() {
+            log('=== Fixing Member Data ===');
+            
+            // Clear localStorage
+            localStorage.removeItem('teamMembers');
+            log('✅ Cleared localStorage');
+            
+            // Reinitialize
+            initializeDefaultMembers();
+            log('✅ Reinitialized members');
+            
+            // Verify
+            const members = JSON.parse(localStorage.getItem('teamMembers') || '{}');
+            const count = Object.keys(members).length;
+            log(`✅ Found ${count} members`);
+            
+            Object.entries(members).forEach(([id, m]) => {
+                log(`  - ${m.name}: ${m.profilePage || 'no profile'}`);
+            });
+            
+            document.getElementById('status').innerHTML = 
+                `<div class="alert success">✅ Fixed! Found ${count} members. Now go to team.html and refresh.</div>`;
+        }
+        
+        function testChenKangwen() {
+            log('=== Opening Chen Kangwen Page ===');
+            const url = `chen-kangwen.html?nocache=${Date.now()}`;
+            window.open(url, '_blank');
+            log('✅ Opened in new tab');
+            log('💡 Press Ctrl+F5 in the new tab');
+        }
+        
+        function checkFavicon() {
+            log('=== Checking Favicon ===');
+            const icons = document.querySelectorAll('link[rel*="icon"]');
+            log(`Found ${icons.length} icon(s)`);
+            
+            icons.forEach((icon, i) => {
+                log(`Icon ${i+1}: ${icon.href.substring(0, 80)}...`);
+            });
+            
+            if (icons.length === 0) {
+                log('❌ No favicon found!');
+            } else {
+                log('✅ Favicon links present');
+            }
+        }
+        
+        window.addEventListener('load', () => {
+            log('Page loaded');
+            checkFavicon();
+        });
+    </script>
+</body>
+</html>
