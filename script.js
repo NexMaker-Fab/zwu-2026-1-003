@@ -76,10 +76,25 @@ document.addEventListener('click', function(e) {
 function initializeDefaultMembers() {
     console.log('🔧 Checking member data...');
     
-    // Only initialize if no members exist in localStorage
+    // Check if members exist in localStorage
     const existingMembers = localStorage.getItem('teamMembers');
+    
     if (existingMembers) {
-        console.log('✅ Member data already exists, skipping initialization');
+        console.log('✅ Member data already exists, updating profile pages...');
+        try {
+            const members = JSON.parse(existingMembers);
+            
+            // Update Chen Kangwen's profile page to external URL
+            if (members['2']) {
+                members['2'].profilePage = 'https://kevinslayer0131.github.io/111111/';
+                console.log('✅ Updated Chen Kangwen profile page to external URL');
+            }
+            
+            // Save updated members back to localStorage
+            localStorage.setItem('teamMembers', JSON.stringify(members));
+        } catch (e) {
+            console.error('❌ Error updating members:', e);
+        }
         return;
     }
     
