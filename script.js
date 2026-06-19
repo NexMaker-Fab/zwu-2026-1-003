@@ -84,11 +84,12 @@ function initializeDefaultMembers() {
         try {
             const members = JSON.parse(existingMembers);
             
-            // Check if we have both members
+            // Check if we have all three members
             const hasMember1 = members['1'];
             const hasMember2 = members['2'];
+            const hasMember3 = members['3'];
             
-            if (!hasMember1 || !hasMember2) {
+            if (!hasMember1 || !hasMember2 || !hasMember3) {
                 console.log('⚠️ Missing members, reinitializing...');
                 localStorage.removeItem('teamMembers');
                 // Fall through to initialization below
@@ -105,6 +106,12 @@ function initializeDefaultMembers() {
             if (members['1'] && !members['1'].profilePage) {
                 members['1'].profilePage = 'wang-chengle.html';
                 console.log('✅ Added Wang Chengle profile page');
+            }
+            
+            // Add profile page for Chen Yuzhe if not exists
+            if (members['3'] && !members['3'].profilePage) {
+                members['3'].profilePage = 'https://cyz9880.github.io/1111/';
+                console.log('✅ Added Chen Yuzhe profile page');
             }
             
             // Save updated members back to localStorage
@@ -145,11 +152,23 @@ function initializeDefaultMembers() {
             github: 'Kevinslayer0131',
             skills: [],
             profilePage: 'https://kevinslayer0131.github.io/111111/'
+        },
+        '3': {
+            name: 'Chen Yuzhe',
+            role: 'Team Member',
+            avatar: 'images/chen-yuzhe-avatar.jpg',
+            avatarType: 'image',
+            bio: '',
+            hobbies: [],
+            email: '',
+            github: 'cyz9880',
+            skills: [],
+            profilePage: 'https://cyz9880.github.io/1111/'
         }
     };
     
     localStorage.setItem('teamMembers', JSON.stringify(defaultMembers));
-    console.log('✅ Successfully initialized 2 team members: Wang Chengle, Chen Kangwen');
+    console.log('✅ Successfully initialized 3 team members: Wang Chengle, Chen Kangwen, Chen Yuzhe');
 }
 
 // Load and display members
