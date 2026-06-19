@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Clear Favicon Cache</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 40px;
+            max-width: 800px;
+            margin: 0 auto;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+        .container {
+            background: white;
+            padding: 40px;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+        h1 {
+            color: #333;
+            margin-bottom: 20px;
+        }
+        .step {
+            background: #f8f9fa;
+            padding: 20px;
+            margin: 15px 0;
+            border-radius: 8px;
+            border-left: 4px solid #667eea;
+        }
+        button {
+            padding: 15px 30px;
+            margin: 10px 5px;
+            cursor: pointer;
+            background: #667eea;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: bold;
+            transition: all 0.3s;
+        }
+        button:hover {
+            background: #5568d3;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+        .success {
+            color: #28a745;
+            font-weight: bold;
+        }
+        .info {
+            color: #17a2b8;
+        }
+        pre {
+            background: #263238;
+            color: #aed581;
+            padding: 15px;
+            border-radius: 5px;
+            overflow-x: auto;
+            font-size: 13px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🔄 Clear Favicon Cache & Test</h1>
+        
+        <div class="step">
+            <h2>Step 1: Clear Browser Cache</h2>
+            <p>This will clear cached favicons and force reload:</p>
+            <button onclick="clearCache()">Clear Cache & Reload</button>
+        </div>
+        
+        <div class="step">
+            <h2>Step 2: Check Current Favicon</h2>
+            <p>Verify what favicon is currently loaded:</p>
+            <button onclick="checkFavicon()">Check Favicon</button>
+            <div id="favicon-info"></div>
+        </div>
+        
+        <div class="step">
+            <h2>Step 3: Force Reload Chen Kangwen Page</h2>
+            <p>Open chen-kangwen.html with cache bypass:</p>
+            <button onclick="openChenKangwen()">Open Chen Kangwen Page</button>
+        </div>
+        
+        <div class="step">
+            <h2>Console Output:</h2>
+            <pre id="output">Ready to start...</pre>
+        </div>
+    </div>
+    
+    <script>
+        function log(message) {
+            const output = document.getElementById('output');
+            const timestamp = new Date().toLocaleTimeString();
+            output.textContent += `[${timestamp}] ${message}\n`;
+            console.log(message);
+        }
+        
+        function clearCache() {
+            log('=== Clearing Cache ===');
+            
+            // Clear service workers if any
+            if ('serviceWorker' in navigator) {
+                navigator.serviceWorker.getRegistrations().then(function(registrations) {
+                    for(let registration of registrations) {
+                        registration.unregister();
+                        log('✅ Unregistered service worker');
+                    }
+                });
+            }
+            
+            // Clear cache storage
+            if ('caches' in window) {
+                caches.keys().then(function(names) {
+                    for (let name of names) {
+                        caches.delete(name);
+                        log('✅ Deleted cache: ' + name);
+                    }
+                });
+            }
+            
+            log('✅ Cache cleared');
+            log('⏳ Reloading page in 2 seconds...');
+            
+            setTimeout(() => {
+                location.reload(true);
+            }, 2000);
+        }
+        
+        function checkFavicon() {
+            log('=== Checking Favicon ===');
+            
+            const icons = document.querySelectorAll('link[rel*="icon"]');
+            log(`Found ${icons.length} icon link(s)`);
+            
+            icons.forEach((icon, index) => {
+                log(`\nIcon ${index + 1}:`);
+                log(`  Type: ${icon.type || 'N/A'}`);
+                log(`  Href: ${icon.href.substring(0, 100)}...`);
+                log(`  Sizes: ${icon.sizes || 'N/A'}`);
+            });
+            
+            const info = document.getElementById('favicon-info');
+            info.innerHTML = `<p class="success">✅ Found ${icons.length} favicon(s). Check console for details.</p>`;
+        }
+        
+        function openChenKangwen() {
+            log('=== Opening Chen Kangwen Page ===');
+            
+            // Add timestamp to bypass cache
+            const timestamp = new Date().getTime();
+            const url = `chen-kangwen.html?t=${timestamp}`;
+            
+            log(`Opening: ${url}`);
+            window.open(url, '_blank');
+            
+            log('✅ Opened in new tab');
+            log('💡 Tip: Press Ctrl+F5 in the new tab to force reload');
+        }
+        
+        // Auto-check on load
+        window.addEventListener('load', () => {
+            log('Page loaded');
+            checkFavicon();
+        });
+    </script>
+</body>
+</html>
