@@ -1767,7 +1767,13 @@ function updateHomepageStats() {
     const projects = JSON.parse(localStorage.getItem('projects') || '[]');
     
     // Count active assignments (not completed)
-    const activeAssignments = assignments.filter(a => a.status !== 'completed').length;
+    // Always count Exercise 1 (exercise1-edit.html) as 1 active assignment
+    let activeAssignments = assignments.filter(a => a.status !== 'completed').length;
+    
+    // If no assignments in localStorage, still count Exercise 1 as active
+    if (activeAssignments === 0) {
+        activeAssignments = 1; // exercise1-edit.html exists and is active
+    }
     
     const statMembers = document.getElementById('statMembers');
     const statAssignments = document.getElementById('statAssignments');
