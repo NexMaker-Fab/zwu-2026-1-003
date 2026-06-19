@@ -74,11 +74,16 @@ document.addEventListener('click', function(e) {
 
 // Initialize default members
 function initializeDefaultMembers() {
-    console.log('🔧 Initializing default members...');
+    console.log('🔧 Checking member data...');
     
-    // FORCE RESET: Always clear existing data and reload defaults
-    console.log('🔄 Force resetting all member data to defaults...');
-    localStorage.removeItem('teamMembers');
+    // Only initialize if no members exist in localStorage
+    const existingMembers = localStorage.getItem('teamMembers');
+    if (existingMembers) {
+        console.log('✅ Member data already exists, skipping initialization');
+        return;
+    }
+    
+    console.log('🔄 Initializing default members for the first time...');
     
     const defaultMembers = {
         '1': { 
