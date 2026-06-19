@@ -84,6 +84,17 @@ function initializeDefaultMembers() {
         try {
             const members = JSON.parse(existingMembers);
             
+            // Check if we have both members
+            const hasMember1 = members['1'];
+            const hasMember2 = members['2'];
+            
+            if (!hasMember1 || !hasMember2) {
+                console.log('⚠️ Missing members, reinitializing...');
+                localStorage.removeItem('teamMembers');
+                // Fall through to initialization below
+                return initializeDefaultMembers();
+            }
+            
             // Update Chen Kangwen's profile page to external URL
             if (members['2']) {
                 members['2'].profilePage = 'https://kevinslayer0131.github.io/111111/';
@@ -101,6 +112,10 @@ function initializeDefaultMembers() {
             console.log('✅ Saved updated member data to localStorage');
         } catch (e) {
             console.error('❌ Error updating members:', e);
+            console.log('⚠️ Corrupted data, reinitializing...');
+            localStorage.removeItem('teamMembers');
+            // Fall through to initialization below
+            return initializeDefaultMembers();
         }
         return;
     }
