@@ -102,6 +102,7 @@ function initializeDefaultMembers() {
             email: '',
             github: 'Kevinslayer0131',
             skills: []
+            profilePage: 'chen-kangwen.html'
         }
     };
     
@@ -150,11 +151,11 @@ function loadMembers() {
                 <div class="member-avatar">
                     ${avatarDisplay}
                 </div>
-                <div class="member-info">
+                <div class="member-info"${member.profilePage ? ` onclick="window.location.href='${member.profilePage}'"` : ''}>
                     <h3 class="member-name">${member.name}</h3>
                     <p class="member-role">${member.role}</p>
                     ${skillsPreview}
-                    <p class="member-bio">${member.bio || 'Profile coming soon →'}</p>
+                    <p class="member-bio">${member.bio || (member.profilePage ? 'View profile →' : 'Profile coming soon →')}</p>
                 </div>
                 ${githubButton}
             </div>
