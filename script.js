@@ -122,10 +122,10 @@ function initializeDefaultMembers() {
                 console.log('✅ Added Ge Chengfei profile page');
             }
             
-            // Add profile page for Wu Changhong if not exists
-            if (members['5'] && !members['5'].profilePage) {
-                members['5'].profilePage = 'https://wch946.github.io/WCH/';
-                console.log('✅ Added Wu Changhong profile page');
+            // Add/update profile page for Wu Changhong
+            if (members['5']) {
+                members['5'].profilePage = 'wu-changhong.html';
+                console.log('✅ Updated Wu Changhong profile page');
             }
             
             // Save updated members back to localStorage
@@ -201,7 +201,7 @@ function initializeDefaultMembers() {
             email: '',
             github: 'wch946',
             skills: [],
-            profilePage: 'https://wch946.github.io/WCH/'
+            profilePage: 'wu-changhong.html'
         }
     };
     
