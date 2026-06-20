@@ -84,14 +84,15 @@ function initializeDefaultMembers() {
         try {
             const members = JSON.parse(existingMembers);
             
-            // Check if we have all four members
+            // Check if we have all five members
             const hasMember1 = members['1'];
             const hasMember2 = members['2'];
             const hasMember3 = members['3'];
             const hasMember4 = members['4'];
+            const hasMember5 = members['5'];
             
-            if (!hasMember1 || !hasMember2 || !hasMember3 || !hasMember4) {
-                console.log('⚠️ Missing members, reinitializing...');
+            if (!hasMember1 || !hasMember2 || !hasMember3 || !hasMember4 || !hasMember5) {
+                console.log('️ Missing members, reinitializing...');
                 localStorage.removeItem('teamMembers');
                 // Fall through to initialization below
                 return initializeDefaultMembers();
@@ -119,6 +120,12 @@ function initializeDefaultMembers() {
             if (members['4'] && !members['4'].profilePage) {
                 members['4'].profilePage = 'https://yypkr.github.io/1.html';
                 console.log('✅ Added Ge Chengfei profile page');
+            }
+            
+            // Add profile page for Wu Changhong if not exists
+            if (members['5'] && !members['5'].profilePage) {
+                members['5'].profilePage = 'https://wch946.github.io/WCH/';
+                console.log('✅ Added Wu Changhong profile page');
             }
             
             // Save updated members back to localStorage
@@ -183,11 +190,23 @@ function initializeDefaultMembers() {
             github: 'yypkr',
             skills: [],
             profilePage: 'https://yypkr.github.io/1.html'
+        },
+        '5': {
+            name: 'Wu Changhong',
+            role: 'Team Member',
+            avatar: 'images/wu-changhong-avatar.jpg',
+            avatarType: 'image',
+            bio: '',
+            hobbies: [],
+            email: '',
+            github: 'wch946',
+            skills: [],
+            profilePage: 'https://wch946.github.io/WCH/'
         }
     };
     
     localStorage.setItem('teamMembers', JSON.stringify(defaultMembers));
-    console.log('✅ Successfully initialized 4 team members: Wang Chengle, Chen Kangwen, Chen Yuzhe, Ge Chengfei');
+    console.log('✅ Successfully initialized 5 team members: Wang Chengle, Chen Kangwen, Chen Yuzhe, Ge Chengfei, Wu Changhong');
 }
 
 // Load and display members
