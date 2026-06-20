@@ -124,8 +124,8 @@ function initializeDefaultMembers() {
             
             // Add/update profile page for Wu Changhong
             if (members['5']) {
-                members['5'].profilePage = 'wu-changhong.html';
-                console.log('✅ Updated Wu Changhong profile page');
+                members['5'].profilePage = 'https://wch946.github.io/WCH/';
+                console.log('✅ Updated Wu Changhong profile page to external website');
             }
             
             // Save updated members back to localStorage
@@ -201,7 +201,7 @@ function initializeDefaultMembers() {
             email: '',
             github: 'wch946',
             skills: [],
-            profilePage: 'wu-changhong.html'
+            profilePage: 'https://wch946.github.io/WCH/'
         }
     };
     
@@ -245,7 +245,7 @@ function loadMembers() {
             : `<button class="member-github-btn disabled" onclick="event.stopPropagation()" title="No GitHub account set">⚪ GitHub</button>`;
         
         html += `
-            <div class="member-card"${member.profilePage ? ` onclick="window.location.href='${member.profilePage}'" style="cursor: pointer;"` : ''}>
+            <div class="member-card"${member.profilePage ? ` onclick="${member.profilePage.startsWith('http') ? `window.open('${member.profilePage}', '_blank')` : `window.location.href='${member.profilePage}'`}" style="cursor: pointer;"` : ''}>
                 <button class="edit-member-btn" onclick="event.stopPropagation(); openEditMemberModal(${id})">️ Edit</button>
                 <div class="member-avatar">
                     ${avatarDisplay}
