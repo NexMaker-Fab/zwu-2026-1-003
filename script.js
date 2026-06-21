@@ -98,6 +98,22 @@ function initializeDefaultMembers() {
                 return initializeDefaultMembers();
             }
             
+            // Add Zhu Yihong (member 6) if not exists
+            if (!members['6']) {
+                members['6'] = {
+                    name: 'Zhu Yihong',
+                    role: 'Team Member',
+                    avatar: '👤',
+                    avatarType: 'emoji',
+                    bio: '',
+                    hobbies: [],
+                    email: '',
+                    github: '3320023780-sudo',
+                    skills: []
+                };
+                console.log('✅ Added Zhu Yihong to team members');
+            }
+            
             // Update Chen Kangwen's profile page to external URL
             if (members['2']) {
                 members['2'].profilePage = 'https://kevinslayer0131.github.io/111111/';
@@ -202,11 +218,22 @@ function initializeDefaultMembers() {
             github: 'wch946',
             skills: [],
             profilePage: 'https://wch946.github.io/WCH/'
+        },
+        '6': {
+            name: 'Zhu Yihong',
+            role: 'Team Member',
+            avatar: '👤',
+            avatarType: 'emoji',
+            bio: '',
+            hobbies: [],
+            email: '',
+            github: '3320023780-sudo',
+            skills: []
         }
     };
     
     localStorage.setItem('teamMembers', JSON.stringify(defaultMembers));
-    console.log('✅ Successfully initialized 5 team members: Wang Chengle, Chen Kangwen, Chen Yuzhe, Ge Chengfei, Wu Changhong');
+    console.log('✅ Successfully initialized 6 team members: Wang Chengle, Chen Kangwen, Chen Yuzhe, Ge Chengfei, Wu Changhong, Zhu Yihong');
 }
 
 // Load and display members
