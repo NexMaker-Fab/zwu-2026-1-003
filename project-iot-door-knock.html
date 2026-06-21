@@ -425,6 +425,12 @@
                 <p style="font-family: 'Futura Hv BT', Futura, sans-serif; font-size: 20px; line-height: 1.8; margin-bottom: 15px;">
                     <strong>Technical Breakthrough:</strong> After consulting Espressif's official latest upgrade whitepaper, the team discovered that in the newest 3.x core library, to enhance multi-node mesh networking security and information traceability, the receiving callback function signature underwent a discontinuous change. The first parameter was upgraded from the original simple <code style="background-color: #1e1e1e; padding: 2px 6px; border-radius: 3px; font-family: 'Courier New', monospace; color: #d4d4d4;">uint8_t *mac</code> to an encapsulated structure pointer <code style="background-color: #1e1e1e; padding: 2px 6px; border-radius: 3px; font-family: 'Courier New', monospace; color: #d4d4d4;">const esp_now_recv_info_t *esp_now_info</code> containing more physical-layer radio frequency information. Through thorough refactoring of the function declaration and internal copy logic, the team perfectly achieved the transition between old and new versions, ensuring a green light all the way through compilation.
                 </p>
+                
+                <div style="margin-top: 80px;"></div>
+                
+                <h3 style="font-family: 'Futura Hv BT', Futura, sans-serif; font-size: 40px; background-color: #00008B; padding: 10px 15px; display: inline-block; margin-bottom: 20px; color: white;">
+                    2. Sensor Reverse-Connection Burnout and "Zombie Chip" Physical Fault Diagnosis (Hardware Trauma Troubleshooting)
+                </h3>
             </div>
         </section>
     </main>
