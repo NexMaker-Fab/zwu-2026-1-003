@@ -88,6 +88,32 @@
                 <p style="font-family: 'Futura Hv BT', Futura, sans-serif; font-size: 20px; line-height: 1.8; margin-bottom: 15px;">
                     During the hardware selection and assembly phase of the project, the team went through a complete engineering evolution from "traditional wired breadboard verification" to "independent power supply, portable modular mounting." The finalized hardware selection and pin mapping are shown in the table below:
                 </p>
+                
+                <div style="margin-top: 80px;"></div>
+                
+                <table style="width: 100%; border-collapse: collapse; font-family: 'Futura Hv BT', Futura, sans-serif; font-size: 20px; line-height: 1.8; margin-bottom: 15px; color: white;">
+                    <thead>
+                        <tr style="background-color: #00008B;">
+                            <th style="border: 1px solid #444; padding: 12px; text-align: left;">Module</th>
+                            <th style="border: 1px solid #444; padding: 12px; text-align: left;">Peripheral Pin / Cable Color</th>
+                            <th style="border: 1px solid #444; padding: 12px; text-align: left;">Dev Board Physical Pin</th>
+                            <th style="border: 1px solid #444; padding: 12px; text-align: left;">Engineering Role & Working Principle</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td rowspan="2" style="border: 1px solid #444; padding: 12px; vertical-align: middle;"><strong>3x AAA Battery Holder</strong><br>(Independent Power Supply)</td>
+                            <td style="border: 1px solid #444; padding: 12px;">Red Wire (Positive)</td>
+                            <td style="border: 1px solid #444; padding: 12px;"><strong>5V</strong></td>
+                            <td style="border: 1px solid #444; padding: 12px;">Power Input: Provides 4.5V raw power for the on-board mini voltage regulator chip.</td>
+                        </tr>
+                        <tr>
+                            <td style="border: 1px solid #444; padding: 12px;">Black Wire (Negative)</td>
+                            <td style="border: 1px solid #444; padding: 12px;"><strong>GND</strong></td>
+                            <td style="border: 1px solid #444; padding: 12px;">Common Ground: Completes the core power circuit of the entire system.</td>
+                        </tr>
+                    </tbody>
+                </table>
             </div>
         </section>
     </main>
