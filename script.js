@@ -161,7 +161,7 @@ function initializeDefaultMembers() {
                     email: '',
                     github: 'Hake8457',
                     skills: [],
-                    profilePage: 'index(6).html'
+                    profilePage: 'liu-xiehan.html'
                 };
                 console.log('✅ Added Liu Xiehan to team members');
             }
@@ -262,7 +262,7 @@ function initializeDefaultMembers() {
             email: '',
             github: 'Hake8457',
             skills: [],
-            profilePage: 'index(6).html'
+            profilePage: 'liu-xiehan.html'
         }
     };
     
