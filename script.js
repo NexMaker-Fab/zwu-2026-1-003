@@ -164,6 +164,10 @@ function initializeDefaultMembers() {
                     profilePage: 'liu-xiehan.html'
                 };
                 console.log('✅ Added Liu Xiehan to team members');
+            } else if (!members['7'].profilePage) {
+                // Add profile page if missing
+                members['7'].profilePage = 'liu-xiehan.html';
+                console.log('✅ Added Liu Xiehan profile page');
             }
             
             // Save updated members back to localStorage
