@@ -275,6 +275,126 @@
                 <p style="font-family: 'Futura Hv BT', Futura, sans-serif; font-size: 20px; line-height: 1.8; margin-bottom: 15px;">
                     This program is deployed on the desktop main control board with a large screen. The code refactors the legacy ESP-NOW callback function signatures to ensure full compatibility with the latest 3.3.x+ core library versions. Meanwhile, through HCI (Human-Computer Interaction) optimization, the alert response time is compressed to 100 milliseconds, delivering a crisp and decisive high-end vibration feedback experience.
                 </p>
+                
+                <div style="margin-top: 80px;"></div>
+                
+                <div style="background-color: #1e1e1e; border-radius: 8px; padding: 20px; margin-bottom: 20px; overflow-x: auto;">
+                    <pre style="font-family: 'Courier New', Consolas, Monaco, monospace; font-size: 14px; line-height: 1.6; color: #d4d4d4; margin: 0; white-space: pre-wrap; word-wrap: break-word;"><code><span style="color: #c586c0;">#include</span> <span style="color: #ce9178;">&lt;Arduino.h&gt;</span>
+<span style="color: #c586c0;">#include</span> <span style="color: #ce9178;">"Arduino_GFX_Library.h"</span>
+<span style="color: #c586c0;">#include</span> <span style="color: #ce9178;">"pin_config.h"</span>
+<span style="color: #c586c0;">#include</span> <span style="color: #ce9178;">&lt;Wire.h&gt;</span>
+<span style="color: #c586c0;">#include</span> <span style="color: #ce9178;">"HWCDC.h"</span>
+<span style="color: #c586c0;">#include</span> <span style="color: #ce9178;">&lt;esp_now.h&gt;</span>
+<span style="color: #c586c0;">#include</span> <span style="color: #ce9178;">&lt;WiFi.h&gt;</span>
+
+<span style="color: #4ec9b0;">HWCDC</span> USBSerial;
+
+<span style="color: #6a9955;">// Physical bus layer and ST7789 screen chip hardware initialization configuration</span>
+<span style="color: #4ec9b0;">Arduino_DataBus</span> *bus = <span style="color: #569cd6;">new</span> <span style="color: #4ec9b0;">Arduino_ESP32SPI</span>(LCD_DC, LCD_CS, LCD_SCK, LCD_MOSI);
+<span style="color: #4ec9b0;">Arduino_GFX</span> *gfx = <span style="color: #569cd6;">new</span> <span style="color: #4ec9b0;">Arduino_ST7789</span>(bus, LCD_RST <span style="color: #6a9955;">/* RST */</span>,
+                                      <span style="color: #b5cea8;">0</span> <span style="color: #6a9955;">/* rotation */</span>, <span style="color: #569cd6;">true</span> <span style="color: #6a9955;">/* IPS */</span>, LCD_WIDTH, LCD_HEIGHT, <span style="color: #b5cea8;">0</span>, <span style="color: #b5cea8;">20</span>, <span style="color: #b5cea8;">0</span>, <span style="color: #b5cea8;">0</span>);
+
+<span style="color: #6a9955;">// 16-bit color code definitions</span>
+<span style="color: #569cd6;">#define</span> BLACK   <span style="color: #b5cea8;">0x0000</span>
+<span style="color: #569cd6;">#define</span> RED     <span style="color: #b5cea8;">0xF800</span>
+<span style="color: #569cd6;">#define</span> GREEN   <span style="color: #b5cea8;">0x07E0</span>
+<span style="color: #569cd6;">#define</span> WHITE   <span style="color: #b5cea8;">0xFFFF</span>
+
+<span style="color: #569cd6;">const</span> <span style="color: #569cd6;">int</span> MOTOR_PIN = <span style="color: #b5cea8;">3</span>;  <span style="color: #6a9955;">// Alert motor mounted on main board pin 3</span>
+
+<span style="color: #6a9955;">// Wireless transmission packet protocol format (must strictly match the transmitter)</span>
+<span style="color: #569cd6;">typedef</span> <span style="color: #569cd6;">struct</span> <span style="color: #4ec9b0;">struct_message</span> {
+  <span style="color: #569cd6;">int</span> knock;
+} <span style="color: #4ec9b0;">struct_message</span>;
+<span style="color: #4ec9b0;">struct_message</span> myData;
+
+<span style="color: #6a9955;">// Core brain state variable: volatile keyword ensures real-time memory synchronization</span>
+<span style="color: #6a9955;">// between interrupt service and main loop</span>
+<span style="color: #569cd6;">volatile</span> <span style="color: #569cd6;">bool</span> isKnocking = <span style="color: #569cd6;">false</span>;
+
+<span style="color: #6a9955;">// Core evolution: asynchronous radio data interception function</span>
+<span style="color: #6a9955;">// compatible with ESP32 3.x new core library</span>
+<span style="color: #569cd6;">void</span> <span style="color: #dcdcaa;">OnDataRecv</span>(<span style="color: #569cd6;">const</span> <span style="color: #4ec9b0;">esp_now_recv_info_t</span> * esp_now_info, <span style="color: #569cd6;">const</span> <span style="color: #569cd6;">uint8_t</span> *incomingData, <span style="color: #569cd6;">int</span> len) {
+  <span style="color: #dcdcaa;">memcpy</span>(&amp;myData, incomingData, <span style="color: #569cd6;">sizeof</span>(myData)); <span style="color: #6a9955;">// Lightning copy air data</span>
+  <span style="color: #c586c0;">if</span> (myData.knock == <span style="color: #b5cea8;">1</span>) {
+    isKnocking = <span style="color: #569cd6;">true</span>; <span style="color: #6a9955;">// Trigger core memory: knock confirmed!</span>
+  }
+}
+
+<span style="color: #569cd6;">void</span> <span style="color: #dcdcaa;">setup</span>(<span style="color: #569cd6;">void</span>) {
+  <span style="color: #dcdcaa;">pinMode</span>(MOTOR_PIN, OUTPUT); <span style="color: #6a9955;">// Configure motor as output</span>
+
+  USBSerial.<span style="color: #dcdcaa;">begin</span>(<span style="color: #b5cea8;">115200</span>);
+  USBSerial.<span style="color: #dcdcaa;">println</span>(<span style="color: #ce9178;">"Desktop hub screen receiver booting..."</span>);
+
+  <span style="color: #6a9955;">// Wake up and initialize high-speed graphics driver bus</span>
+  <span style="color: #c586c0;">if</span> (!gfx-&gt;<span style="color: #dcdcaa;">begin</span>()) {
+    USBSerial.<span style="color: #dcdcaa;">println</span>(<span style="color: #ce9178;">"Graphics driver bus gfx-&gt;begin() initialization failed!"</span>);
+  }
+  gfx-&gt;<span style="color: #dcdcaa;">fillScreen</span>(BLACK); <span style="color: #6a9955;">// Clear screen to black</span>
+
+  <span style="color: #6a9955;">// Turn on screen backlight</span>
+  <span style="color: #dcdcaa;">pinMode</span>(LCD_BL, OUTPUT);
+  <span style="color: #dcdcaa;">digitalWrite</span>(LCD_BL, HIGH);
+
+  <span style="color: #6a9955;">// Forcibly start microcontroller's WiFi radio frequency zone</span>
+  WiFi.<span style="color: #dcdcaa;">mode</span>(WIFI_STA);
+  
+  <span style="color: #6a9955;">// Wake up ESP-NOW core protocol</span>
+  <span style="color: #c586c0;">if</span> (<span style="color: #dcdcaa;">esp_now_init</span>() != ESP_OK) {
+    USBSerial.<span style="color: #dcdcaa;">println</span>(<span style="color: #ce9178;">"ESP-NOW protocol layer boot failed!"</span>);
+    <span style="color: #c586c0;">return</span>;
+  }
+  
+  <span style="color: #6a9955;">// Extremely important: register callback function under new rules</span>
+  <span style="color: #6a9955;">// to establish automatic air packet reception channel</span>
+  <span style="color: #dcdcaa;">esp_now_register_recv_cb</span>(OnDataRecv);
+  USBSerial.<span style="color: #dcdcaa;">println</span>(<span style="color: #ce9178;">"IoT radio all-day listening is ready..."</span>);
+
+  <span style="color: #6a9955;">// Render default static 'calm waiting' human-machine interface</span>
+  gfx-&gt;<span style="color: #dcdcaa;">fillScreen</span>(BLACK);
+  gfx-&gt;<span style="color: #dcdcaa;">setCursor</span>(<span style="color: #b5cea8;">10</span>, <span style="color: #b5cea8;">50</span>);
+  gfx-&gt;<span style="color: #dcdcaa;">setTextColor</span>(GREEN);
+  gfx-&gt;<span style="color: #dcdcaa;">setTextSize</span>(<span style="color: #b5cea8;">2</span>);
+  gfx-&gt;<span style="color: #dcdcaa;">println</span>(<span style="color: #ce9178;">"Waiting..."</span>);
+}
+
+<span style="color: #569cd6;">void</span> <span style="color: #dcdcaa;">loop</span>() {
+  <span style="color: #6a9955;">// Check 'isKnocking' brain memory status modified by radio interrupt around the clock</span>
+  <span style="color: #c586c0;">if</span> (isKnocking == <span style="color: #569cd6;">true</span>) { 
+    USBSerial.<span style="color: #dcdcaa;">println</span>(<span style="color: #ce9178;">"[Radio Signal Burst] Legal knock code intercepted! Alert response activated!"</span>);
+    
+    <span style="color: #6a9955;">// 1. Drive vibration motor at full speed with high level</span>
+    <span style="color: #dcdcaa;">digitalWrite</span>(MOTOR_PIN, HIGH);
+    
+    <span style="color: #6a9955;">// 2. Instantly render full-screen warning red and display large warning characters</span>
+    gfx-&gt;<span style="color: #dcdcaa;">fillScreen</span>(RED); 
+    gfx-&gt;<span style="color: #dcdcaa;">setCursor</span>(<span style="color: #b5cea8;">10</span>, <span style="color: #b5cea8;">50</span>);  
+    gfx-&gt;<span style="color: #dcdcaa;">setTextColor</span>(WHITE); 
+    gfx-&gt;<span style="color: #dcdcaa;">setTextSize</span>(<span style="color: #b5cea8;">3</span>);     
+    gfx-&gt;<span style="color: #dcdcaa;">println</span>(<span style="color: #ce9178;">"Somebody"</span>);
+    gfx-&gt;<span style="color: #dcdcaa;">setCursor</span>(<span style="color: #b5cea8;">10</span>, <span style="color: #b5cea8;">90</span>);
+    gfx-&gt;<span style="color: #dcdcaa;">println</span>(<span style="color: #ce9178;">"Knocking!"</span>);
+    
+    <span style="color: #6a9955;">// HCI tactile optimization: 100ms power-on with rotor physical inertia</span>
+    <span style="color: #6a9955;">// delivers a crisp, high-end modern vibration feedback</span>
+    <span style="color: #dcdcaa;">delay</span>(<span style="color: #b5cea8;">100</span>); 
+    
+    <span style="color: #6a9955;">// ==== Auto-recover to calm state ====</span>
+    <span style="color: #dcdcaa;">digitalWrite</span>(MOTOR_PIN, LOW); <span style="color: #6a9955;">// Cut motor power</span>
+    
+    gfx-&gt;<span style="color: #dcdcaa;">fillScreen</span>(BLACK); <span style="color: #6a9955;">// Restore to black</span>
+    gfx-&gt;<span style="color: #dcdcaa;">setCursor</span>(<span style="color: #b5cea8;">10</span>, <span style="color: #b5cea8;">50</span>);
+    gfx-&gt;<span style="color: #dcdcaa;">setTextColor</span>(GREEN); 
+    gfx-&gt;<span style="color: #dcdcaa;">setTextSize</span>(<span style="color: #b5cea8;">2</span>);
+    gfx-&gt;<span style="color: #dcdcaa;">println</span>(<span style="color: #ce9178;">"Waiting..."</span>);
+    
+    isKnocking = <span style="color: #569cd6;">false</span>; <span style="color: #6a9955;">// Clear core burst memory, reset system, and wait for next radio wave awakening</span>
+  }
+  
+  <span style="color: #dcdcaa;">delay</span>(<span style="color: #b5cea8;">10</span>); <span style="color: #6a9955;">// Maintain microsecond-level OS underlying idle stability</span>
+}</code></pre>
+                </div>
             </div>
         </section>
     </main>
