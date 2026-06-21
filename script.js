@@ -98,7 +98,7 @@ function initializeDefaultMembers() {
                 return initializeDefaultMembers();
             }
             
-            // Add Zhu Yihong (member 6) if not exists
+            // Add/update Zhu Yihong (member 6)
             if (!members['6']) {
                 members['6'] = {
                     name: 'Zhu Yihong',
@@ -112,6 +112,11 @@ function initializeDefaultMembers() {
                     skills: []
                 };
                 console.log('✅ Added Zhu Yihong to team members');
+            } else if (members['6'].avatarType === 'emoji') {
+                // Update old emoji avatar to image
+                members['6'].avatar = 'images/zhu-yihong-avatar.jpg';
+                members['6'].avatarType = 'image';
+                console.log('✅ Updated Zhu Yihong avatar to image');
             }
             
             // Update Chen Kangwen's profile page to external URL
