@@ -103,8 +103,8 @@ function initializeDefaultMembers() {
                 members['6'] = {
                     name: 'Zhu Yihong',
                     role: 'Team Member',
-                    avatar: '👤',
-                    avatarType: 'emoji',
+                    avatar: 'images/zhu-yihong-avatar.jpg',
+                    avatarType: 'image',
                     bio: '',
                     hobbies: [],
                     email: '',
@@ -222,8 +222,8 @@ function initializeDefaultMembers() {
         '6': {
             name: 'Zhu Yihong',
             role: 'Team Member',
-            avatar: '👤',
-            avatarType: 'emoji',
+            avatar: 'images/zhu-yihong-avatar.jpg',
+            avatarType: 'image',
             bio: '',
             hobbies: [],
             email: '',
