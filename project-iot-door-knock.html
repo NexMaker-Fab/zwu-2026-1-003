@@ -188,6 +188,81 @@
                 <p style="font-family: 'Futura Hv BT', Futura, sans-serif; font-size: 20px; line-height: 1.8; margin-bottom: 15px;">
                     This program is deployed on the ESP32-S3-Zero bare board outside the door. To address the GND pin occupation crisis caused by independent battery power supply, the code innovatively introduces "software-defined pin" technology, changing GPIO 11 to a ground line, and incorporates an efficient 300-millisecond anti-bounce filter logic.
                 </p>
+                
+                <div style="margin-top: 80px;"></div>
+                
+                <div style="background-color: #1e1e1e; border-radius: 8px; padding: 20px; margin-bottom: 20px; overflow-x: auto;">
+                    <pre style="font-family: 'Courier New', Consolas, Monaco, monospace; font-size: 14px; line-height: 1.6; color: #d4d4d4; margin: 0; white-space: pre-wrap; word-wrap: break-word;"><code><span style="color: #c586c0;">#include</span> <span style="color: #ce9178;">&lt;esp_now.h&gt;</span>
+<span style="color: #c586c0;">#include</span> <span style="color: #ce9178;">&lt;WiFi.h&gt;</span>
+
+<span style="color: #6a9955;">// Target MAC address obtained in the previous step (replace with actual address)</span>
+<span style="color: #569cd6;">uint8_t</span> broadcastAddress[] = {<span style="color: #b5cea8;">0x10</span>, <span style="color: #b5cea8;">0x20</span>, <span style="color: #b5cea8;">0xBA</span>, <span style="color: #b5cea8;">0x46</span>, <span style="color: #b5cea8;">0x78</span>, <span style="color: #b5cea8;">0xAC</span>};
+
+<span style="color: #6a9955;">// Core physical pin mapping</span>
+<span style="color: #569cd6;">const</span> <span style="color: #569cd6;">int</span> SENSOR_PIN = <span style="color: #b5cea8;">10</span>;   <span style="color: #6a9955;">// Vibration sensor DO data line connected to pin 10</span>
+<span style="color: #569cd6;">const</span> <span style="color: #569cd6;">int</span> FAKE_GND_PIN = <span style="color: #b5cea8;">11</span>; <span style="color: #6a9955;">// Sensor GND negative pole connected to pin 11</span>
+
+<span style="color: #6a9955;">// Define the wireless transmission "message data structure" (must strictly match the receiver)</span>
+<span style="color: #569cd6;">typedef</span> <span style="color: #569cd6;">struct</span> <span style="color: #4ec9b0;">struct_message</span> {
+  <span style="color: #569cd6;">int</span> knock;
+} <span style="color: #4ec9b0;">struct_message</span>;
+<span style="color: #4ec9b0;">struct_message</span> myData;
+
+<span style="color: #4ec9b0;">esp_now_peer_info_t</span> peerInfo;
+
+<span style="color: #569cd6;">void</span> <span style="color: #dcdcaa;">setup</span>() {
+  Serial.<span style="color: #dcdcaa;">begin</span>(<span style="color: #b5cea8;">115200</span>);
+
+  <span style="color: #6a9955;">// Software-defined ground core implementation: forcibly create a GND on the circuit board</span>
+  <span style="color: #dcdcaa;">pinMode</span>(FAKE_GND_PIN, OUTPUT);     <span style="color: #6a9955;">// Configure pin 11 as output mode</span>
+  <span style="color: #dcdcaa;">digitalWrite</span>(FAKE_GND_PIN, LOW);   <span style="color: #6a9955;">// Lock the level at 0V (equivalent to physical ground)</span>
+
+  <span style="color: #6a9955;">// Configure signal pin as input mode</span>
+  <span style="color: #dcdcaa;">pinMode</span>(SENSOR_PIN, INPUT);
+
+  <span style="color: #6a9955;">// Wake up radio frequency hardware and switch to STA mode</span>
+  WiFi.<span style="color: #dcdcaa;">mode</span>(WIFI_STA);
+
+  <span style="color: #6a9955;">// Initialize ESP-NOW wireless protocol stack</span>
+  <span style="color: #c586c0;">if</span> (<span style="color: #dcdcaa;">esp_now_init</span>() != ESP_OK) {
+    Serial.<span style="color: #dcdcaa;">println</span>(<span style="color: #ce9178;">"ESP-NOW protocol stack initialization failed!"</span>);
+    <span style="color: #c586c0;">return</span>;
+  }
+
+  <span style="color: #6a9955;">// Configure peer node information</span>
+  <span style="color: #dcdcaa;">memcpy</span>(peerInfo.peer_addr, broadcastAddress, <span style="color: #b5cea8;">6</span>);
+  peerInfo.channel = <span style="color: #b5cea8;">0</span>;  
+  peerInfo.encrypt = <span style="color: #569cd6;">false</span>;
+  <span style="color: #c586c0;">if</span> (<span style="color: #dcdcaa;">esp_now_add_peer</span>(&amp;peerInfo) != ESP_OK){
+    Serial.<span style="color: #dcdcaa;">println</span>(<span style="color: #ce9178;">"Pairing with desktop receiver failed"</span>);
+    <span style="color: #c586c0;">return</span>;
+  }
+  
+  Serial.<span style="color: #dcdcaa;">println</span>(<span style="color: #ce9178;">"Door wireless sentinel node is ready, monitoring door panel vibrations..."</span>);
+}
+
+<span style="color: #569cd6;">void</span> <span style="color: #dcdcaa;">loop</span>() {
+  <span style="color: #6a9955;">// Real-time scan of pin 10. When vibration occurs, the sensor injects HIGH level into this pin</span>
+  <span style="color: #c586c0;">if</span> (<span style="color: #dcdcaa;">digitalRead</span>(SENSOR_PIN) == HIGH) {
+    
+    Serial.<span style="color: #dcdcaa;">println</span>(<span style="color: #ce9178;">"[Hardware Trigger] Knock detected! Compiling radio wave..."</span>);
+    
+    myData.knock = <span style="color: #b5cea8;">1</span>; <span style="color: #6a9955;">// Write package data</span>
+    
+    <span style="color: #6a9955;">// Call the underlying RF chip to transmit data at millisecond-level precision</span>
+    <span style="color: #4ec9b0;">esp_err_t</span> result = <span style="color: #dcdcaa;">esp_now_send</span>(broadcastAddress, (<span style="color: #569cd6;">uint8_t</span> *) &amp;myData, <span style="color: #569cd6;">sizeof</span>(myData));
+    
+    <span style="color: #c586c0;">if</span> (result == ESP_OK) {
+      Serial.<span style="color: #dcdcaa;">println</span>(<span style="color: #ce9178;">"-> Air transmission successful!"</span>);
+    } <span style="color: #c586c0;">else</span> {
+      Serial.<span style="color: #dcdcaa;">println</span>(<span style="color: #ce9178;">"-> Transmission failed, target receiver is offline."</span>);
+    }
+    
+    <span style="color: #6a9955;">// Engineering anti-bounce: 300ms brief sleep to filter door rebound aftershocks</span>
+    <span style="color: #dcdcaa;">delay</span>(<span style="color: #b5cea8;">300</span>);
+  }
+}</code></pre>
+                </div>
             </div>
         </section>
     </main>
