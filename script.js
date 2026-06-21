@@ -149,7 +149,7 @@ function initializeDefaultMembers() {
                 console.log('✅ Updated Wu Changhong profile page to external website');
             }
             
-            // Add Liu Xiehan (member 7) if not exists
+            // Add/update Liu Xiehan (member 7)
             if (!members['7']) {
                 members['7'] = {
                     name: 'Liu Xiehan',
@@ -164,10 +164,10 @@ function initializeDefaultMembers() {
                     profilePage: 'liu-xiehan.html'
                 };
                 console.log('✅ Added Liu Xiehan to team members');
-            } else if (!members['7'].profilePage) {
-                // Add profile page if missing
+            } else {
+                // Always ensure profile page is correct
                 members['7'].profilePage = 'liu-xiehan.html';
-                console.log('✅ Added Liu Xiehan profile page');
+                console.log('✅ Updated Liu Xiehan profile page');
             }
             
             // Save updated members back to localStorage
