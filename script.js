@@ -1358,16 +1358,13 @@ function loadProjects() {
     const projectsGrid = document.getElementById('projectsGrid');
     if (!projectsGrid) return;
     
+    // Save static cards HTML before any modification
+    const staticCards = projectsGrid.innerHTML;
+    
     const projects = JSON.parse(localStorage.getItem('projects') || '[]');
     
     if (projects.length === 0) {
-        projectsGrid.innerHTML = `
-            <div style="text-align: center; padding: 60px 20px; color: var(--text-secondary); grid-column: 1/-1;">
-                <div style="font-size: 64px; margin-bottom: 20px;">🚀</div>
-                <h3 style="font-size: 20px; font-weight: 600; margin-bottom: 8px; color: var(--text-primary);">No projects yet</h3>
-                <p style="font-size: 15px;">Projects will appear here when added</p>
-            </div>
-        `;
+        // Keep static cards, don't overwrite
         return;
     }
     
@@ -1404,7 +1401,8 @@ function loadProjects() {
         `;
     });
     
-    projectsGrid.innerHTML = html;
+    // Append dynamic projects after static cards
+    projectsGrid.innerHTML = staticCards + html;
 }
 
 // ==================== Page Initialization ====================
