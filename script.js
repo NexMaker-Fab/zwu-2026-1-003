@@ -1943,12 +1943,12 @@ function updateHomepageStats() {
     const projects = JSON.parse(localStorage.getItem('projects') || '[]');
     
     // Count active assignments (not completed)
-    // Always count Exercise 1 (exercise1-edit.html) and Exercise 4 (exercise4-material-tool.html) as active assignments
+    // Always count Exercise 1, Exercise 4, and Exercise 6 as active assignments
     let activeAssignments = assignments.filter(a => a.status !== 'completed').length;
     
-    // If no assignments in localStorage, count both Exercise 1 and Exercise 4 as active
+    // If no assignments in localStorage, count all 3 exercises as active
     if (activeAssignments === 0) {
-        activeAssignments = 2; // exercise1-edit.html and exercise4-material-tool.html both exist and are active
+        activeAssignments = 3; // exercise1-edit.html, exercise4-material-tool.html, and exercise6-iot-interaction.html
     }
     
     const statMembers = document.getElementById('statMembers');
