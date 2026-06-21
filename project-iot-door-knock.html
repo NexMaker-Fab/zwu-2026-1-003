@@ -148,6 +148,28 @@
                 <p style="font-family: 'Futura Hv BT', Futura, sans-serif; font-size: 20px; line-height: 1.8; margin-bottom: 15px;">
                     Before establishing ESP-NOW wireless communication, the door-side transmitter is like someone sending a package — it must first know the exact house number of the desk-side receiver (the package collection point), which is the MAC address. To this end, the team first connects the screen-equipped main control board to a computer and flashes the following short code for hardware sniffing:
                 </p>
+                
+                <div style="margin-top: 80px;"></div>
+                
+                <div style="background-color: #1e1e1e; border-radius: 8px; padding: 20px; margin-bottom: 20px; overflow-x: auto;">
+                    <pre style="font-family: 'Courier New', Consolas, Monaco, monospace; font-size: 14px; line-height: 1.6; color: #d4d4d4; margin: 0; white-space: pre-wrap; word-wrap: break-word;"><code><span style="color: #c586c0;">#include</span> <span style="color: #ce9178;">&lt;WiFi.h&gt;</span>
+
+<span style="color: #569cd6;">void</span> <span style="color: #dcdcaa;">setup</span>(){<br>  Serial.<span style="color: #dcdcaa;">begin</span>(<span style="color: #b5cea8;">115200</span>);
+  
+  <span style="color: #6a9955;">// Set WiFi chip to Station mode (STA), activating its physical network card</span>
+  WiFi.<span style="color: #dcdcaa;">mode</span>(WIFI_STA);
+  
+  Serial.<span style="color: #dcdcaa;">println</span>(<span style="color: #ce9178;">"\n-----------------------------------"</span>);
+  Serial.<span style="color: #dcdcaa;">println</span>(<span style="color: #ce9178;">"Reading the device's exclusive physical NIC address..."</span>);
+  Serial.<span style="color: #dcdcaa;">print</span>(<span style="color: #ce9178;">"Local MAC address: "</span>);
+  <span style="color: #6a9955;">// Read and print the 6-digit hexadecimal MAC address</span>
+  Serial.<span style="color: #dcdcaa;">println</span>(WiFi.<span style="color: #dcdcaa;">macAddress</span>());
+  Serial.<span style="color: #dcdcaa;">println</span>(<span style="color: #ce9178;">"-----------------------------------\n"</span>);
+}
+ 
+<span style="color: #569cd6;">void</span> <span style="color: #dcdcaa;">loop</span>(){<br>  <span style="color: #6a9955;">// No further tasks needed after successful acquisition</span>
+}</code></pre>
+                </div>
             </div>
         </section>
     </main>
