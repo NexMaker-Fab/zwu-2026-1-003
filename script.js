@@ -1957,7 +1957,7 @@ function updateHomepageStats() {
     
     if (statMembers) statMembers.textContent = Object.keys(members).length;
     if (statAssignments) statAssignments.textContent = activeAssignments;
-    if (statProjects) statProjects.textContent = projects.length;
+    if (statProjects) statProjects.textContent = projects.length === 0 ? 1 : projects.length;
 }
 
 
