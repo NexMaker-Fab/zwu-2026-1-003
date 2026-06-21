@@ -449,6 +449,18 @@
                 <h3 style="font-family: 'Futura Hv BT', Futura, sans-serif; font-size: 40px; background-color: #00008B; padding: 10px 15px; display: inline-block; margin-bottom: 20px; color: white;">
                     3. Breakthrough: "Software-Defined Ground" Innovation Overcoming Physical Power Supply Pin Bottleneck (Architecture Hacker Technique)
                 </h3>
+                
+                <div style="margin-top: 80px;"></div>
+                
+                <p style="font-family: 'Futura Hv BT', Futura, sans-serif; font-size: 20px; line-height: 1.8; margin-bottom: 15px;">
+                    <strong>Facing Dilemma:</strong> When the door-side transmitter was disconnected from the computer and switched to independent power supply from a 3-cell AAA battery pack, the battery pack's negative terminal (black wire) had to forcibly occupy the only physical GND pin on the development board. This left the vibration sensor's negative terminal without a physical grounding port.
+                </p>
+                
+                <div style="margin-top: 80px;"></div>
+                
+                <p style="font-family: 'Futura Hv BT', Futura, sans-serif; font-size: 20px; line-height: 1.8; margin-bottom: 15px;">
+                    <strong>Technical Solution:</strong> The team abandoned the crude "multi-wire stripping and twisting" tape-wrapping approach (which easily leads to poor contact and loosening during door opening/closing vibrations). Leveraging the microcontroller pin's freely reconfigurable Software Defined characteristic, the idle GPIO 11 pin was configured as OUTPUT (output mode) in code, and through software commands, firmly written as LOW (low level, i.e., 0V absolute potential). This single line of code successfully conjured a highly reliable virtual ground pin out of thin air on the circuit board. The sensor GND can be directly plugged into it for stable operation, not only achieving absolute cleanliness in appearance but also fundamentally eliminating the safety hazard of poor contact.
+                </p>
             </div>
         </section>
     </main>
