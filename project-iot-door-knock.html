@@ -431,6 +431,18 @@
                 <h3 style="font-family: 'Futura Hv BT', Futura, sans-serif; font-size: 40px; background-color: #00008B; padding: 10px 15px; display: inline-block; margin-bottom: 20px; color: white;">
                     2. Sensor Reverse-Connection Burnout and "Zombie Chip" Physical Fault Diagnosis (Hardware Trauma Troubleshooting)
                 </h3>
+                
+                <div style="margin-top: 80px;"></div>
+                
+                <p style="font-family: 'Futura Hv BT', Futura, sans-serif; font-size: 20px; line-height: 1.8; margin-bottom: 15px;">
+                    <strong>Fault Scene:</strong> Due to the extremely compact hardware board and dense pin layout, during one physical assembly, the SW-420 vibration sensor's VCC and GND were accidentally reversed. After power-on, the sensor chip generated intense heat. After correcting the wiring, the module's signal indicator light remained locked in a permanently-on state.
+                </p>
+                
+                <div style="margin-top: 80px;"></div>
+                
+                <p style="font-family: 'Futura Hv BT', Futura, sans-serif; font-size: 20px; line-height: 1.8; margin-bottom: 15px;">
+                    <strong>Scientific Diagnosis:</strong> The team conducted a rigorous "independent isolation test method," completely disconnecting the sensor's signal line (DO) to place it in a pure power-on state. It was discovered that the core processing chip on the back of the module (LM393 comparator) still became severely hot within about ten seconds, and the signal light remained continuously on. The diagnostic conclusion was: the reversed high-voltage current instantly caused irreversible "thermal penetration damage" to the chip's interior, with the internal logic permanently short-circuited due to silicon wafer melting and adhesion. Although its logic output terminal still retained weak level transition functionality (commonly known as "zombie chip" state, still capable of triggering the motor), it had become a serious power leakage black hole that would aggressively drain battery life and posed a risk of back-current damage to the main development board. The team decisively scrapped and replaced it, and sealed the GPIO 2 pin at the accident site, successfully avoiding the major loss of scrapping the entire main board.
+                </p>
             </div>
         </section>
     </main>
