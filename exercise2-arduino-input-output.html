@@ -198,6 +198,26 @@
    <span style="color: #dcdcaa;">delay</span>(<span style="color: #b5cea8;">200</span>); 
 }
 }</code></pre>
+                
+                <div style="margin-top: 80px;"></div>
+                
+                <p style="font-family: 'Futura Hv BT', Futura, sans-serif; font-size: 20px; line-height: 1.8; margin-bottom: 15px;">
+                    <strong>Function Analysis:</strong> This subroutine realizes synchronous flashing of all 8-channel LEDs with a double-layer loop structure:
+                </p>
+                
+                <ol style="font-family: 'Futura Hv BT', Futura, sans-serif; font-size: 20px; line-height: 1.8; margin-left: 20px; margin-bottom: 15px; color: white;">
+                    <li>The outer loop runs when k=0~2, executing 3 complete flashing actions;</li>
+                    <li>The first inner loop traverses pins 1~8 to output high level uniformly, lighting up all 8 LEDs for 200ms;</li>
+                    <li>The second inner loop traverses pins 1~8 to output low level uniformly, turning off all 8 LEDs for 200ms;</li>
+                </ol>
+                
+                <p style="font-family: 'Futura Hv BT', Futura, sans-serif; font-size: 20px; line-height: 1.8; margin-bottom: 15px;">
+                    It finally realizes the synchronous flashing effect of "full on - full off". A single run of this subroutine completes 3 full flashes.
+                </p>
+                
+                <p style="font-family: 'Futura Hv BT', Futura, sans-serif; font-size: 20px; line-height: 1.8; margin-bottom: 15px; font-style: italic; color: #888;">
+                    【flash Subroutine Effect Diagram: Insert the overall synchronous flashing effect diagram of LEDs here】
+                </p>
             </div>
         </section>
     </main>
