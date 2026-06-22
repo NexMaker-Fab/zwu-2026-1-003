@@ -47,224 +47,96 @@
         <section class="content-section">
             <div class="container">
                 <h2 style="font-family: 'Futura Hv BT', Futura, sans-serif; font-size: 40px; margin-bottom: 20px; color: white;">
-                    Analysis of IoT Operation Process and Practical Application Case
+                    Daily Life IoT Case: Smart Robot Vacuum Cleaner (Cloud-Edge-End Architecture)
                 </h2>
-                
+
                 <div style="margin-top: 80px;"></div>
-                
+
                 <h2 style="font-family: 'Futura Hv BT', Futura, sans-serif; font-size: 40px; background-color: #00008B; padding: 10px 15px; display: inline-block; margin-bottom: 20px; color: white;">
-                    1. Analysis of IoT Operation Process Based on the Diagram
+                    I. Definition of Each Layer
                 </h2>
-                
+
                 <div style="margin-top: 80px;"></div>
-                
-                <p style="font-family: 'Futura Hv BT', Futura, sans-serif; font-size: 20px; line-height: 1.8; margin-bottom: 15px;">
-                    This diagram illustrates a typical four-layer IoT architecture, which also serves as the underlying supporting framework for Industry 4.0. The complete top-down operation logic is as follows:
-                </p>
-                
+
+                <ul style="font-family: 'Futura Hv BT', Futura, sans-serif; font-size: 20px; line-height: 1.8; margin-left: 40px; margin-bottom: 15px; color: white;">
+                    <li><strong>End (Terminal Device):</strong> Robot vacuum cleaner body (LiDAR, dust sensor, motor, WiFi module, collision sensor)</li>
+                    <li><strong>Edge (Edge Node):</strong> Home WiFi router (local edge gateway, processes data nearby, reduces cloud latency)</li>
+                    <li><strong>Cloud (Cloud Platform):</strong> Brand IoT cloud server (data storage, AI path planning, remote command dispatch, device management)</li>
+                </ul>
+
                 <div style="margin-top: 80px;"></div>
-                
-                <img src="images/iot-architecture-diagram.png" alt="IoT Four-Layer Architecture Diagram" style="max-width: 100%; height: auto; display: block; margin: 0 auto;">
-                
-                <div style="margin-top: 80px;"></div>
-                
+
                 <h2 style="font-family: 'Futura Hv BT', Futura, sans-serif; font-size: 40px; background-color: #00008B; padding: 10px 15px; display: inline-block; margin-bottom: 20px; color: white;">
-                    1.1 Bottom Layer: Physical World & End Users (Things World + Customers)
+                    II. Complete Operation Process (Remote Start Cleaning via Mobile)
                 </h2>
-                
+
                 <div style="margin-top: 80px;"></div>
-                
-                <p style="font-family: 'Futura Hv BT', Futura, sans-serif; font-size: 20px; line-height: 1.8; margin-bottom: 15px;">
-                    This is the data source of the entire IoT system, covering physical devices, daily scenarios, ordinary users and real environments.<br><br>
-                    •	Input: Industrial know-how (product operation logic, residents' living demands, equipment maintenance experience), which guides sensor layout and data collection standards.<br>
-                    •	Output: Physical signals such as temperature, human motion, power consumption and user operations, which are transmitted upward to the hardware sensing layer.
-                </p>
-                
+
+                <ol style="font-family: 'Futura Hv BT', Futura, sans-serif; font-size: 20px; line-height: 1.8; margin-left: 40px; margin-bottom: 15px; color: white;">
+                    <li>User opens Mi Home / ECOVACS APP and issues a "Full House Cleaning" command</li>
+                    <li>The command is uploaded to the cloud via mobile data / WiFi</li>
+                    <li>The cloud verifies device binding permissions and forwards the control signal to the home edge gateway (router)</li>
+                    <li>The edge gateway locally forwards the signal to the robot vacuum terminal device</li>
+                    <li>Terminal startup: LiDAR scans the room, dust sensor detects dirty areas, drive motor starts cleaning</li>
+                    <li>Robot collects in real-time: position, dust level, battery, fault status, and sends data to the edge gateway first</li>
+                    <li>Edge layer local pre-processing: filters redundant useless data, only uploads key information to the cloud, reducing traffic</li>
+                    <li>Cloud stores cleaning records, AI optimizes cleaning routes, syncs real-time status back to mobile APP</li>
+                    <li>After cleaning is complete, terminal auto-returns to charging dock, status is synced through edge and cloud to mobile, pushing a cleaning completion notification</li>
+                </ol>
+
                 <div style="margin-top: 80px;"></div>
-                
+
                 <h2 style="font-family: 'Futura Hv BT', Futura, sans-serif; font-size: 40px; background-color: #00008B; padding: 10px 15px; display: inline-block; margin-bottom: 20px; color: white;">
-                    1.2 Hardware Sensing Layer: Sensors + Controllers
+                    III. Cloud-Edge-End Text Flowchart
                 </h2>
-                
+
                 <div style="margin-top: 80px;"></div>
-                
-                <p style="font-family: 'Futura Hv BT', Futura, sans-serif; font-size: 20px; line-height: 1.8; margin-bottom: 15px;">
-                    This layer acts as the "sense organs and limbs" of IoT.<br>
-                    •	Sensors collect raw physical data including temperature & humidity, human body induction, power consumption, button operations and door/window status.<br>
-                    •	Controllers conduct local preliminary judgment and data filtering to eliminate invalid information.<br>
-                    •	Two-way interaction: It receives control commands from the cloud to manipulate physical devices, and uploads standardized data to communication modules.
-                </p>
-                
+
+                <h3 style="font-family: 'Futura Hv BT', Futura, sans-serif; font-size: 30px; margin-bottom: 20px; color: white;">
+                    Bidirectional Complete Architecture Diagram
+                </h3>
+
+                <div style="margin-top: 40px;"></div>
+
+                <pre style="font-family: 'Courier New', monospace; font-size: 18px; line-height: 1.6; color: white; background-color: #1a1a1a; padding: 20px; border-radius: 8px; overflow-x: auto;">
+┌─────────────────────────────────────┐
+│         User: Mobile APP            │
+└──────────────┬──────────────────────┘
+               ↓↑ 4G/WiFi Network
+┌─────────────────────────────────────┐
+│              Cloud                  │
+│         IoT Cloud Platform          │
+│  Permission Verification / Data     │
+│  Storage / AI Computing / Remote    │
+│  Management                         │
+└──────────────┬──────────────────────┘
+               ↓↑
+┌─────────────────────────────────────┐
+│              Edge                   │
+│    Home WiFi Gateway (Edge)         │
+│  Local Forwarding, Data Filtering,  │
+│  Low-Latency Local Control          │
+└──────────────┬──────────────────────┘
+               ↓↑
+┌─────────────────────────────────────┐
+│              End                    │
+│    Smart Robot Vacuum Terminal      │
+│  Various Sensors, Drive Motors,     │
+│  Raw Data Collection                │
+└─────────────────────────────────────┘</pre>
+
                 <div style="margin-top: 80px;"></div>
-                
-                <img src="images/dht11-sensor.png" alt="DHT11 Temperature and Humidity Sensor" style="max-width: 100%; height: auto; display: block; margin: 0 auto;">
-                
-                <div style="margin-top: 80px;"></div>
-                
-                <img src="images/pir-motion-sensor.png" alt="PIR Motion Sensor" style="max-width: 100%; height: auto; display: block; margin: 0 auto;">
-                
-                <div style="margin-top: 80px;"></div>
-                
-                <h2 style="font-family: 'Futura Hv BT', Futura, sans-serif; font-size: 40px; background-color: #00008B; padding: 10px 15px; display: inline-block; margin-bottom: 20px; color: white;">
-                    1.3 Transmission Layer: Communication Module
-                </h2>
-                
-                <div style="margin-top: 80px;"></div>
-                
-                <p style="font-family: 'Futura Hv BT', Futura, sans-serif; font-size: 20px; line-height: 1.8; margin-bottom: 15px;">
-                    This is the data transmission channel of IoT, enabling bidirectional data exchange:<br>
-                    •	Uplink: Data collected by sensors is uploaded to the cloud via Wi-Fi, Bluetooth, 4G or 5G.<br>
-                    •	Downlink: Control commands (power on/off, mode adjustment, timing setting, etc.) issued by the cloud are sent back to controllers to realize remote control.<br>
-                    It works as the intermediate hub connecting end hardware and cloud software.
-                </p>
-                
-                <div style="margin-top: 80px;"></div>
-                
-                <img src="images/iot-communication-module.png" alt="IoT Communication Module" style="max-width: 100%; height: auto; display: block; margin: 0 auto;">
-                
-                <div style="margin-top: 80px;"></div>
-                
-                <h2 style="font-family: 'Futura Hv BT', Futura, sans-serif; font-size: 40px; background-color: #00008B; padding: 10px 15px; display: inline-block; margin-bottom: 20px; color: white;">
-                    1.4 Top Layer: Cloud + Social Networking (Software Applications)
-                </h2>
-                
-                <div style="margin-top: 80px;"></div>
-                
-                <p style="font-family: 'Futura Hv BT', Futura, sans-serif; font-size: 20px; line-height: 1.8; margin-bottom: 15px;">
-                    Regarded as the "brain" of IoT, this layer delivers core value including convenience and efficiency.<br>
-                    •	The cloud stores massive equipment operation data, and leverages big data and AI algorithms to analyze user habits.<br>
-                    •	Supporting software: smart home mobile apps, equipment operation & maintenance background systems, community intelligent linkage platforms.<br>
-                    •	Value closed loop: Data analysis results optimize automatic equipment logic and residential experience, and cut household energy consumption, thus improving overall life efficiency.<br>
-                    •	Complete commercial closed loop: Household appliance industry know-how empowers smart hardware, while upper-layer software services upgrade user experience. The integration of hardware and software forms mature consumer IoT commercial solutions.
-                </p>
-                
-                <div style="margin-top: 80px;"></div>
-                
-                <img src="images/iot-cloud-dashboard.png" alt="IoT Cloud Dashboard" style="max-width: 100%; height: auto; display: block; margin: 0 auto;">
-                
-                <div style="margin-top: 80px;"></div>
-                
-                <img src="images/smart-home-app.png" alt="Smart Home App Interface" style="max-width: 100%; height: auto; display: block; margin: 0 auto;">
-                
-                <div style="margin-top: 80px;"></div>
-                
-                <h2 style="font-family: 'Futura Hv BT', Futura, sans-serif; font-size: 40px; margin-bottom: 20px; color: white;">
-                    Overall Closed-Loop Logic
-                </h2>
-                
-                <div style="margin-top: 80px;"></div>
-                
-                <p style="font-family: 'Futura Hv BT', Futura, sans-serif; font-size: 20px; line-height: 1.8; margin-bottom: 15px;">
-                    Household industry know-how → Household physical objects & users → Sensors collect environmental and device data → Communication modules transmit data bidirectionally → Cloud & mobile apps analyze user routines and generate optimization strategies → Control commands are sent to adjust hardware automatically → Continuous improvement of household comfort and energy-saving efficiency, forming an iterative cycle.
-                </p>
-                
-                <div style="margin-top: 80px;"></div>
-                
-                <h2 style="font-family: 'Futura Hv BT', Futura, sans-serif; font-size: 40px; background-color: #00008B; padding: 10px 15px; display: inline-block; margin-bottom: 20px; color: white;">
-                    2. Daily Life Case: IoT Smart Air Conditioning System
-                </h2>
-                
-                <div style="margin-top: 80px;"></div>
-                
-                <p style="font-family: 'Futura Hv BT', Futura, sans-serif; font-size: 20px; line-height: 1.8; margin-bottom: 15px;">
-                    This product is widely accessible to every household and fully matches the four-layer architecture in the diagram, with layer-by-layer correspondence as below:
-                </p>
-                
-                <div style="margin-top: 80px;"></div>
-                
-                <img src="images/iot-solution-architecture.png" alt="IoT Solution Architecture" style="max-width: 100%; height: auto; display: block; margin: 0 auto;">
-                
-                <div style="margin-top: 80px;"></div>
-                
-                <h2 style="font-family: 'Futura Hv BT', Futura, sans-serif; font-size: 40px; background-color: #00008B; padding: 10px 15px; display: inline-block; margin-bottom: 20px; color: white;">
-                    2.1 Bottom Layer: Physical World & End Users
-                </h2>
-                
-                <div style="margin-top: 80px;"></div>
-                
-                <p style="font-family: 'Futura Hv BT', Futura, sans-serif; font-size: 20px; line-height: 1.8; margin-bottom: 15px;">
-                    •	Physical objects: Air conditioners, rooms, doors, windows, human bodies and outdoor environments.<br>
-                    •	Know-how: Heating & cooling temperature control principles, human comfort temperature standards, energy-saving logic of home appliances, and user daily routines.<br>
-                    •	Core user demands: Avoid frequent manual temperature adjustment, automatic temperature adaptation, power saving, remote power on/off and temperature regulation.
-                </p>
-                
-                <div style="margin-top: 80px;"></div>
-                
-                <img src="images/smart-ac-bottom-layer.png" alt="Smart AC Bottom Layer" style="max-width: 100%; height: auto; display: block; margin: 0 auto;">
-                
-                <div style="margin-top: 80px;"></div>
-                
-                <h2 style="font-family: 'Futura Hv BT', Futura, sans-serif; font-size: 40px; background-color: #00008B; padding: 10px 15px; display: inline-block; margin-bottom: 20px; color: white;">
-                    2.2 Sensing Layer: Sensors + Controllers
-                </h2>
-                
-                <div style="margin-top: 80px;"></div>
-                
-                <p style="font-family: 'Futura Hv BT', Futura, sans-serif; font-size: 20px; line-height: 1.8; margin-bottom: 15px;">
-                    Air conditioners are equipped with multiple built-in sensors: temperature & humidity sensors, human infrared sensors, door/window contact sensors, together with the mainboard controller inside the unit.<br>
-                    •	Data collection: Real-time indoor temperature & humidity, room occupancy, door/window open/closed status, and current power consumption of the air conditioner.<br>
-                    •	Local autonomous control: The controller automatically reduces cooling power when sensors detect no people indoors; it sends local reminders if temperature surges due to open doors or windows.
-                </p>
-                
-                <div style="margin-top: 80px;"></div>
-                
-                <img src="images/smart-ac-sensors.png" alt="Smart AC Sensors" style="max-width: 100%; height: auto; display: block; margin: 0 auto;">
-                
-                <div style="margin-top: 80px;"></div>
-                
-                <h2 style="font-family: 'Futura Hv BT', Futura, sans-serif; font-size: 40px; background-color: #00008B; padding: 10px 15px; display: inline-block; margin-bottom: 20px; color: white;">
-                    2.3 Transmission Layer: Wi-Fi Communication Module
-                </h2>
-                
-                <div style="margin-top: 80px;"></div>
-                
-                <p style="font-family: 'Futura Hv BT', Futura, sans-serif; font-size: 20px; line-height: 1.8; margin-bottom: 15px;">
-                    The built-in Wi-Fi module acts as the transmission channel:<br>
-                    •	Uplink: Real-time data of indoor temperature, humidity, power consumption and human presence is uploaded to the brand cloud every 30 seconds.<br>
-                    •	Downlink: Commands sent from mobile apps (power switch, temperature adjustment, timing, sleep mode) are delivered to the air conditioner controller via the module for execution.
-                </p>
-                
-                <div style="margin-top: 80px;"></div>
-                
-                <h2 style="font-family: 'Futura Hv BT', Futura, sans-serif; font-size: 40px; background-color: #00008B; padding: 10px 15px; display: inline-block; margin-bottom: 20px; color: white;">
-                    2.4 Cloud & Software Application Layer: Home Appliance Cloud Platform + Smart Home Mobile App
-                </h2>
-                
-                <div style="margin-top: 80px;"></div>
-                
-                <p style="font-family: 'Futura Hv BT', Futura, sans-serif; font-size: 20px; line-height: 1.8; margin-bottom: 15px;">
-                    1. The cloud stores long-term data of daily air conditioner operation, indoor temperature and power consumption across all rooms.<br>
-                    2. AI algorithms analyze user schedules: for example, identifying users' routine of sleeping at 23:00 and leaving home at 7:00, then generating personalized temperature control plans automatically.<br>
-                    3. Supporting software: Mobile smart home apps and manufacturer's equipment operation & maintenance backend.<br>
-                    4. Practical efficiency gains:<br>
-                    •	No manual operation required; the air conditioner adapts to human presence automatically, greatly boosting residential comfort.<br>
-                    •	Power is adjusted intelligently based on human detection and door/window status, cutting monthly air conditioning power consumption by roughly 25%.<br>
-                    •	Users can remotely turn off the unit when going out and pre-cool the room before returning, saving waiting time.
-                </p>
-                
-                <div style="margin-top: 80px;"></div>
-                
-                <img src="images/smart-home-app-interface.png" alt="Smart Home App Interface" style="max-width: 100%; height: auto; display: block; margin: 0 auto;">
-                
-                <div style="margin-top: 80px;"></div>
-                
-                <img src="images/iot-cloud-platform.png" alt="IoT Cloud Platform" style="max-width: 100%; height: auto; display: block; margin: 0 auto;">
-                
-                <div style="margin-top: 80px;"></div>
-                
-                <h2 style="font-family: 'Futura Hv BT', Futura, sans-serif; font-size: 40px; margin-bottom: 20px; color: white;">
-                    Case Closed-Loop Matching the Diagram
-                </h2>
-                
-                <div style="margin-top: 80px;"></div>
-                
-                <p style="font-family: 'Futura Hv BT', Futura, sans-serif; font-size: 20px; line-height: 1.8; margin-bottom: 15px;">
-                    HVAC & home appliance industry know-how sets data collection rules for sensors → Household rooms and air conditioners collect environmental and human data → Wi-Fi modules transmit data bidirectionally → Cloud and mobile apps analyze user schedules to generate temperature control strategies → Commands are sent to automatically adjust air conditioner operation, continuously optimizing residential comfort and energy efficiency, forming a mature consumer IoT commercial product.
-                </p>
-                
-                <div style="margin-top: 80px;"></div>
-                
-                <img src="images/case-closed-loop-diagram.png" alt="Case Closed-Loop Diagram" style="max-width: 100%; height: auto; display: block; margin: 0 auto;">
+
+                <h3 style="font-family: 'Futura Hv BT', Futura, sans-serif; font-size: 30px; margin-bottom: 20px; color: white;">
+                    Single-Line Event Flow (Remote Cleaning Complete Chain)
+                </h3>
+
+                <div style="margin-top: 40px;"></div>
+
+                <pre style="font-family: 'Courier New', monospace; font-size: 18px; line-height: 1.6; color: white; background-color: #1a1a1a; padding: 20px; border-radius: 8px; overflow-x: auto;">
+Mobile issues cleaning command → Cloud receives & verifies → Edge gateway forwards command → Terminal robot starts cleaning
+
+Terminal collects sensor data → Edge gateway streamlines processing → Cloud stores & analyzes → Cleaning status synced back to mobile APP</pre>
             </div>
         </section>
     </main>
