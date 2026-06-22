@@ -157,6 +157,21 @@
     <span style="color: #dcdcaa;">delay</span>(<span style="color: #b5cea8;">200</span>);<span style="color: #6a9955;">//Delay 200ms</span>
   }
 }</code></pre>
+                
+                <div style="margin-top: 80px;"></div>
+                
+                <p style="font-family: 'Futura Hv BT', Futura, sans-serif; font-size: 20px; line-height: 1.8; margin-bottom: 15px;">
+                    <strong>Function Analysis:</strong> This subroutine consists of two core loops to realize the precise one-way water light effect:
+                </p>
+                
+                <ol style="font-family: 'Futura Hv BT', Futura, sans-serif; font-size: 20px; line-height: 1.8; margin-left: 20px; margin-bottom: 15px; color: white;">
+                    <li><strong>Forward lighting loop:</strong> The variable j increases from 1 to 8, triggering pins 1~8 to output high level in turn. LEDs light up one by one from left to right, and each light state lasts for 200ms to form a progressive water light vision effect;</li>
+                    <li><strong>Reverse extinguishing loop:</strong> The variable j decreases from 8 to 1, triggering pins 8~1 to output low level in turn. LEDs turn off one by one from right to left, matching the forward lighting logic to complete a full water light action.</li>
+                </ol>
+                
+                <p style="font-family: 'Futura Hv BT', Futura, sans-serif; font-size: 20px; line-height: 1.8; margin-bottom: 15px; font-style: italic; color: #888;">
+                    【F1 Subroutine Effect Diagram: Insert the dynamic effect diagram of left-to-right lighting and right-to-left extinguishing water light here】
+                </p>
             </div>
         </section>
     </main>
