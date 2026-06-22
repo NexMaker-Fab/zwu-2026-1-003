@@ -96,6 +96,15 @@
                 <h3 style="font-family: 'Futura Hv BT', Futura, sans-serif; font-size: 40px; background-color: #00008B; padding: 10px 15px; display: inline-block; margin-bottom: 20px; color: white;">
                     3.1 Initialization Function setup()
                 </h3>
+                
+                <div style="margin-top: 80px;"></div>
+                
+                <pre style="background-color: #1e1e1e; border-radius: 8px; padding: 20px; overflow-x: auto; font-family: 'Courier New', Consolas, Monaco, monospace; font-size: 16px; line-height: 1.6; color: #d4d4d4;"><code><span style="color: #569cd6;">void</span> <span style="color: #dcdcaa;">setup</span>()<span style="color: #6a9955;">//Initialization function</span>
+ {
+<span style="color: #569cd6;">unsigned char</span> i; <span style="color: #6a9955;">//Define variable for pin loop configuration</span>
+  <span style="color: #c586c0;">for</span> (i=<span style="color: #b5cea8;">1</span>;i&lt;=<span style="color: #b5cea8;">8</span>;i++)
+<span style="color: #dcdcaa;">pinMode</span>(i,<span style="color: #4fc1ff;">OUTPUT</span>); <span style="color: #6a9955;">//Set pins 1-8 to output mode</span>
+}</code></pre>
             </div>
         </section>
     </main>
