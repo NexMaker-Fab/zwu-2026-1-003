@@ -137,6 +137,26 @@
                 <h3 style="font-family: 'Futura Hv BT', Futura, sans-serif; font-size: 40px; background-color: #00008B; padding: 10px 15px; display: inline-block; margin-bottom: 20px; color: white;">
                     3.3 Water Light Subroutine F1()
                 </h3>
+                
+                <div style="margin-top: 80px;"></div>
+                
+                <pre style="background-color: #1e1e1e; border-radius: 8px; padding: 20px; overflow-x: auto; font-family: 'Courier New', Consolas, Monaco, monospace; font-size: 16px; line-height: 1.6; color: #d4d4d4;"><code><span style="color: #569cd6;">void</span> <span style="color: #dcdcaa;">F1</span>(<span style="color: #569cd6;">void</span>)
+<span style="color: #6a9955;">//LEDs light up from left to right and turn off from right to left</span>
+{
+  <span style="color: #569cd6;">unsigned char</span> j;
+<span style="color: #6a9955;">//First loop: Light up LEDs from left to right</span>
+  <span style="color: #c586c0;">for</span> (j=<span style="color: #b5cea8;">1</span>;j&lt;=<span style="color: #b5cea8;">8</span>;j++)
+  {
+<span style="color: #dcdcaa;">digitalWrite</span>(j,<span style="color: #4fc1ff;">HIGH</span>); <span style="color: #6a9955;">//Output high level to light up corresponding LED</span>
+    <span style="color: #dcdcaa;">delay</span>(<span style="color: #b5cea8;">200</span>);<span style="color: #6a9955;">//Delay 200ms to form gradient water light effect</span>
+  }
+<span style="color: #6a9955;">//Second loop: Turn off LEDs from right to left</span>
+   <span style="color: #c586c0;">for</span> (j=<span style="color: #b5cea8;">8</span>;j&gt;=<span style="color: #b5cea8;">1</span>;j--)
+  {
+<span style="color: #dcdcaa;">digitalWrite</span>(j,<span style="color: #4fc1ff;">LOW</span>); <span style="color: #6a9955;">//Output low level to turn off corresponding LED</span>
+    <span style="color: #dcdcaa;">delay</span>(<span style="color: #b5cea8;">200</span>);<span style="color: #6a9955;">//Delay 200ms</span>
+  }
+}</code></pre>
             </div>
         </section>
     </main>
