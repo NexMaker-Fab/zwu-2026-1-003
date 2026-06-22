@@ -71,6 +71,19 @@
                 <h3 style="font-family: 'Futura Hv BT', Futura, sans-serif; font-size: 40px; background-color: #00008B; padding: 10px 15px; display: inline-block; margin-bottom: 20px; color: white;">
                     2. Overall Code Architecture
                 </h3>
+                
+                <div style="margin-top: 80px;"></div>
+                
+                <p style="font-family: 'Futura Hv BT', Futura, sans-serif; font-size: 20px; line-height: 1.8; margin-bottom: 15px;">
+                    The project code adopts the standard Arduino program structure, divided into three parts: initialization function, main loop function and custom functional subroutines. The modular design performs separate functions as follows:
+                </p>
+                
+                <ul style="font-family: 'Futura Hv BT', Futura, sans-serif; font-size: 20px; line-height: 1.8; margin-left: 20px; margin-bottom: 15px; color: white;">
+                    <li><strong>setup() Initialization Function:</strong> Executes only once after power-on, completing the output mode configuration of pins 1-8 to lay a hardware foundation for light control;</li>
+                    <li><strong>loop() Main Loop Function:</strong> Runs in an infinite loop after power-on, calling the water light effect subroutine and the overall flashing subroutine in turn to realize dynamic light switching;</li>
+                    <li><strong>F1() Custom Water Light Subroutine:</strong> Realizes the core water light effect of LEDs lighting up one by one from left to right and turning off one by one from right to left;</li>
+                    <li><strong>flash() Custom Flashing Subroutine:</strong> Realizes the synchronous on-off cyclic flashing effect of all 8-channel LEDs.</li>
+                </ul>
             </div>
         </section>
     </main>
