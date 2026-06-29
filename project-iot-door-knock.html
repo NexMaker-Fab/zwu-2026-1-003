@@ -811,127 +811,129 @@
 
                 <div style="margin-top: 80px;"></div>
 
-                <pre style="background-color: #1e1e1e; color: #d4d4d4; padding: 20px; border-radius: 8px; overflow-x: auto; font-family: 'Consolas', 'Monaco', monospace; font-size: 14px; line-height: 1.5; white-space: pre-wrap; word-wrap: break-word; border-left: 4px solid #007acc;"><code>#include &lt;Arduino.h&gt;
-#include "Arduino_GFX_Library.h"
-#include "pin_config.h"
-#include &lt;Wire.h&gt;
-#include "HWCDC.h"
-#include &lt;esp_now.h&gt;
-#include &lt;WiFi.h&gt;
-#include &lt;ESP32Servo.h&gt;
+                <div style="background-color: #1e1e1e; border-radius: 8px; padding: 20px; margin-bottom: 20px; overflow-x: auto;">
+                    <pre style="font-family: 'Courier New', Consolas, Monaco, monospace; font-size: 14px; line-height: 1.6; color: #d4d4d4; margin: 0; white-space: pre-wrap; word-wrap: break-word;"><code><span style="color: #c586c0;">#include</span> <span style="color: #ce9178;">&lt;Arduino.h&gt;</span>
+<span style="color: #c586c0;">#include</span> <span style="color: #ce9178;">"Arduino_GFX_Library.h"</span>
+<span style="color: #c586c0;">#include</span> <span style="color: #ce9178;">"pin_config.h"</span>
+<span style="color: #c586c0;">#include</span> <span style="color: #ce9178;">&lt;Wire.h&gt;</span>
+<span style="color: #c586c0;">#include</span> <span style="color: #ce9178;">"HWCDC.h"</span>
+<span style="color: #c586c0;">#include</span> <span style="color: #ce9178;">&lt;esp_now.h&gt;</span>
+<span style="color: #c586c0;">#include</span> <span style="color: #ce9178;">&lt;WiFi.h&gt;</span>
+<span style="color: #c586c0;">#include</span> <span style="color: #ce9178;">&lt;ESP32Servo.h&gt;</span>
 
 HWCDC USBSerial;
 
-Arduino_DataBus *bus = new Arduino_ESP32SPI(LCD_DC, LCD_CS, LCD_SCK, LCD_MOSI);
-Arduino_GFX *gfx = new Arduino_ST7789(bus, LCD_RST, 0, true, LCD_WIDTH, LCD_HEIGHT, 0, 20, 0, 0);
+Arduino_DataBus *bus = <span style="color: #569cd6;">new</span> Arduino_ESP32SPI(LCD_DC, LCD_CS, LCD_SCK, LCD_MOSI);
+Arduino_GFX *gfx = <span style="color: #569cd6;">new</span> Arduino_ST7789(bus, LCD_RST, <span style="color: #b5cea8;">0</span>, <span style="color: #569cd6;">true</span>, LCD_WIDTH, LCD_HEIGHT, <span style="color: #b5cea8;">0</span>, <span style="color: #b5cea8;">20</span>, <span style="color: #b5cea8;">0</span>, <span style="color: #b5cea8;">0</span>);
 
-#define BLACK 0x0000
-#define RED 0xF800
-#define GREEN 0x07E0
-#define WHITE 0xFFFF
+<span style="color: #c586c0;">#define</span> BLACK <span style="color: #b5cea8;">0x0000</span>
+<span style="color: #c586c0;">#define</span> RED <span style="color: #b5cea8;">0xF800</span>
+<span style="color: #c586c0;">#define</span> GREEN <span style="color: #b5cea8;">0x07E0</span>
+<span style="color: #c586c0;">#define</span> WHITE <span style="color: #b5cea8;">0xFFFF</span>
 
-const int MOTOR_PIN = 3; // Vibration motor
-const int SERVO_PIN = 16; // 360-degree servo signal wire
+<span style="color: #569cd6;">const int</span> MOTOR_PIN = <span style="color: #b5cea8;">3</span>; <span style="color: #6a9955;">// Vibration motor</span>
+<span style="color: #569cd6;">const int</span> SERVO_PIN = <span style="color: #b5cea8;">16</span>; <span style="color: #6a9955;">// 360-degree servo signal wire</span>
 Servo doorServo;
 
-// ==========================================
-// 🎯 360-degree Servo Exclusive: Physical Zero-point Calibration and Mechanical Drive Parameters
-// ==========================================
-const int STOP_SPEED = 94; // Absolute brake password discovered through dynamic blind testing
-const int OPEN_SPEED = 180; // Door opening direction speed (if opposite, swap values with CLOSE_SPEED)
-const int CLOSE_SPEED = 0; // Door closing direction speed
-const int MOVE_TIME = 400; // ⏱️ Control servo rotation time (milliseconds), precisely limiting door opening angle
+<span style="color: #6a9955;">// ==========================================</span>
+<span style="color: #6a9955;">// 🎯 360-degree Servo Exclusive: Physical Zero-point Calibration and Mechanical Drive Parameters</span>
+<span style="color: #6a9955;">// ==========================================</span>
+<span style="color: #569cd6;">const int</span> STOP_SPEED = <span style="color: #b5cea8;">94</span>; <span style="color: #6a9955;">// Absolute brake password discovered through dynamic blind testing</span>
+<span style="color: #569cd6;">const int</span> OPEN_SPEED = <span style="color: #b5cea8;">180</span>; <span style="color: #6a9955;">// Door opening direction speed (if opposite, swap values with CLOSE_SPEED)</span>
+<span style="color: #569cd6;">const int</span> CLOSE_SPEED = <span style="color: #b5cea8;">0</span>; <span style="color: #6a9955;">// Door closing direction speed</span>
+<span style="color: #569cd6;">const int</span> MOVE_TIME = <span style="color: #b5cea8;">400</span>; <span style="color: #6a9955;">// ⏱️ Control servo rotation time (milliseconds), precisely limiting door opening angle</span>
 
-typedef struct struct_message {
-    int knock;
+<span style="color: #569cd6;">typedef struct</span> struct_message {
+    <span style="color: #569cd6;">int</span> knock;
 } struct_message;
 
 struct_message myData;
-volatile bool isKnocking = false;
+<span style="color: #569cd6;">volatile bool</span> isKnocking = <span style="color: #569cd6;">false</span>;
 
-void OnDataRecv(const esp_now_recv_info_t * esp_now_info, const uint8_t *incomingData, int len) {
-    memcpy(&myData, incomingData, sizeof(myData));
-    if (myData.knock == 1) {
-        isKnocking = true;
+<span style="color: #569cd6;">void</span> <span style="color: #dcdcaa;">OnDataRecv</span>(<span style="color: #569cd6;">const</span> esp_now_recv_info_t * esp_now_info, <span style="color: #569cd6;">const uint8_t</span> *incomingData, <span style="color: #569cd6;">int</span> len) {
+    <span style="color: #dcdcaa;">memcpy</span>(&myData, incomingData, <span style="color: #569cd6;">sizeof</span>(myData));
+    <span style="color: #569cd6;">if</span> (myData.knock == <span style="color: #b5cea8;">1</span>) {
+        isKnocking = <span style="color: #569cd6;">true</span>;
     }
 }
 
-void setup(void) {
-    pinMode(MOTOR_PIN, OUTPUT);
+<span style="color: #569cd6;">void</span> <span style="color: #dcdcaa;">setup</span>(<span style="color: #569cd6;">void</span>) {
+    <span style="color: #dcdcaa;">pinMode</span>(MOTOR_PIN, OUTPUT);
     
-    // Initialize servo, inject brake password at power-on to forcibly suppress current surge and initial creep
-    doorServo.setPeriodHertz(50);
-    doorServo.attach(SERVO_PIN, 500, 2400);
-    doorServo.write(STOP_SPEED);
+    <span style="color: #6a9955;">// Initialize servo, inject brake password at power-on to forcibly suppress current surge and initial creep</span>
+    doorServo.<span style="color: #dcdcaa;">setPeriodHertz</span>(<span style="color: #b5cea8;">50</span>);
+    doorServo.<span style="color: #dcdcaa;">attach</span>(SERVO_PIN, <span style="color: #b5cea8;">500</span>, <span style="color: #b5cea8;">2400</span>);
+    doorServo.<span style="color: #dcdcaa;">write</span>(STOP_SPEED);
     
-    USBSerial.begin(115200);
-    gfx->begin();
-    pinMode(LCD_BL, OUTPUT);
-    digitalWrite(LCD_BL, HIGH);
-    WiFi.mode(WIFI_STA);
-    esp_now_init();
-    esp_now_register_recv_cb(OnDataRecv);
+    USBSerial.<span style="color: #dcdcaa;">begin</span>(<span style="color: #b5cea8;">115200</span>);
+    gfx-><span style="color: #dcdcaa;">begin</span>();
+    <span style="color: #dcdcaa;">pinMode</span>(LCD_BL, OUTPUT);
+    <span style="color: #dcdcaa;">digitalWrite</span>(LCD_BL, HIGH);
+    WiFi.<span style="color: #dcdcaa;">mode</span>(WIFI_STA);
+    <span style="color: #dcdcaa;">esp_now_init</span>();
+    <span style="color: #dcdcaa;">esp_now_register_recv_cb</span>(OnDataRecv);
 
-    gfx->fillScreen(BLACK);
-    gfx->setCursor(10, 50);
-    gfx->setTextColor(GREEN);
-    gfx->setTextSize(2);
-    gfx->println("Waiting...");
+    gfx-><span style="color: #dcdcaa;">fillScreen</span>(BLACK);
+    gfx-><span style="color: #dcdcaa;">setCursor</span>(<span style="color: #b5cea8;">10</span>, <span style="color: #b5cea8;">50</span>);
+    gfx-><span style="color: #dcdcaa;">setTextColor</span>(GREEN);
+    gfx-><span style="color: #dcdcaa;">setTextSize</span>(<span style="color: #b5cea8;">2</span>);
+    gfx-><span style="color: #dcdcaa;">println</span>(<span style="color: #ce9178;">"Waiting..."</span>);
 }
 
-void loop() {
-    if (isKnocking == true) {
-        USBSerial.println("【Wireless Signal Triggered】Starting cinematic staggered load-limiting response sequence...");
+<span style="color: #569cd6;">void</span> <span style="color: #dcdcaa;">loop</span>() {
+    <span style="color: #569cd6;">if</span> (isKnocking == <span style="color: #569cd6;">true</span>) {
+        USBSerial.<span style="color: #dcdcaa;">println</span>(<span style="color: #ce9178;">"【Wireless Signal Triggered】Starting cinematic staggered load-limiting response sequence..."</span>);
         
-        // =====================================
-        // ⚡ Phase 1: Power Cut & Borrow, Explosive Vibration
-        // =====================================
-        digitalWrite(LCD_BL, LOW); // Instantly cut off screen backlight current
-        digitalWrite(MOTOR_PIN, HIGH); // Motor exclusively enjoys all current, fierce start-up
-        delay(500); // Expand to 500ms for full, sustained premium tactile feedback
-        digitalWrite(MOTOR_PIN, LOW); // Immediately cut power to motor after vibration, completely release current
+        <span style="color: #6a9955;">// =====================================</span>
+        <span style="color: #6a9955;">// ⚡ Phase 1: Power Cut & Borrow, Explosive Vibration</span>
+        <span style="color: #6a9955;">// =====================================</span>
+        <span style="color: #dcdcaa;">digitalWrite</span>(LCD_BL, LOW); <span style="color: #6a9955;">// Instantly cut off screen backlight current</span>
+        <span style="color: #dcdcaa;">digitalWrite</span>(MOTOR_PIN, HIGH); <span style="color: #6a9955;">// Motor exclusively enjoys all current, fierce start-up</span>
+        <span style="color: #dcdcaa;">delay</span>(<span style="color: #b5cea8;">500</span>); <span style="color: #6a9955;">// Expand to 500ms for full, sustained premium tactile feedback</span>
+        <span style="color: #dcdcaa;">digitalWrite</span>(MOTOR_PIN, LOW); <span style="color: #6a9955;">// Immediately cut power to motor after vibration, completely release current</span>
         
-        // =====================================
-        //  Phase 2: Screen Revival, Visual Sudden Warning
-        // =====================================
-        digitalWrite(LCD_BL, HIGH); // Re-light screen backlight
-        gfx->fillScreen(RED);
-        gfx->setCursor(10, 50);
-        gfx->setTextColor(WHITE);
-        gfx->setTextSize(3);
-        gfx->println("Somebody");
-        gfx->setCursor(10, 90);
-        gfx->println("Knocking!");
+        <span style="color: #6a9955;">// =====================================</span>
+        <span style="color: #6a9955;">//  Phase 2: Screen Revival, Visual Sudden Warning</span>
+        <span style="color: #6a9955;">// =====================================</span>
+        <span style="color: #dcdcaa;">digitalWrite</span>(LCD_BL, HIGH); <span style="color: #6a9955;">// Re-light screen backlight</span>
+        gfx-><span style="color: #dcdcaa;">fillScreen</span>(RED);
+        gfx-><span style="color: #dcdcaa;">setCursor</span>(<span style="color: #b5cea8;">10</span>, <span style="color: #b5cea8;">50</span>);
+        gfx-><span style="color: #dcdcaa;">setTextColor</span>(WHITE);
+        gfx-><span style="color: #dcdcaa;">setTextSize</span>(<span style="color: #b5cea8;">3</span>);
+        gfx-><span style="color: #dcdcaa;">println</span>(<span style="color: #ce9178;">"Somebody"</span>);
+        gfx-><span style="color: #dcdcaa;">setCursor</span>(<span style="color: #b5cea8;">10</span>, <span style="color: #b5cea8;">90</span>);
+        gfx-><span style="color: #dcdcaa;">println</span>(<span style="color: #ce9178;">"Knocking!"</span>);
         
-        // =====================================
-        // ⚡ Phase 3: Neural Awakening, Mechanical Automatic Door Opening
-        // =====================================
-        doorServo.attach(SERVO_PIN, 500, 2400); // Temporarily mount servo neural connection
-        doorServo.write(OPEN_SPEED); // Full-speed execution of door-opening mechanical action
-        delay(MOVE_TIME); // Move for 0.4 seconds to open perfect width
-        doorServo.write(STOP_SPEED); // Emergency brake, door remains wide open
+        <span style="color: #6a9955;">// =====================================</span>
+        <span style="color: #6a9955;">// ⚡ Phase 3: Neural Awakening, Mechanical Automatic Door Opening</span>
+        <span style="color: #6a9955;">// =====================================</span>
+        doorServo.<span style="color: #dcdcaa;">attach</span>(SERVO_PIN, <span style="color: #b5cea8;">500</span>, <span style="color: #b5cea8;">2400</span>); <span style="color: #6a9955;">// Temporarily mount servo neural connection</span>
+        doorServo.<span style="color: #dcdcaa;">write</span>(OPEN_SPEED); <span style="color: #6a9955;">// Full-speed execution of door-opening mechanical action</span>
+        <span style="color: #dcdcaa;">delay</span>(MOVE_TIME); <span style="color: #6a9955;">// Move for 0.4 seconds to open perfect width</span>
+        doorServo.<span style="color: #dcdcaa;">write</span>(STOP_SPEED); <span style="color: #6a9955;">// Emergency brake, door remains wide open</span>
 
-        delay(3000); // Keep wide open for 3 seconds, leaving visual window for hearing-impaired to check corridor
+        <span style="color: #dcdcaa;">delay</span>(<span style="color: #b5cea8;">3000</span>); <span style="color: #6a9955;">// Keep wide open for 3 seconds, leaving visual window for hearing-impaired to check corridor</span>
         
-        // =====================================
-        // ⚡ Phase 4: Pull Back Door, Deep Disconnection Sleep
-        // =====================================
-        doorServo.write(CLOSE_SPEED); // Reverse full-speed pull back door
-        delay(MOVE_TIME); // Run same duration
-        doorServo.write(STOP_SPEED); // Emergency brake, door tightly closed
-        doorServo.detach(); // Extremely important: Completely cut off servo neural connection, flatten standby microamp current
+        <span style="color: #6a9955;">// =====================================</span>
+        <span style="color: #6a9955;">// ⚡ Phase 4: Pull Back Door, Deep Disconnection Sleep</span>
+        <span style="color: #6a9955;">// =====================================</span>
+        doorServo.<span style="color: #dcdcaa;">write</span>(CLOSE_SPEED); <span style="color: #6a9955;">// Reverse full-speed pull back door</span>
+        <span style="color: #dcdcaa;">delay</span>(MOVE_TIME); <span style="color: #6a9955;">// Run same duration</span>
+        doorServo.<span style="color: #dcdcaa;">write</span>(STOP_SPEED); <span style="color: #6a9955;">// Emergency brake, door tightly closed</span>
+        doorServo.<span style="color: #dcdcaa;">detach</span>(); <span style="color: #6a9955;">// Extremely important: Completely cut off servo neural connection, flatten standby microamp current</span>
         
-        // System perfectly reset
-        gfx->fillScreen(BLACK);
-        gfx->setCursor(10, 50);
-        gfx->setTextColor(GREEN);
-        gfx->setTextSize(2);
-        gfx->println("Waiting...");
-        delay(500); // Debounce delay, avoid physical vibration from door closing triggering secondary false touch
-        isKnocking = false;
+        <span style="color: #6a9955;">// System perfectly reset</span>
+        gfx-><span style="color: #dcdcaa;">fillScreen</span>(BLACK);
+        gfx-><span style="color: #dcdcaa;">setCursor</span>(<span style="color: #b5cea8;">10</span>, <span style="color: #b5cea8;">50</span>);
+        gfx-><span style="color: #dcdcaa;">setTextColor</span>(GREEN);
+        gfx-><span style="color: #dcdcaa;">setTextSize</span>(<span style="color: #b5cea8;">2</span>);
+        gfx-><span style="color: #dcdcaa;">println</span>(<span style="color: #ce9178;">"Waiting..."</span>);
+        <span style="color: #dcdcaa;">delay</span>(<span style="color: #b5cea8;">500</span>); <span style="color: #6a9955;">// Debounce delay, avoid physical vibration from door closing triggering secondary false touch</span>
+        isKnocking = <span style="color: #569cd6;">false</span>;
     }
-    delay(10);
+    <span style="color: #dcdcaa;">delay</span>(<span style="color: #b5cea8;">10</span>);
 }</code></pre>
+                </div>
 
                 <div style="margin-top: 80px;"></div>
 
