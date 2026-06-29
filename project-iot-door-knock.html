@@ -180,6 +180,40 @@
                 
                 <div style="margin-top: 80px;"></div>
                 
+                <h4 style="font-family: 'Futura Hv BT', Futura, sans-serif; font-size: 24px; color: white; margin-bottom: 15px;">
+                    The Idealized Technological Vision
+                </h4>
+                
+                <p style="font-family: 'Futura Hv BT', Futura, sans-serif; font-size: 20px; line-height: 1.8; margin-bottom: 15px;">
+                    Starting from a perfect IoT topology design, we are committed to establishing an "absolutely high-fault-tolerance, low-latency, seamless access" intelligent environmental perception network for hearing-impaired users:
+                </p>
+                
+                <ul style="font-family: 'Futura Hv BT', Futura, sans-serif; font-size: 20px; line-height: 1.8; margin-bottom: 15px; margin-left: 20px;">
+                    <li><strong>Ideal Wireless Communication:</strong> Completely eliminate dependence on third-party commercial wireless routers (avoiding service outages or disconnections that could paralyze accessibility guarantees). Using the low-power ESP-NOW RF protocol, two motherboards establish a private point-to-point LAN. In ideal conditions, external vibrations penetrate walls within less than 5 milliseconds, achieving 100% packet-loss-free wave delivery.</li>
+                    <li><strong>Ideal System Operation:</strong> The logic code assumes hardware is a black-box system with unlimited energy supply, capable of supporting high-pixel full-color screen high-speed rendering, continuous wireless RF monitoring, and high-power motors with mechanical servos running at full load simultaneously upon power-up.</li>
+                </ul>
+                
+                <div style="margin-top: 80px;"></div>
+                
+                <h4 style="font-family: 'Futura Hv BT', Futura, sans-serif; font-size: 24px; color: white; margin-bottom: 15px;">
+                    Collision with Reality: Potential Engineering Hazards and Practical Solutions
+                </h4>
+                
+                <p style="font-family: 'Futura Hv BT', Futura, sans-serif; font-size: 20px; line-height: 1.8; margin-bottom: 15px;">
+                    When ideal designs land on physical components worth tens of yuan and encounter the real physical world, the team encountered and resolved two classic hardware-level technical deadlocks:
+                </p>
+                
+                <p style="font-family: 'Futura Hv BT', Futura, sans-serif; font-size: 20px; line-height: 1.8; margin-bottom: 15px;">
+                    <strong>Problem 1: Noise Residual Vibration Pollution in the Physical World and Hardware Manufacturing Tolerances</strong>
+                </p>
+                
+                <ul style="font-family: 'Futura Hv BT', Futura, sans-serif; font-size: 20px; line-height: 1.8; margin-bottom: 15px; margin-left: 20px;">
+                    <li><strong>Real-world Hazard:</strong> Strong winds in corridors, doors slammed by wind gusts, or inertial secondary physical vibrations caused by the system's own door-closing mechanical actions can be misjudged by sensitive sensors as someone knocking again, triggering infinite system loops. Additionally, cheap SG90 servos purchased are non-standard 360-degree continuous rotation servos with serious physical potentiometer tolerances. When inputting the theoretical brake value of 90, the servo still slowly grinds and creeps like a zombie.</li>
+                    <li><strong>Engineering Solution:</strong> On the transmitter side, introduce a <strong>300ms software adaptive debouncing filter algorithm</strong>, automatically cutting off the sampling window after the initial pulse to precisely filter door panel residual vibrations. On the receiver side, execute dynamic manual zero-point calibration. Through multiple rounds of blind data testing, successfully captured the unique <strong>"absolute brake password (parameter 94)"</strong> of this servo, perfectly flattening hardware manufacturing tolerances purely through software computing power.</li>
+                </ul>
+                
+                <div style="margin-top: 80px;"></div>
+                
                 <h2 style="font-family: 'Futura Hv BT', Futura, sans-serif; font-size: 40px; background-color: #00008B; padding: 10px 15px; display: inline-block; margin-bottom: 20px; color: white;">
                     II. Hardware Selection and Physical Topology
                 </h2>
