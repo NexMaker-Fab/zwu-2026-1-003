@@ -813,6 +813,130 @@
 
                 <div style="margin-top: 80px;"></div>
 
+                <pre style="background-color: #1e1e1e; color: #d4d4d4; padding: 20px; border-radius: 8px; overflow-x: auto; font-family: 'Consolas', 'Monaco', monospace; font-size: 14px; line-height: 1.5; white-space: pre-wrap; word-wrap: break-word; border-left: 4px solid #007acc;"><code>#include &lt;Arduino.h&gt;
+#include "Arduino_GFX_Library.h"
+#include "pin_config.h"
+#include &lt;Wire.h&gt;
+#include "HWCDC.h"
+#include &lt;esp_now.h&gt;
+#include &lt;WiFi.h&gt;
+#include &lt;ESP32Servo.h&gt;
+
+HWCDC USBSerial;
+
+Arduino_DataBus *bus = new Arduino_ESP32SPI(LCD_DC, LCD_CS, LCD_SCK, LCD_MOSI);
+Arduino_GFX *gfx = new Arduino_ST7789(bus, LCD_RST, 0, true, LCD_WIDTH, LCD_HEIGHT, 0, 20, 0, 0);
+
+#define BLACK 0x0000
+#define RED 0xF800
+#define GREEN 0x07E0
+#define WHITE 0xFFFF
+
+const int MOTOR_PIN = 3; // Vibration motor
+const int SERVO_PIN = 16; // 360-degree servo signal wire
+Servo doorServo;
+
+// ==========================================
+// 🎯 360-degree Servo Exclusive: Physical Zero-point Calibration and Mechanical Drive Parameters
+// ==========================================
+const int STOP_SPEED = 94; // Absolute brake password discovered through dynamic blind testing
+const int OPEN_SPEED = 180; // Door opening direction speed (if opposite, swap values with CLOSE_SPEED)
+const int CLOSE_SPEED = 0; // Door closing direction speed
+const int MOVE_TIME = 400; // ⏱️ Control servo rotation time (milliseconds), precisely limiting door opening angle
+
+typedef struct struct_message {
+    int knock;
+} struct_message;
+
+struct_message myData;
+volatile bool isKnocking = false;
+
+void OnDataRecv(const esp_now_recv_info_t * esp_now_info, const uint8_t *incomingData, int len) {
+    memcpy(&myData, incomingData, sizeof(myData));
+    if (myData.knock == 1) {
+        isKnocking = true;
+    }
+}
+
+void setup(void) {
+    pinMode(MOTOR_PIN, OUTPUT);
+    
+    // Initialize servo, inject brake password at power-on to forcibly suppress current surge and initial creep
+    doorServo.setPeriodHertz(50);
+    doorServo.attach(SERVO_PIN, 500, 2400);
+    doorServo.write(STOP_SPEED);
+    
+    USBSerial.begin(115200);
+    gfx->begin();
+    pinMode(LCD_BL, OUTPUT);
+    digitalWrite(LCD_BL, HIGH);
+    WiFi.mode(WIFI_STA);
+    esp_now_init();
+    esp_now_register_recv_cb(OnDataRecv);
+
+    gfx->fillScreen(BLACK);
+    gfx->setCursor(10, 50);
+    gfx->setTextColor(GREEN);
+    gfx->setTextSize(2);
+    gfx->println("Waiting...");
+}
+
+void loop() {
+    if (isKnocking == true) {
+        USBSerial.println("【Wireless Signal Triggered】Starting cinematic staggered load-limiting response sequence...");
+        
+        // =====================================
+        // ⚡ Phase 1: Power Cut & Borrow, Explosive Vibration
+        // =====================================
+        digitalWrite(LCD_BL, LOW); // Instantly cut off screen backlight current
+        digitalWrite(MOTOR_PIN, HIGH); // Motor exclusively enjoys all current, fierce start-up
+        delay(500); // Expand to 500ms for full, sustained premium tactile feedback
+        digitalWrite(MOTOR_PIN, LOW); // Immediately cut power to motor after vibration, completely release current
+        
+        // =====================================
+        //  Phase 2: Screen Revival, Visual Sudden Warning
+        // =====================================
+        digitalWrite(LCD_BL, HIGH); // Re-light screen backlight
+        gfx->fillScreen(RED);
+        gfx->setCursor(10, 50);
+        gfx->setTextColor(WHITE);
+        gfx->setTextSize(3);
+        gfx->println("Somebody");
+        gfx->setCursor(10, 90);
+        gfx->println("Knocking!");
+        
+        // =====================================
+        // ⚡ Phase 3: Neural Awakening, Mechanical Automatic Door Opening
+        // =====================================
+        doorServo.attach(SERVO_PIN, 500, 2400); // Temporarily mount servo neural connection
+        doorServo.write(OPEN_SPEED); // Full-speed execution of door-opening mechanical action
+        delay(MOVE_TIME); // Move for 0.4 seconds to open perfect width
+        doorServo.write(STOP_SPEED); // Emergency brake, door remains wide open
+
+        delay(3000); // Keep wide open for 3 seconds, leaving visual window for hearing-impaired to check corridor
+        
+        // =====================================
+        // ⚡ Phase 4: Pull Back Door, Deep Disconnection Sleep
+        // =====================================
+        doorServo.write(CLOSE_SPEED); // Reverse full-speed pull back door
+        delay(MOVE_TIME); // Run same duration
+        doorServo.write(STOP_SPEED); // Emergency brake, door tightly closed
+        doorServo.detach(); // Extremely important: Completely cut off servo neural connection, flatten standby microamp current
+        
+        // System perfectly reset
+        gfx->fillScreen(BLACK);
+        gfx->setCursor(10, 50);
+        gfx->setTextColor(GREEN);
+        gfx->setTextSize(2);
+        gfx->println("Waiting...");
+        delay(500); // Debounce delay, avoid physical vibration from door closing triggering secondary false touch
+        isKnocking = false;
+    }
+    delay(10);
+}</code></pre>
+
+                <div style="margin-top: 80px;"></div>
+
                 <h2 style="font-family: 'Futura Hv BT', Futura, sans-serif; font-size: 40px; background-color: #00008B; padding: 10px 15px; display: inline-block; margin-bottom: 20px; color: white;">
                     VI. Finished Product Display and Summary
                 </h2>
